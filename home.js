@@ -2,17 +2,17 @@
 'use strict';
 (function () {
   const I = (n, s) => Prefs.icon(n, s);
-  const ME_URL = 'https://odin-cards.sites.tab.bot/me/'; // Me lives inside the app now (same storage as the installed app)
-  const WORK_URL = 'https://drive.google.com/drive/folders/15yMPz8UIFLLkCH5eXZzvGe9hAbR88Cin';
+  const ME_URL = '/me/'; // Me lives inside the app now (same storage as the installed app)
+  const WORK_URL = '';
   const TILES = [
     { k: 'cards', tab: 1, name: 'Cards', ic: 'cards', go: () => go('decks'), sub: () => { const n = dueCards(), w = window.Weak ? Weak.dueCount() : 0; return n ? n + ' due' + (w ? ' · ' + w + ' weak' : '') : w ? w + ' weak spots' : 'All caught up'; }, badge: () => dueCards() + (window.Weak ? Weak.dueCount() : 0) },
     { k: 'doc', tab: 1, name: 'Doctordle', ic: 'doc', go: () => go('doc'), sub: () => { const b = window.Doctordle ? Doctordle.badge() : ''; return b ? "Today's case is ready" : 'Free play'; }, badge: () => window.Doctordle ? Doctordle.badge() : '' },
     { k: 'anat', name: 'Anatomy', ic: 'anat', go: () => go('anat'), sub: () => window.Anatomy && Anatomy.sub ? Anatomy.sub() : '3D body', badge: () => window.Anatomy && Anatomy.badge ? Anatomy.badge() : '' },
-    { k: 'me', name: 'Me', ic: 'me', href: ME_URL, sub: () => 'Your profile', when: () => !window.ODIN_STORE },
+    { k: 'me', name: 'Me', ic: 'me', href: ME_URL, sub: () => 'Your profile', when: () => false },
     { k: 'rx', name: 'Interactions', ic: 'pill', go: () => XView.open('rx'), sub: () => { try { const r = M.progress.get('rx:best'); return r && r.best && r.best.timed != null ? 'Best ' + r.best.timed + ' in 60s' : 'Drug-interaction game'; } catch (e) { return 'Drug-interaction game'; } } },
     { k: 'lab', tab: 1, name: 'Doctor Lab', ic: 'brain', go: () => XView.open('lab'), sub: () => { const s = window.Lab && Lab.stat('sim'); return s ? s.n + ' cases · avg ' + s.avg + '%' : 'Patient sim · lesions · more'; } },
     { k: 'tools', tab: 1, name: 'Study tools', ic: 'bolt', go: () => XView.open('tools'), sub: () => 'Snap a page · focus timer' },
-    { k: 'work', name: "Tab's Work", ic: 'folder', href: WORK_URL, plain: true, ext: true, sub: () => 'Google Drive', when: () => !window.ODIN_STORE }
+    { k: 'work', name: 'Files', ic: 'folder', href: WORK_URL, plain: true, ext: true, sub: () => 'Folder', when: () => false }
   ];
   function openLib(mode) {
     if (window.Resources && Resources._S) { Resources._S.mode = mode; try { localStorage.setItem('res.mode', mode); } catch (e) {} }

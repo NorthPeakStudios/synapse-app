@@ -63,7 +63,7 @@ window.SYNAPSE_PRO = {
       keyNote: 'Paste the license key from your receipt email.'
     },
     links: {
-      privacy: 'https://odin-cards.sites.tab.bot/privacy/',
+      privacy: 'privacy/',
       terms: 'https://northpeakstudios.github.io/synapse/',
       contact: 'mailto:northpeak.support@gmail.com'
     }

@@ -74,7 +74,7 @@
   function head(t, sub) { return '<button type="button" class="pw-x" data-ac-close aria-label="Close">' + X + '</button><div class="pw-hero pw-hero-sm"><img class="pw-logo" src="' + esc(logo()) + '" alt=""><h2 id="acT">' + esc(t) + '</h2>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>'; }
   function field(name, label, type, ac, extra) { return '<label>' + esc(label) + '<input name="' + name + '" type="' + type + '" autocomplete="' + ac + '" ' + (extra || '') + ' required></label>'; }
   var ERR = '<p class="pw-fine pw-err" data-ac-err hidden></p>';
-  var PRIV = '<p class="pw-fine ac-priv">We store your email, a hashed password and your study progress so it can sync. Nothing is sold. You can delete your account in Settings. <a href="https://odin-cards.sites.tab.bot/privacy/" target="_blank" rel="noopener">Privacy policy</a></p>';
+  var PRIV = '<p class="pw-fine ac-priv">We store your email, a hashed password and your study progress so it can sync. Nothing is sold. You can delete your account in Settings. <a href="privacy/" target="_blank" rel="noopener">Privacy policy</a></p>';
   function proLine(u) {
     if (u.owner) return 'Synapse Pro \u00b7 owner'; if (u.pro) return 'Synapse Pro \u00b7 active';
     var l = window.Pro && Pro.trialLeft ? Pro.trialLeft() : null; if (l == null) return 'Free';

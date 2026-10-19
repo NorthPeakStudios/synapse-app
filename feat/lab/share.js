@@ -3,7 +3,7 @@
   'use strict';
   const L = window.Lab, esc = L.esc; L.css2(); L.css3();
   let S = null;
-  const base = () => (window.ODIN_SITE || location.origin) + '/share/?t=';
+  const base = () => (window.ODIN_SITE && !window.SYN_REMOTE ? window.ODIN_SITE + '/' : location.origin + location.pathname.replace(/[^/]*$/, '')) + 'share/?t=';
   function render(el) { S = { el, mine: null, made: null, busy: 0, err: '' }; if (!el.__sh) { el.__sh = 1; el.addEventListener('click', onClick); } paint(); refresh(); }
   async function refresh() { if (!meta.code) return; try { const j = await api('/api/share/mine'); S.mine = j.shares || []; S.err = ''; } catch (e) { S.err = e.offline ? 'You\'re offline.' : ''; S.mine = S.mine || []; } paint(); }
   function paint() {

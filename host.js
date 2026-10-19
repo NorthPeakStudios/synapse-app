@@ -1,11 +1,10 @@
 /* Synapse on GitHub Pages (NorthPeakStudios/synapse-app). The app's server (accounts, sync, deck library, buy requests,
-   unlock codes, reminders) and the big 3D anatomy models stay on odin-cards.sites.tab.bot; this sends those requests there.
+   unlock codes, reminders) runs separately; this sends API requests there. Everything else, 3D models included, loads from this site.
    Signed in here, the session is a bearer token in this browser's storage (a cross-site cookie would not be sent). */
 (function () {
   'use strict';
   var SITE = 'https://odin-cards.sites.tab.bot', BASE = location.pathname.replace(/[^/]*$/, '');
   window.ODIN_SITE = SITE; window.SYN_REMOTE = true;
-  var REMOTE_FILES = /^anat\/(h|m2)\//; // 3D models are served by the main site
   var _fetch = window.fetch.bind(window);
   window.fetch = function (input, init) {
     try {
@@ -25,7 +24,6 @@
           if (init.signal) o.signal = init.signal;
           return _fetch(SITE + api + u.search, o);
         }
-        if (rel !== null && REMOTE_FILES.test(rel)) return _fetch(SITE + '/' + rel + u.search, isReq ? undefined : init);
       }
     } catch (e) {}
     return _fetch(input, init);

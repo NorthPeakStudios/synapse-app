@@ -6,7 +6,7 @@
   const BOARDS = [['green', '#eeeed2', '#769656'], ['brown', '#f0d9b5', '#b58863'], ['blue', '#dee3e6', '#8ca2ad'], ['gray', '#e0e0e0', '#9e9e9e'], ['wood', '#e8c99b', '#a9743f'], ['ice', '#e4eef8', '#8fb0d0'], ['mint', '#e6f4ea', '#7fb894'], ['rose', '#f6e3e6', '#c48a95'], ['purple', '#ece4f7', '#8c6bbf']];
   const PIECES = ['cburnett', 'merida', 'california', 'cardinal', 'chessnut', 'companion', 'fantasy', 'maestro', 'staunty', 'shapes', 'pixel'];
   const LEVELS = [['kid', '5'], ['hs', 'HS'], ['college', 'College'], ['phd', 'PhD'], ['expert', 'Dr']];
-  const TILE_NAMES = { cards: 'Cards', doc: 'Doctordle', anat: 'Anatomy', me: 'Me', work: "Tab's Work" };
+  const TILE_NAMES = { cards: 'Cards', doc: 'Doctordle', anat: 'Anatomy', me: 'Me', work: 'Files' };
   const TILE_IC = { cards: 'cards', doc: 'doc', anat: 'anat', me: 'me', work: 'folder' };
   const ICONS = [['default', 'Classic', '#0a84ff'], ['mint', 'Mint', '#30d158'], ['ember', 'Ember', '#ff9f0a'], ['mono', 'Mono', '#e5e5ea']];
   const sw = (on, path) => `<button class="sw${on ? ' on' : ''}" role="switch" aria-checked="${on}" data-p-tog="${path}" type="button"><i></i></button>`;

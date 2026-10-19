@@ -25,7 +25,7 @@
     books: '<path d="M5 4h4v16H5zM10 4h4v16h-4zM15.5 4.5l3.8 1-3.6 14.5-3.8-1"/>', bolt: '<path d="M13 2.5 5 13.5h6l-1 8 8-11h-6z"/>', ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/>'
   };
   const svg = (n, s, w) => `<svg viewBox="0 0 24 24" width="${s || 22}" height="${s || 22}" fill="none" stroke="currentColor" stroke-width="${w || 1.9}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ''}</svg>`;
-  const WORK_URL = 'https://drive.google.com/drive/folders/15yMPz8UIFLLkCH5eXZzvGe9hAbR88Cin';
+  const WORK_URL = '';
 
   /* ---------- feature registry ---------- */
   const GROUPS = {
@@ -39,20 +39,20 @@
     make: ['add', 'ocr', 'occl', 'pbook', 'anki'],
     review: ['daily', 'hands', 'mnemo', 'vn', 'fc', 'plan', 'badges'],
     focus: ['focus', 'amb'],
-    you: ['me', 'customize', 'themes', 'share', 'prefs', 'sync', 'help', 'about', 'work']
+    you: ['customize', 'themes', 'share', 'prefs', 'sync', 'help', 'about']
   };
   const EXTRA = {
     doc: { title: 'Doctordle', sub: "Guess the diagnosis: today's case + 6-clue rounds", icn: 'steth', open: () => go('doc'), keys: 'diagnosis guess case daily wordle dle clues' },
     anat: { title: 'Anatomy 3D', sub: 'Spin, zoom and tap a 3D body and brain', icn: 'body', open: () => go('anat'), keys: 'body 3d model brain organs skeleton muscles' },
     rx: { title: 'Interactions game', sub: 'Spot the drug interaction, beat your 60s best', icn: 'pill', open: () => XView.open('rx'), keys: 'drug interaction rx game pharmacology' },
     add: { title: 'Add a card', sub: 'Type a new flashcard', icn: 'plus', open: () => go('add'), keys: 'new card create flashcard' },
-    me: { title: 'Me', sub: 'Your profile', icn: 'person', href: 'https://odin-cards.sites.tab.bot/me/', keys: 'profile account me', when: () => !window.ODIN_STORE },
+    me: { title: 'Me', sub: 'Your profile', icn: 'person', href: '/me/', keys: 'profile', when: () => false },
     customize: { title: 'Customize', sub: 'Home blocks, layout, theme and colors', icn: 'gear', open: () => { if (window.Layout) Layout.customize('home'); }, keys: 'customize layout look theme themes colors colours home blocks drawer menu tabs navigation appearance style', when: () => !!window.Layout },
     help: { title: 'Help & feedback', sub: 'Questions, send a bug or idea, replay the intro', icn: 'help', open: () => { if (window.SettingsUI) SettingsUI.open('help'); }, keys: 'help faq feedback bug idea support question tour intro' },
     about: { title: 'About', sub: 'Version, credits & licenses, privacy', icn: 'info', open: () => { if (window.SettingsUI) SettingsUI.open('about'); }, keys: 'about version credits licenses license privacy made by' },
     prefs: { title: 'Settings', sub: 'Appearance, study, voices, notifications', icn: 'gear', open: () => { if (window.SettingsUI && SettingsUI.open) SettingsUI.open(); else go('prefs'); }, keys: 'settings preferences options config dark mode text size' },
     sync: { title: 'Sync & backup', sub: () => (typeof meta !== 'undefined' && meta.code ? 'Synced across your devices' : 'Not synced yet') + ' · import · export', icn: 'cloud', open: () => go('settings'), keys: 'sync code backup import export csv json devices' },
-    work: { title: "Tab's Work", sub: 'Google Drive folder', icn: 'folder', href: WORK_URL, ext: true, keys: 'drive google files work folder', when: () => !window.ODIN_STORE }
+    work: { title: 'Files', sub: 'Folder', icn: 'folder', href: WORK_URL, ext: true, keys: 'files folder', when: () => false }
   };
   const SYN = { ecg: 'ekg rhythm electrocardiogram heart monitor', themes: 'theme themes colors colour dark light fonts appearance background', share: 'share link deck friends', fc: 'forecast reviews upcoming calendar', vn: 'voice notes recording', amb: 'sounds ambient rain noise music white brown', focus: 'pomodoro timer focus', daily: 'daily challenge best score', badges: 'badges level xp achievements', plan: 'exam planner test date', anki: 'anki import apkg colpkg', ocr: 'camera photo snap scan text page', occl: 'image occlusion diagram labels', pbook: 'pharm book pharmacology', hands: 'hands free audio voice review', mnemo: 'mnemonics memory hooks', sim: 'patient simulator case history exam', ddx: 'differential diagnosis', labs: 'lab values cbc bmp abg lft blood', vit: 'vitals blood pressure heart rate map news2 qsofa', soap: 'soap note', neuro: 'neurology exam reflexes cranial nerves', lesion: 'lesion localization brain', code: 'code blue acls cpr arrest', heart: 'heart sounds murmurs stethoscope', lung: 'lung sounds wheeze crackles', scan: 'ct mri imaging radiology', atlas: 'brain atlas mri slices', spot: 'spot the difference imaging', speed: 'anatomy speed run brain parts', histo: 'histology microscope tissue', derm: 'dermatology rash skin', surg: 'surgery steps neurosurgery craniotomy', inst: 'surgical instruments tools', druglab: 'drug lab invent trials approval', match: 'drug class mechanism', receptor: 'receptor drug target', pk: 'pharmacokinetics half life', bugs: 'microbiology bacteria microbe', pun: 'genetics punnett', words: 'medical terminology prefixes roots', history: 'medicine history timeline' };
   function feat(id) {

@@ -213,7 +213,7 @@
   const GROUP_ITEMS = {
     study: ['decks', 'daily', 'weak', 'doc', 'library', 'browse'],
     learn: ['learn', 'exam', 'anat', 'plan'],
-    you: ['stats', 'badges', 'me', 'account', 'sync', 'customize', 'prefs', 'share', 'help', 'about', 'work']
+    you: ['stats', 'badges', 'account', 'sync', 'customize', 'prefs', 'share', 'help', 'about']
   };
   function item(id) {
     const c = CORE[id]; if (c) return { id, title: c.t, icon: ic(c.icn, 19), go: c.go, n: c.n ? c.n() : '', keys: c.t };

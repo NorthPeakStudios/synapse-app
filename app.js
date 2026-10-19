@@ -461,7 +461,7 @@ function rSettings() {
 const loaded = {};
 function loadScript(src) { return loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = (window.OdinNative && OdinNative.overURL && OdinNative.overURL(src)) || src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Could not load ' + src)); }; document.head.appendChild(s); })); }
 async function showCodeSheet(code, fresh) {
-  const url = (window.ODIN_SITE ? window.ODIN_SITE + '/' : location.origin + location.pathname) + '#pair=' + code; // native builds link to the website
+  const url = (window.ODIN_SITE && !window.SYN_REMOTE ? window.ODIN_SITE + '/' : location.origin + location.pathname) + '#pair=' + code; // native builds link to the website
   openSheet(`<h2>${fresh ? 'Sync account created' : 'Your sync code'}</h2>
     <p class="muted small">On your other device, open this app, go to Settings → Use a sync code, and enter:</p>
     <div class="code" id="codeBox">${fmtCode(code)}</div>

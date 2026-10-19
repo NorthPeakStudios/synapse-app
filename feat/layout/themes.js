@@ -24,7 +24,7 @@
     notebook: T('Notebook', 'light', { bg: '#f6f0e1', bg2: '#fbf6ea', card: '#fffdf6', card2: '#f3ecda', tx: '#25264a', mut: '#7a7466', line: '#d9cfb6', acc: '#2b3a8c', onacc: '#fffdf6', bar: '#f6f0e1', drawer: '#fffdf6', hl: '#fbe7a1', g1: '#2b3a8c', g2: '#b5651d', g3: '#2f7a4a', g4: '#6b4fa0', g5: '#b3261e', again: '#b3261e', hard: '#b5651d', good: '#2f7a4a', easy: '#2b3a8c', due: '#2f7a4a', new: '#2b3a8c' }, { font: 'sans', head: 'serif', r: 6, shadow: 'hard', sh: '#e2d8bf', deco: 'notebook', desc: 'Cream paper, ruled cards, serif headings' }),
     clinical: T('Clinical', 'light', { bg: '#f5f9fa', bg2: '#ffffff', card: '#ffffff', card2: '#eef4f5', tx: '#12212b', mut: '#5d6f78', line: '#dce6e9', acc: '#0f8f80', onacc: '#ffffff', bar: '#f5f9fa', drawer: '#ffffff', hl: '#d6f2ee', g1: '#0f8f80', g2: '#3b82c4', g3: '#7a5cc4', g4: '#d0811f', g5: '#c74255', again: '#d64545', hard: '#d0811f', good: '#0f8f80', easy: '#3b82c4', due: '#0f8f80', new: '#3b82c4' }, { font: 'sans', head: 'sans', r: 16, shadow: 'soft', deco: 'none', desc: 'White, teal, soft cards' }),
     neon: T('OLED Neon', 'dark', { bg: '#000000', bg2: '#0a0a0a', card: '#0d0d0d', card2: '#161616', tx: '#f4f4f4', mut: '#8b8b8b', line: '#262626', acc: '#c6ff3d', onacc: '#000000', bar: '#000000', drawer: '#060606', hl: '#2a3a00', g1: '#c6ff3d', g2: '#3df2ff', g3: '#ff3df2', g4: '#ffb03d', g5: '#ff4d6d', again: '#ff4d6d', hard: '#ffb03d', good: '#c6ff3d', easy: '#3df2ff', due: '#c6ff3d', new: '#3df2ff' }, { font: 'sans', head: 'sans', r: 14, shadow: 'glow', deco: 'neon', desc: 'True black, lime glow' }),
-    glass: T('Glass', 'dark', { bg: '#14113a', bg2: '#1d1a4a', card: 'rgba(255,255,255,.09)', card2: 'rgba(255,255,255,.14)', tx: '#f3f1ff', mut: '#b2acd8', line: 'rgba(255,255,255,.16)', acc: '#8fd3ff', onacc: '#0b1030', bar: 'rgba(20,17,58,.6)', drawer: 'rgba(30,26,80,.82)', hl: 'rgba(143,211,255,.22)', g1: '#8fd3ff', g2: '#c9a7ff', g3: '#7ef0c2', g4: '#ffc58f', g5: '#ff9ac1', again: '#ff8a9a', hard: '#ffc58f', good: '#7ef0c2', easy: '#8fd3ff', due: '#7ef0c2', new: '#8fd3ff' }, { font: 'sans', head: 'sans', r: 22, shadow: 'soft', deco: 'glass', desc: 'Frosted panels over a deep gradient' }),
+    glass: T('Glass', 'dark', { bg: '#14113a', bg2: '#1d1a4a', card: 'rgba(255,255,255,.09)', card2: 'rgba(255,255,255,.14)', tx: '#f3f1ff', mut: '#b2acd8', line: 'rgba(255,255,255,.16)', acc: '#8fd3ff', onacc: '#0b1030', bar: 'rgba(20,17,58,.6)', top: '#1c1a4c', drawer: 'rgba(30,26,80,.82)', hl: 'rgba(143,211,255,.22)', g1: '#8fd3ff', g2: '#c9a7ff', g3: '#7ef0c2', g4: '#ffc58f', g5: '#ff9ac1', again: '#ff8a9a', hard: '#ffc58f', good: '#7ef0c2', easy: '#8fd3ff', due: '#7ef0c2', new: '#8fd3ff' }, { font: 'sans', head: 'sans', r: 22, shadow: 'soft', deco: 'glass', desc: 'Frosted panels over a deep gradient' }),
     brutalist: T('Brutalist', 'light', { bg: '#fffbea', bg2: '#ffffff', card: '#ffffff', card2: '#fff1b8', tx: '#000000', mut: '#3d3d3d', line: '#000000', acc: '#ff5c00', onacc: '#000000', bar: '#fffbea', drawer: '#ffffff', hl: '#ffe14d', g1: '#ff5c00', g2: '#2f6bff', g3: '#00b36b', g4: '#ffcf00', g5: '#ff2e63', again: '#ff2e63', hard: '#ffcf00', good: '#00b36b', easy: '#2f6bff', due: '#00b36b', new: '#2f6bff' }, { font: 'sans', head: 'sans', r: 0, shadow: 'brutal', deco: 'brutal', desc: 'Thick borders, flat colors, hard shadows' }),
     pastel: T('Pastel', 'light', { bg: '#fbf5ff', bg2: '#ffffff', card: '#ffffff', card2: '#f3eafd', tx: '#3d3554', mut: '#857c9c', line: '#ece2f7', acc: '#9b6ce0', onacc: '#ffffff', bar: '#fbf5ff', drawer: '#ffffff', hl: '#ffe4f1', g1: '#9b6ce0', g2: '#f28fb1', g3: '#5cc4a6', g4: '#f5b45f', g5: '#6aa8f0', again: '#f07a8f', hard: '#f5b45f', good: '#5cc4a6', easy: '#6aa8f0', due: '#5cc4a6', new: '#6aa8f0' }, { font: 'rounded', head: 'rounded', r: 24, shadow: 'soft', deco: 'none', desc: 'Soft colors, round shapes' }),
     chart: T('Medical Chart', 'light', { bg: '#f3f7f2', bg2: '#ffffff', card: '#ffffff', card2: '#eaf1e8', tx: '#1f2d24', mut: '#5f7064', line: '#c9d8c9', acc: '#c0392b', onacc: '#ffffff', bar: '#f3f7f2', drawer: '#ffffff', hl: '#fde2df', g1: '#c0392b', g2: '#1f6f8b', g3: '#2e7d32', g4: '#8e5ab5', g5: '#d68910', again: '#c0392b', hard: '#d68910', good: '#2e7d32', easy: '#1f6f8b', due: '#2e7d32', new: '#1f6f8b' }, { font: 'sans', head: 'mono', r: 4, shadow: 'none', deco: 'chart', desc: 'Graph paper and chart labels' }),
@@ -57,8 +57,15 @@
   function setVar(k, v) { de.style.setProperty(k, v); if (SET.indexOf(k) < 0) SET.push(k); }
   function clearVars() { SET.forEach(function (k) { de.style.removeProperty(k); }); SET = []; }
   var RAD = { sharp: 2, soft: 10, round: 18, pill: 26 }, ZOOM = { s: .92, m: 1, l: 1.1, xl: 1.22 };
+  var busy = false, last = null;
   function apply(s) {
-    s = s || state(); var th = themeOf(s);
+    if (busy) return; busy = true;
+    try { applyNow(s); } finally { busy = false; }
+  }
+  // Settings (prefs.js) re-applies its own colors on some changes; this puts the active layout theme back on top
+  function reapply() { if (!busy) apply(last || undefined); }
+  function applyNow(s) {
+    s = s || state(); last = s; var th = themeOf(s);
     clearVars();
     if (!th.c) { // classic: Settings > Appearance owns colors
       delete de.dataset.lt; delete de.dataset.ltDeco; de.dataset.ltMode = de.dataset.theme || 'dark';
@@ -84,7 +91,7 @@
       setVar('--acc-soft', mix(acc, 'transparent', 16));
       var r = th.r == null ? 14 : +th.r;
       setVar('--r', r + 'px'); setVar('--r-sm', Math.max(0, Math.round(r * .75)) + 'px'); setVar('--lt-r', r + 'px');
-      var mc = document.querySelector('meta[name=theme-color]'); if (mc && /^#/.test(c.bar || c.bg)) mc.content = c.bar || c.bg;
+      var mc = document.querySelector('meta[name=theme-color]'), top = /^#/.test(c.top || '') ? c.top : /^#/.test(c.bar || '') ? c.bar : c.bg; if (mc && /^#/.test(top || '')) mc.content = top;
     }
     // shape + size choices apply to every theme, classic included
     if (s.corners && RAD[s.corners] != null) { var rr = RAD[s.corners]; setVar('--r', rr + 'px'); setVar('--r-sm', Math.round(rr * .75) + 'px'); setVar('--lt-r', rr + 'px'); }
@@ -93,7 +100,7 @@
     de.classList.toggle('lt-compact', s.density === 'compact');
     de.classList.add('lt-themed');
   }
-  window.LT = { THEMES: THEMES, ORDER: ORDER, TOKENS: TOKENS, FONTS: FONTS, KEY: KEY, state: state, apply: apply, themeOf: themeOf, hex: hex, lum: lum };
+  window.LT = { THEMES: THEMES, ORDER: ORDER, TOKENS: TOKENS, FONTS: FONTS, KEY: KEY, state: state, apply: apply, reapply: reapply, themeOf: themeOf, hex: hex, lum: lum };
   try { apply(); } catch (e) {}
   // Settings (prefs.js) writes its own colors when it starts; the saved layout theme goes back on top once every script has run
   document.addEventListener('DOMContentLoaded', function () { try { apply(); } catch (e) {} });

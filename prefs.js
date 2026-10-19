@@ -5,7 +5,7 @@
   if (window.Prefs) return;
   const KEY = 'prefs.v1';
   const ACCENTS = [['Blue', '#0a84ff'], ['Indigo', '#5e5ce6'], ['Purple', '#bf5af2'], ['Pink', '#ff375f'], ['Red', '#ff453a'], ['Orange', '#ff9f0a'], ['Yellow', '#ffd60a'], ['Green', '#30d158'], ['Mint', '#63e6be'], ['Teal', '#40c8e0'], ['Graphite', '#98989d']];
-  const TILE_IDS = ['cards', 'doc', 'anat', 'me', 'work', 'speak', 'rx', 'lab', 'tools'];
+  const TILE_IDS = ['cards', 'doc', 'anat', 'speak', 'rx', 'lab', 'tools'];
   const DEF = {
     theme: 'dark', accent: '#0a84ff', tint: 'none', uiFont: 'system', myThemes: [], icon: 'default', text: 'm', reduceMotion: 'auto', haptics: true, sounds: false,
     home: { order: TILE_IDS.slice(), hidden: [], style: 'grid', stats: { streak: true, level: true, xp: true, goal: true } },
@@ -64,7 +64,9 @@
     const rm = v.reduceMotion === 'auto' ? !!(mqMotion && mqMotion.matches) : !!v.reduceMotion;
     de.classList.toggle('reduce-motion', rm);
     const mc = document.querySelector('meta[name=theme-color]');
-    if (mc && !location.pathname.startsWith('/chess')) mc.content = t === 'light' ? '#f2f2f7' : t === 'amoled' ? '#000000' : '#0c0c0e';
+    if (mc && !location.pathname.startsWith('/chess')) mc.content = tv && /^#/.test(tv[0]) ? tv[0] : t === 'light' ? '#f2f2f7' : t === 'amoled' ? '#000000' : '#0c0c0e';
+    // a layout theme (Customize) owns the colors and the top bar color: put it back on top
+    if (window.LT && LT.reapply) try { LT.reapply(); } catch (e) {}
   }
   if (mqDark && mqDark.addEventListener) mqDark.addEventListener('change', () => { if (v.theme === 'auto') { apply(); syncChess(); } });
   // chess (Openings Lab) keeps its own settings; mirror the shared ones into it so it follows the app
