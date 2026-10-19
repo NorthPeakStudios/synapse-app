@@ -1,0 +1,40 @@
+/* polish pass (cards-v52): overlays, safe areas, scroll bleed, small-screen fit, consistency */
+/* tab bar: solid enough that scrolled text never shows through */
+.tabs{background-color:var(--bg);background-image:linear-gradient(var(--bar,transparent),var(--bar,transparent));-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px)}
+.top{background-color:var(--bg);background-image:linear-gradient(var(--bar,transparent),var(--bar,transparent))}
+/* header: long titles truncate instead of pushing the right-hand pills off a 375px screen */
+.top .brand{min-width:0;flex:1 1 auto}
+#title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .topr{flex:none}
+/* sheets: no scroll bleed behind, stay clear of the notch, home bar padding */
+html:has(#sheetWrap:not([hidden])),html:has(#sheetWrap:not([hidden])) body{overflow:hidden;overscroll-behavior:none}
+.sheet{max-height:calc(100dvh - var(--top,0px) - 24px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.sheet-wrap{padding-top:var(--top,0px)}
+/* only one dimmed backdrop at a time: the side menu hides behind an open sheet instead of stacking */
+html:has(#sheetWrap:not([hidden])) .nm-edge{display:none}
+/* page content never ends under the tab bar / home indicator */
+body:not(.no-tabs) main{padding-bottom:calc(104px + var(--bot,0px))}
+body.no-tabs main{padding-bottom:calc(28px + var(--bot,0px))}
+/* anatomy: side buttons clear the chip row + breadcrumb on every width */
+.ax-side{top:150px}
+@media (max-height:700px){.ax-side{top:144px;gap:6px}.ax-side .ax-round{width:40px;height:40px}}
+/* toast sits above the tab bar where there is one, above the home bar where there isn't */
+body.no-tabs .toast{bottom:calc(24px + var(--bot,0px))}
+/* consistent tap feedback + radius on round icon buttons */
+.ax-round,.nm-burger,#homeBtn{-webkit-tap-highlight-color:transparent}
+/* settings root nav: house icon like every other section */
+.st-back[data-s-home] .st-house{display:inline-flex}
+.st-back[data-s-home] .st-house svg{display:block}
+/* 375px: segmented controls and chip rows scroll instead of clipping */
+.rs-segs,.ax-regions{scroll-snap-type:x proximity}
+@media (max-width:380px){.tabs button span:last-child{font-size:9.5px;letter-spacing:-.01em}}
+
+/* v56: no lone tile on the last row. 2 columns: an odd last tile spans the row. Small tiles (3 columns) use a 6-track grid so 1 or 2 leftovers fill the row. */
+#v-home .btiles.as-grid .btile:last-child:nth-child(odd){grid-column:1/-1;min-height:84px;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px}
+html.s-tile-s #v-home .btiles.as-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+html.s-tile-s #v-home .btiles.as-grid .btile{grid-column:span 2;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:10px;min-height:96px}
+html.s-tile-s #v-home .btiles.as-grid .btile:last-child:nth-child(3n+1){grid-column:1/-1;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;min-height:72px}
+html.s-tile-s #v-home .btiles.as-grid .btile:last-child:nth-child(3n+2),html.s-tile-s #v-home .btiles.as-grid .btile:nth-last-child(2):nth-child(3n+1){grid-column:span 3}
+html.s-tile-l #v-home .btiles.as-grid .btile:last-child:nth-child(odd){grid-column:auto}
+.doc-cbtns .chip.on{background:var(--acc)!important;color:#fff!important}
+.doc-cbtns .chip.on small{color:rgba(255,255,255,.8)!important}

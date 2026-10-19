@@ -1,0 +1,30 @@
+/* Make flashcards sheet (feat/makecards). */
+.mk-head h2 { margin: 0 0 2px; }
+.mk-sub { color: var(--mut); font-size: 15px; }
+.mk-deck { display: flex; align-items: center; gap: 8px; margin: 16px 0 4px; padding: 12px 14px; background: var(--card); border-radius: var(--r-sm); font-size: 15px; color: var(--mut); min-width: 0; }
+.mk-deck svg { flex: none; color: var(--acc-tx); }
+.mk-deck b { color: var(--tx); font-weight: 600; margin-left: auto; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-bar { display: flex; align-items: baseline; justify-content: space-between; margin: 18px 4px 8px; }
+.mk-count { font-size: 13px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: var(--mut); }
+.mk-link { border: 0; background: none; color: var(--acc-tx); font-size: 15px; font-weight: 500; padding: 6px 0 6px 12px; min-height: 32px; }
+.mk-list { background: var(--card); border-radius: var(--r-sm); overflow: hidden; }
+.mk-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; position: relative; cursor: pointer; min-height: 48px; }
+.mk-row + .mk-row::before { content: ""; position: absolute; top: 0; left: 48px; right: 0; border-top: .5px solid var(--line); }
+.mk-row input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mk-chk { flex: none; width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--mut2) inset; margin-top: 1px; display: grid; place-items: center; transition: background .15s var(--ease), box-shadow .15s; }
+.mk-row input:checked + .mk-chk { background: var(--acc); box-shadow: none; }
+.mk-row input:checked + .mk-chk::after { content: ""; width: 10px; height: 5px; border-left: 2px solid var(--on-acc); border-bottom: 2px solid var(--on-acc); transform: translateY(-1px) rotate(-45deg); }
+.mk-row input:focus-visible + .mk-chk { outline: 2px solid var(--acc); outline-offset: 2px; }
+.mk-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mk-k { font-size: 12px; font-weight: 600; color: var(--mut); letter-spacing: .01em; }
+.mk-f { font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; }
+.mk-b { font-size: 14px; color: var(--mut); line-height: 1.35; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mk-blank { color: var(--acc-tx); font-weight: 600; border-bottom: 1.5px solid currentColor; }
+.mk-note { font-size: 13px; color: var(--mut); margin: 10px 4px 0; }
+.mk-actions { position: sticky; bottom: calc(-20px - var(--bot, 0px)); display: flex; gap: 10px; margin: 16px -18px calc(-20px - var(--bot, 0px)); padding: 12px 18px calc(12px + var(--bot, 0px)); background: var(--bg2); border-top: .5px solid var(--line); }
+.mk-actions .btn { flex: 1; }
+.mk-actions .btn.pri { flex: 2; }
+.mk-actions .btn:disabled { opacity: .45; }
+/* the lesson-page button (hook) */
+.mk-lbtn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 20px; }
+.mk-lbtn svg { flex: none; }

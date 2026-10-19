@@ -1,0 +1,97 @@
+/* Exam mode (feat/exam). Theme tokens only. */
+.ex { padding-bottom: 24px; }
+.ex-back { margin-bottom: 2px; }
+.ex-h { font-size: 28px; letter-spacing: -.022em; margin: 2px 0 4px; }
+.ex-lead { color: var(--mut); font-size: 15px; margin: 0 0 4px; line-height: 1.4; }
+.ex-sh { display: flex; align-items: baseline; justify-content: space-between; margin: 24px 4px 8px; font-size: 13px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: var(--mut); }
+.ex-sv { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--mut2); }
+.ex-link { border: 0; background: none; color: var(--acc-tx); font-size: 15px; font-weight: 500; padding: 6px 0 6px 12px; min-height: 32px; text-transform: none; letter-spacing: 0; }
+.ex-topics { background: var(--card); border-radius: var(--r-sm); overflow: hidden; }
+.ex-tp { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 10px 14px; border: 0; background: none; color: var(--tx); text-align: left; position: relative; font: inherit; border-radius: 0; }
+.ex-tp + .ex-tp::before { content: ""; position: absolute; top: 0; left: 48px; right: 0; border-top: .5px solid var(--line); }
+.ex-tp:active { background: var(--fill); }
+.ex-tp-c { flex: none; width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--mut2) inset; display: grid; place-items: center; color: var(--on-acc); transition: background .15s var(--ease); }
+.ex-tp.on .ex-tp-c { background: var(--acc); box-shadow: none; }
+.ex-tp-n { flex: 1; font-size: 16px; font-weight: 500; min-width: 0; }
+.ex-tp-s { font-size: 13px; color: var(--mut); white-space: nowrap; }
+.ex-seg { display: flex; }
+.ex-seg button { flex: 1; font-size: 15px; }
+.ex-note { font-size: 13px; color: var(--mut); margin: 8px 4px 0; line-height: 1.4; }
+.ex-err { color: var(--again); font-size: 15px; margin: 16px 4px 0; }
+.ex-go { margin-top: 24px; width: 100%; }
+.ex-go:disabled { opacity: .45; }
+.ex-hist, .ex-by, .ex-miss { background: var(--card); border-radius: var(--r-sm); overflow: hidden; }
+.ex-hrow { display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 52px; position: relative; }
+.ex-hrow + .ex-hrow::before, .ex-brow + .ex-brow::before, .ex-mi + .ex-mi::before { content: ""; position: absolute; top: 0; left: 14px; right: 0; border-top: .5px solid var(--line); }
+.ex-hs { flex: none; width: 52px; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--mut); }
+.ex-hs.ok { color: var(--good); }
+.ex-ht { display: flex; flex-direction: column; min-width: 0; }
+.ex-h1 { font-size: 15px; font-weight: 500; }
+.ex-h2 { font-size: 13px; color: var(--mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* running */
+.ex-run { padding-top: 2px; }
+.ex-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; }
+.ex-quit { border: 0; background: none; color: var(--acc-tx); font-size: 17px; padding: 8px 8px 8px 0; min-height: 44px; min-width: 44px; text-align: left; }
+.ex-pos { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ex-pos span { color: var(--mut); font-weight: 500; }
+.ex-time { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 56px; text-align: right; }
+.ex-time.low { color: var(--again); }
+.ex-tbar { height: 4px; border-radius: 2px; background: var(--fill2); overflow: hidden; margin: 6px 0 10px; }
+.ex-tbar b { display: block; height: 100%; background: var(--acc); border-radius: 2px; transition: width .5s linear; }
+.ex-tbar.low b { background: var(--again); }
+.ex-dots { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 14px; }
+.ex-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--fill2); }
+.ex-dots i.on { background: var(--mut); }
+.ex-dots i.cur { background: var(--acc); transform: scale(1.35); }
+.ex-q { background: var(--card); border-radius: var(--r); padding: 18px 16px; }
+.ex-qk { font-size: 12px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--mut); margin-bottom: 8px; }
+.ex-qq { font-size: 19px; font-weight: 600; line-height: 1.35; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.ex-qq p { margin: 0 0 6px; }
+.ex-choices { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.ex-ch { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 10px 12px; border: 0; border-radius: var(--r-sm); background: var(--fill); color: var(--tx); text-align: left; font: inherit; font-size: 16px; transition: background .12s var(--ease), box-shadow .12s; }
+.ex-ch-k { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--mut); box-shadow: 0 0 0 1.5px var(--line2) inset; }
+.ex-ch-t { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ex-ch.on { background: var(--acc-soft); box-shadow: 0 0 0 1.5px var(--acc) inset; }
+.ex-ch.on .ex-ch-k { background: var(--acc); color: var(--on-acc); box-shadow: none; }
+.ex-typed { margin-top: 14px; }
+.ex-typed input { width: 100%; font-size: 17px; min-height: 50px; padding: 12px 14px; background: var(--fill) !important; box-shadow: none; }
+.ex-nav { display: flex; gap: 10px; margin-top: 16px; }
+.ex-nav .btn { flex: 1; }
+.ex-nav .btn.pri { flex: 2; }
+.ex-nav .btn:disabled { opacity: .4; }
+.ex-foot { text-align: center; font-size: 13px; color: var(--mut); margin: 12px 0 0; }
+.ex-foot .ex-link { font-size: 13px; padding: 4px; min-height: 0; }
+/* results */
+.ex-score { text-align: center; padding: 18px 0 6px; }
+.ex-big { font-size: 64px; font-weight: 700; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.ex-big span { font-size: 28px; color: var(--mut); margin-left: 2px; font-weight: 600; }
+.ex-sl { font-size: 17px; font-weight: 600; margin-top: 8px; }
+.ex-sm { font-size: 14px; color: var(--mut); margin-top: 2px; }
+.ex-brow { display: grid; grid-template-columns: minmax(0, 9fr) 7fr auto; align-items: center; gap: 12px; padding: 12px 14px; position: relative; }
+.ex-bn { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-bbar { height: 6px; border-radius: 3px; background: var(--fill2); overflow: hidden; }
+.ex-bbar b { display: block; height: 100%; border-radius: 3px; background: var(--again); }
+.ex-bbar b.mid { background: var(--hard); }
+.ex-bbar b.ok { background: var(--good); }
+.ex-bs.bad { color: var(--again); }
+.ex-bs { font-size: 14px; color: var(--mut); font-variant-numeric: tabular-nums; min-width: 38px; text-align: right; }
+.ex-mi { padding: 14px; position: relative; }
+.ex-mk { font-size: 12px; font-weight: 600; color: var(--mut); letter-spacing: .01em; margin-bottom: 4px; }
+.ex-mq { font-size: 16px; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.ex-mq p { margin: 0 0 6px; }
+.ex-ma { display: flex; gap: 10px; font-size: 15px; margin-top: 4px; }
+.ex-mal { flex: none; width: 58px; color: var(--mut); font-size: 13px; padding-top: 2px; }
+.ex-bad { color: var(--again); text-decoration: line-through; text-decoration-thickness: 1px; overflow-wrap: anywhere; }
+.ex-ok { color: var(--good); font-weight: 600; overflow-wrap: anywhere; }
+.ex-me { font-size: 14px; color: var(--mut); line-height: 1.4; margin-top: 8px; }
+.ex-open { padding-left: 0; margin-top: 2px; }
+.ex-perfect { text-align: center; font-size: 15px; margin-top: 20px; }
+.ex-end { margin-top: 24px; }
+html.reduce-motion .ex-tbar b { transition: none; }
+/* entry row (hook) */
+.ex-entry { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 10px 14px; margin-top: 12px; border: 0; border-radius: var(--r-sm); background: var(--card); color: var(--tx); text-align: left; font: inherit; }
+.ex-entry .ex-ei { flex: none; color: var(--acc-tx); display: grid; place-items: center; }
+.ex-entry .ex-et { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ex-entry .ex-et b { font-size: 16px; font-weight: 600; }
+.ex-entry .ex-et span { font-size: 13px; color: var(--mut); }
+.ex-entry .ex-chev { flex: none; color: var(--mut2); }

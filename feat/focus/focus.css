@@ -1,0 +1,11 @@
+.fo{display:flex;flex-direction:column;align-items:stretch;padding-top:8px}
+.fo-ring{position:relative;width:272px;height:272px;margin:8px auto 18px}
+.fo-arc{transition:stroke-dashoffset .3s linear}
+.fo.brk .fo-arc{stroke:var(--good)}
+.fo-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.fo-ph{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.fo-time{font-size:60px;font-weight:300;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.fo-done{font-size:13px;color:var(--mut);margin-top:4px}
+.fo-btns{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+
+.fo-brk{margin:14px 0;padding:14px;border-radius:14px;background:var(--bg2);border:1px solid var(--line);text-align:center}.fo-brk p{margin:0 0 10px;color:var(--tx)}

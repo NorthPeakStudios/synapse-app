@@ -1,0 +1,35 @@
+/* Global search (feat/search). Full-screen sheet; theme tokens only. */
+html.srch-on, html.srch-on body { overflow: hidden; }
+.srch { position: fixed; inset: 0; z-index: 60; background: var(--bg); display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); animation: srchin .22s var(--ease); }
+@keyframes srchin { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.srch-bar { display: flex; align-items: center; gap: 8px; padding: 10px 16px 10px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); border-bottom: .5px solid var(--line); background: var(--bg); }
+.srch-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 8px 0 10px; border-radius: 10px; background: var(--fill); color: var(--mut); }
+.srch-field:focus-within { box-shadow: 0 0 0 2px var(--acc) inset; }
+.srch-mag { flex: none; }
+.srch-field input[type=search] { flex: 1; min-width: 0; height: 38px; font-size: 17px; border: 0 !important; background: transparent !important; box-shadow: none !important; color: var(--tx); padding: 0; margin: 0; outline: none; -webkit-appearance: none; appearance: none; border-radius: 0; }
+.srch-field input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.srch-field input::placeholder { color: var(--mut); }
+.srch-clr { flex: none; width: 30px; height: 30px; display: grid; place-items: center; border: 0; background: none; color: var(--mut2); padding: 0; border-radius: 50%; }
+.srch-cancel { flex: none; border: 0; background: none; color: var(--acc-tx); font-size: 17px; font-weight: 400; min-height: 44px; padding: 0 2px 0 6px; }
+.srch-res { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 4px 16px calc(24px + env(safe-area-inset-bottom)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+.srch-h { display: flex; align-items: baseline; justify-content: space-between; margin: 22px 4px 8px; font-size: 13px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: var(--mut); }
+.srch-n { font-weight: 500; color: var(--mut2); letter-spacing: 0; }
+.srch-link { border: 0; background: none; color: var(--acc-tx); font-size: 15px; font-weight: 500; text-transform: none; letter-spacing: 0; padding: 6px 0 6px 12px; min-height: 32px; }
+.srch-grp { background: var(--card); border-radius: var(--r-sm); overflow: hidden; }
+.srch-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 9px 14px; border: 0; background: none; color: var(--tx); text-align: left; position: relative; font: inherit; border-radius: 0; }
+.srch-row + .srch-row::before { content: ""; position: absolute; top: 0; left: 50px; right: 0; border-top: .5px solid var(--line); }
+.srch-row:active, .srch-row.sel { background: var(--fill); }
+html.touch .srch-row.sel:not(:active) { background: none; }
+.srch-ic { flex: none; width: 24px; height: 24px; display: grid; place-items: center; color: var(--acc-tx); }
+.srch-rec .srch-ic { color: var(--mut); }
+.srch-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.srch-t1 { font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.srch-t2 { font-size: 13px; color: var(--mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.srch-t1 mark { background: none; color: inherit; font-weight: 700; }
+.srch-tag { flex: none; font-size: 12px; font-weight: 500; color: var(--mut); background: var(--fill); padding: 3px 8px; border-radius: 999px; }
+.srch-empty { text-align: center; padding: 56px 24px; color: var(--mut); }
+.srch-empty-t { font-size: 20px; font-weight: 700; color: var(--tx); letter-spacing: -.01em; margin-bottom: 6px; }
+.srch-empty-s { font-size: 15px; line-height: 1.4; max-width: 300px; margin: 0 auto; }
+html.reduce-motion .srch { animation: none; }
+/* entry points (hooks in INTEGRATE.md) */
+.srch-entry { display: flex; align-items: center; gap: 8px; width: 100%; height: 40px; margin: 0 0 14px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--fill); color: var(--mut); font-size: 17px; font-weight: 400; text-align: left; }

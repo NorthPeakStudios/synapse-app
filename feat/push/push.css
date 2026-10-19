@@ -1,0 +1,29 @@
+/* Streak reminders — iOS Settings-style inset group. Theme tokens only. */
+.pu{margin:0}
+.pu-h{font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin:26px 16px 8px}
+.pu-group{background:var(--card);border-radius:var(--r);overflow:hidden}
+.pu-row{display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 16px;width:100%;box-sizing:border-box;position:relative;background:none;border:0;color:var(--tx);font:inherit;text-align:left;-webkit-tap-highlight-color:transparent}
+.pu-row+.pu-row::before{content:"";position:absolute;top:0;left:52px;right:0;border-top:.5px solid var(--line)}
+button.pu-row{cursor:pointer}
+button.pu-row:active,label.pu-row:active{background:var(--fill)}
+.pu-row[hidden]{display:none}
+.pu-ic{flex:0 0 24px;height:24px;display:grid;place-items:center;color:var(--mut)}
+.pu-l{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:4px 0}
+.pu-t{font-size:16px;line-height:1.3}
+.pu-acc{color:var(--acc-tx)}
+.pu-st{font-size:13px;line-height:1.35;color:var(--mut)}
+.pu-st[data-tone=warn]{color:var(--again)}
+.pu-trow.dim .pu-t,.pu-trow.dim .pu-time{opacity:.45}
+.pu-time{font:inherit;font-size:16px;color:var(--tx);background:var(--fill);border:0;border-radius:8px;padding:6px 10px;min-height:36px;min-width:96px;-webkit-appearance:none;appearance:none;text-align:center}
+.pu-time:focus{outline:2px solid var(--acc-soft)}
+.pu-time::-webkit-date-and-time-value{text-align:center}
+.pu-sw{flex:0 0 auto;position:relative;width:51px;height:31px;border-radius:16px;border:0;padding:0;background:var(--fill2);cursor:pointer;transition:background .2s var(--ease);-webkit-tap-highlight-color:transparent}
+.pu-sw::after{content:"";position:absolute;inset:-7px -4px}
+.pu-knob{position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18),0 0 0 .5px rgba(0,0,0,.04);transition:transform .22s var(--ease)}
+.pu-sw[aria-checked=true]{background:var(--good)}
+.pu-sw[aria-checked=true] .pu-knob{transform:translateX(20px)}
+.pu-sw:disabled{opacity:.5;cursor:default}
+.pu-sw.busy{opacity:.7}
+.pu-sw:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.pu-foot{font-size:13px;line-height:1.4;color:var(--mut);margin:8px 16px 0}
+html.reduce-motion .pu-sw,html.reduce-motion .pu-knob{transition:none}
