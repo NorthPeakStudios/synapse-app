@@ -4,7 +4,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const MIN = 60e3, HOUR = 36e5, DAY = 864e5;
-const VERSION = '1.3.0';
+let VERSION = '118'; // v118: replaced at start-up by the number in sw.js CACHE (the one place the version lives)
 const rid = () => { const a = new Uint8Array(9); crypto.getRandomValues(a); return [...a].map(b => b.toString(36).padStart(2, '0')).join('').slice(0, 14); };
 let clock = 0; const stamp = () => { const t = Date.now(); clock = t > clock ? t : clock + 1; return clock; };
 const isTouch = matchMedia('(pointer: coarse)').matches; if (isTouch) document.documentElement.classList.add('touch');
@@ -831,6 +831,43 @@ async function seedMore() {
   setPill(); hubInit(); go(pendingPair && !meta.code ? 'settings' : 'home');
   try { await seedMore(); } catch (e) { console.warn('seed merge', e); }
   syncNow();
-  if ('serviceWorker' in navigator && !self.NO_SW) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator && !self.NO_SW) swAutoUpdate();
 })();
+/* v118: the installed app updates itself. sw.js CACHE is the single version source (Settings > Version reads it too).
+   The page checks for a new sw.js on start, whenever it comes back to the foreground and every 30 min; a new worker
+   takes over right away and the page reloads once (never mid-review: it waits until the review ends), then says "Updated to vN". */
+function swAutoUpdate() {
+  const sw = navigator.serviceWorker; let hadCtl = !!sw.controller;
+  let reloading = false, pend = false;
+  const verOf = t => { const m = /CACHE\s*=\s*['"]cards-v(\d+)['"]/.exec(t || ''); return m ? m[1] : ''; };
+  fetch('sw.js', { cache: 'no-store' }).then(r => r.text()).then(t => { const v = verOf(t); if (v) { VERSION = v; window.APP_VER = 'v' + v; } }).catch(() => {});
+  const inReview = () => view === 'study' && !!cur;
+  const reload = () => {
+    if (reloading) return;
+    if (inReview()) { pend = true; return; }
+    let last = 0; try { last = +sessionStorage.getItem('swReloadAt') || 0; } catch (e) {}
+    if (Date.now() - last < 20e3) return; // loop guard: at most one automatic reload per 20 s
+    reloading = true;
+    try { sessionStorage.setItem('swReloadAt', String(Date.now())); sessionStorage.setItem('swUpdated', '1'); } catch (e) {}
+    location.reload();
+  };
+  sw.addEventListener('controllerchange', () => { if (hadCtl) reload(); else hadCtl = true; }); // first install (no old worker) needs no reload
+  setInterval(() => { if (pend && !inReview()) reload(); }, 1500);
+  try {
+    if (sessionStorage.getItem('swUpdated') === '1') {
+      sessionStorage.removeItem('swUpdated');
+      fetch('sw.js', { cache: 'no-store' }).then(r => r.text()).then(t => { const v = verOf(t); setTimeout(() => toast(v ? 'Updated to v' + v : 'App updated', 2600), 600); }).catch(() => {});
+    }
+  } catch (e) {}
+  sw.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+    const skip = w => { try { if (w) w.postMessage({ type: 'SKIP_WAITING' }); } catch (e) {} };
+    if (reg.waiting && sw.controller) skip(reg.waiting);
+    reg.addEventListener('updatefound', () => { const w = reg.installing; if (w) w.addEventListener('statechange', () => { if (w.state === 'installed' && sw.controller) skip(w); }); });
+    let lastPing = 0; const ping = () => { if (Date.now() - lastPing < 2e3) return; lastPing = Date.now(); reg.update().catch(() => {}); };
+    ping();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) ping(); });
+    window.addEventListener('focus', ping); window.addEventListener('pageshow', ping);
+    setInterval(ping, 30 * 60e3);
+  }).catch(() => {});
+}
 self.__cards = { M, meta: () => meta, schedule, syncNow, nextCard, renderCard, seedMore };

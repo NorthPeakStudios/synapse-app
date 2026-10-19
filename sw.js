@@ -5,6 +5,7 @@ const ANAT_CACHE = 'anat-models-v2'; // 3D models + anatomy lessons, kept across
 const LEARN_CACHE = 'cards-learn'; // course JSON lives here and survives app updates
 const LAZY = ['learn/manifest.json', 'resources.json', 'seed-v2.json', 'vendor/jszip.min.js', 'vendor/sql-wasm.js', 'vendor/sql-wasm.wasm', 'vendor/fzstd.js', 'vendor/qrcode.js', 'doctordle/cases.json', 'anat/data.json', 'anat/viewer3.js', 'anat/v2/parts.json', 'anat/v2/desc.json', 'feat/about/credits.json'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE).then(() => c.addAll(LAZY).catch(() => {}))).then(() => self.skipWaiting())); });
+self.addEventListener('message', e => { if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting(); }); // v118: the page asks a waiting update to take over
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => (k.startsWith('cards-') && k !== CACHE && k !== LEARN_CACHE) || (k.startsWith('anat-models-') && k !== ANAT_CACHE)).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
   const req = e.request, u = new URL(req.url);
