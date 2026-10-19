@@ -1,8 +1,14 @@
 /* Shell (v95): one header, five tabs, grouped hubs. Loaded last; overrides older nav styles. */
 :root{--sh-tabh:50px;--sh-gut:16px}
 /* ---- header ---- */
-header.top{display:grid!important;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;column-gap:8px;row-gap:0;min-height:calc(48px + var(--top))!important;padding:calc(4px + var(--top)) max(10px,env(safe-area-inset-right)) 4px max(6px,env(safe-area-inset-left))!important;border-bottom:.5px solid transparent!important;transition:border-color .2s;background-color:var(--bg)!important;background-image:none!important}
-body.sh-scrolled header.top,body.sh-segon header.top{border-bottom-color:var(--line)!important}
+header.top{display:grid!important;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;column-gap:8px;row-gap:0;min-height:calc(48px + var(--top))!important;padding:calc(4px + var(--top)) max(10px,env(safe-area-inset-right)) 4px max(6px,env(safe-area-inset-left))!important;border-bottom:.5px solid transparent!important;transition:border-color .2s;background-color:var(--topbar,#000)!important;background-image:none!important}
+body.sh-scrolled header.top,body.sh-segon header.top{border-bottom-color:transparent!important}
+/* v116: dark top bar = black strip + black header, light text/icons */
+:root{--topbar:#000;--topbar-tx:#f3ede0}
+header.top{color:var(--topbar-tx)!important;--tx:var(--topbar-tx);--acc-tx:var(--topbar-tx);--mut:rgba(243,237,224,.62);--fill:rgba(255,255,255,.13);--line:transparent;border-bottom-color:transparent!important;box-shadow:none!important}
+header.top #title,header.top .sh-back,header.top .sh-hbtn{color:var(--topbar-tx)!important}
+header.top .sh-segc button{color:var(--topbar-tx)!important}
+header.top .sh-segc button.on,html[data-theme=light] header.top .sh-segc button.on{background:rgba(255,255,255,.22)!important}
 header.top .brand{display:flex;align-items:center;gap:2px;min-width:0;overflow:hidden;padding-left:10px}
 body.sh-sub header.top .brand{padding-left:0}
 header.top #title{font-size:17px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .18s}
@@ -117,3 +123,8 @@ html.s-contrast .sh-list,html.s-contrast .h-mini,html.s-contrast .h-hero.done,ht
 .srch-field,.sh-find{border:0!important;border-radius:10px!important;background:var(--fill)!important;box-shadow:none!important;outline:none!important;transition:background-color .15s}
 .srch-field:focus-within,.sh-find:focus-within{background:var(--fill2)!important;box-shadow:none!important}
 .srch-field input,.sh-find input{-webkit-appearance:none!important;appearance:none!important;border:0!important;border-radius:0!important;outline:none!important;box-shadow:none!important;background:transparent!important}
+/* v116: home's own top row joins the black top bar (full-bleed up to the strip), light text/buttons */
+body.at-home .lt-htop>.lt-hrow{position:relative;background:#000!important;box-shadow:0 0 0 100vmax #000!important;clip-path:inset(-100vmax -100vmax -6px -100vmax);padding-bottom:6px;color:var(--topbar-tx)!important;--tx:var(--topbar-tx);--line:transparent;--card:rgba(255,255,255,.12)}
+body.at-home .lt-htop>.lt-hrow .lt-brand,body.at-home .lt-htop>.lt-hrow .lt-hb{color:var(--topbar-tx)!important}
+body.at-home .lt-htop>.lt-hrow .lt-hb{background:rgba(255,255,255,.12)!important;border-color:transparent!important}
+body.at-home .lt-htop{margin-top:0!important}

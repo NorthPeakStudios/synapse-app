@@ -93,7 +93,7 @@
       setVar('--acc-soft', mix(acc, 'transparent', 16));
       var r = th.r == null ? 14 : +th.r;
       setVar('--r', r + 'px'); setVar('--r-sm', Math.max(0, Math.round(r * .75)) + 'px'); setVar('--lt-r', r + 'px');
-      var mc = document.querySelector('meta[name=theme-color]'), top = /^#/.test(c.top || '') ? c.top : /^#/.test(c.bar || '') ? c.bar : c.bg; if (mc && /^#/.test(top || '')) mc.content = top;
+      var mc = document.querySelector('meta[name=theme-color]'), top = /^#/.test(c.top || '') ? c.top : /^#/.test(c.bar || '') ? c.bar : c.bg; if (mc) mc.content = '#000000'; // v116: black top bar on every theme
       sbStyle();
     }
     // shape + size choices apply to every theme, classic included
