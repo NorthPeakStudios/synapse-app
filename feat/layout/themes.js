@@ -22,6 +22,9 @@
   var THEMES = {
     classic: { name: 'Classic', mode: '', c: null, desc: 'Follows Settings > Appearance' },
     notebook: T('Notebook', 'light', { bg: '#f6f0e1', bg2: '#fbf6ea', card: '#fffdf6', card2: '#f3ecda', tx: '#25264a', mut: '#7a7466', line: '#d9cfb6', acc: '#2b3a8c', onacc: '#fffdf6', bar: '#f6f0e1', drawer: '#fffdf6', hl: '#fbe7a1', g1: '#2b3a8c', g2: '#b5651d', g3: '#2f7a4a', g4: '#6b4fa0', g5: '#b3261e', again: '#b3261e', hard: '#b5651d', good: '#2f7a4a', easy: '#2b3a8c', due: '#2f7a4a', new: '#2b3a8c' }, { font: 'sans', head: 'serif', r: 6, shadow: 'hard', sh: '#e2d8bf', deco: 'notebook', desc: 'Cream paper, ruled cards, serif headings' }),
+    // v118: Notebook's dark twin, used by 'auto' (Match phone) when the phone is in dark mode. Warm ink-black paper, ivory text, lighter navy accent.
+    notebookNight: T('Notebook Night', 'dark', { bg: '#1a1814', bg2: '#211e19', card: '#25221c', card2: '#2e2a22', tx: '#f1e9d6', mut: '#a89f8b', line: '#3b3529', acc: '#9aabf2', onacc: '#15172a', bar: '#1a1814', drawer: '#211e19', hl: '#4d4120', g1: '#9aabf2', g2: '#e3a468', g3: '#7fc796', g4: '#bda5ea', g5: '#f08e84', again: '#c44a3e', hard: '#b8742c', good: '#3d8a58', easy: '#4d62c4', due: '#7fc796', new: '#9aabf2' }, { font: 'sans', head: 'serif', r: 6, shadow: 'hard', sh: '#0d0b08', deco: 'notebook', desc: 'Dark paper, ivory ink, serif headings' }),
+    auto: { name: 'Match phone (auto)', short: 'Match phone', mode: 'auto', c: null, auto: ['notebook', 'notebookNight'], desc: 'Cream Notebook in light mode, Notebook Night in dark mode' },
     clinical: T('Clinical', 'light', { bg: '#f5f9fa', bg2: '#ffffff', card: '#ffffff', card2: '#eef4f5', tx: '#12212b', mut: '#5d6f78', line: '#dce6e9', acc: '#0f8f80', onacc: '#ffffff', bar: '#f5f9fa', drawer: '#ffffff', hl: '#d6f2ee', g1: '#0f8f80', g2: '#3b82c4', g3: '#7a5cc4', g4: '#d0811f', g5: '#c74255', again: '#d64545', hard: '#d0811f', good: '#0f8f80', easy: '#3b82c4', due: '#0f8f80', new: '#3b82c4' }, { font: 'sans', head: 'sans', r: 16, shadow: 'soft', deco: 'none', desc: 'White, teal, soft cards' }),
     neon: T('OLED Neon', 'dark', { bg: '#000000', bg2: '#0a0a0a', card: '#0d0d0d', card2: '#161616', tx: '#f4f4f4', mut: '#8b8b8b', line: '#262626', acc: '#c6ff3d', onacc: '#000000', bar: '#000000', drawer: '#060606', hl: '#2a3a00', g1: '#c6ff3d', g2: '#3df2ff', g3: '#ff3df2', g4: '#ffb03d', g5: '#ff4d6d', again: '#ff4d6d', hard: '#ffb03d', good: '#c6ff3d', easy: '#3df2ff', due: '#c6ff3d', new: '#3df2ff' }, { font: 'sans', head: 'sans', r: 14, shadow: 'glow', deco: 'neon', desc: 'True black, lime glow' }),
     glass: T('Glass', 'dark', { bg: '#14113a', bg2: '#1d1a4a', card: 'rgba(255,255,255,.09)', card2: 'rgba(255,255,255,.14)', tx: '#f3f1ff', mut: '#b2acd8', line: 'rgba(255,255,255,.16)', acc: '#8fd3ff', onacc: '#0b1030', bar: 'rgba(20,17,58,.6)', top: '#1c1a4c', drawer: 'rgba(30,26,80,.82)', hl: 'rgba(143,211,255,.22)', g1: '#8fd3ff', g2: '#c9a7ff', g3: '#7ef0c2', g4: '#ffc58f', g5: '#ff9ac1', again: '#ff8a9a', hard: '#ffc58f', good: '#7ef0c2', easy: '#8fd3ff', due: '#7ef0c2', new: '#8fd3ff' }, { font: 'sans', head: 'sans', r: 22, shadow: 'soft', deco: 'glass', desc: 'Frosted panels over a deep gradient' }),
@@ -42,15 +45,21 @@
     atlas: T('Anatomy Atlas', 'light', { bg: '#f4ecdf', bg2: '#fbf6ee', card: '#fdf9f2', card2: '#efe4d2', tx: '#2a1d17', mut: '#7a6656', line: '#ddcdb6', acc: '#7b1e1e', onacc: '#fdf9f2', bar: '#f4ecdf', drawer: '#fdf9f2', hl: '#f1d3c8', g1: '#7b1e1e', g2: '#1e4f7b', g3: '#3d6b2a', g4: '#6b3d7b', g5: '#a35d1e', again: '#9e2a2a', hard: '#a35d1e', good: '#3d6b2a', easy: '#1e4f7b', due: '#3d6b2a', new: '#1e4f7b' }, { font: 'serif', head: 'serif', r: 4, shadow: 'hard', sh: '#d8c7ad', deco: 'notebook', desc: 'Parchment and deep red, like an old atlas' }),
     arctic: T('Arctic Night', 'dark', { bg: '#2e3440', bg2: '#343b48', card: '#3b4252', card2: '#434c5e', tx: '#eceff4', mut: '#aeb7c6', line: '#4c566a', acc: '#88c0d0', onacc: '#1d232c', bar: '#2e3440', drawer: '#343b48', hl: '#3f5466', g1: '#88c0d0', g2: '#b48ead', g3: '#a3be8c', g4: '#ebcb8b', g5: '#d08770', again: '#bf616a', hard: '#ebcb8b', good: '#a3be8c', easy: '#81a1c1', due: '#a3be8c', new: '#81a1c1' }, { font: 'sans', head: 'sans', r: 12, shadow: 'none', deco: 'none', desc: 'Cool blue-gray, low glare' })
   };
-  var ORDER = ['notebook', 'clinical', 'neon', 'glass', 'brutalist', 'pastel', 'chart', 'premium', 'ios', 'terminal', 'midnight', 'sepia', 'forest', 'sakura', 'ocean', 'slate', 'sunset', 'contrast', 'atlas', 'arctic', 'classic'];
+  var ORDER = ['auto', 'notebook', 'notebookNight', 'clinical', 'neon', 'glass', 'brutalist', 'pastel', 'chart', 'premium', 'ios', 'terminal', 'midnight', 'sepia', 'forest', 'sakura', 'ocean', 'slate', 'sunset', 'contrast', 'atlas', 'arctic', 'classic'];
   function state() { try { return JSON.parse(localStorage.getItem(KEY) || 'null') || {}; } catch (e) { return {}; } }
   function hex(h) { h = String(h || '').trim(); var m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(h); if (!m) return null; h = m[1]; if (h.length === 3) h = h.replace(/./g, '$&$&'); var n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
   function lum(c) { var f = function (v) { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); }
   function mix(a, b, p) { return 'color-mix(in srgb,' + a + ' ' + p + '%,' + b + ')'; }
   // the theme a state points at: built-in, or a saved custom theme ({ id:'c-…', name, base, mode, c, font, head, r, shadow, deco })
+  // v118: 'auto' (the default) follows the phone: Notebook in light mode, Notebook Night in dark mode.
+  // A saved 'notebook' from before v118 was only ever the default, so it counts as auto until the person picks a theme again (m118 marks that).
+  var mqDark = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+  function isDark() { return !!(mqDark && mqDark.matches); }
+  function idOf(s) { s = s || state(); var id = s.theme || 'auto'; if (id === 'notebook' && !s.m118) id = 'auto'; return id; }
+  function resolveId(id) { return id === 'auto' ? (isDark() ? 'notebookNight' : 'notebook') : id; }
   function themeOf(s) {
-    s = s || state(); var id = s.theme || 'notebook';
-    if (id.indexOf('c-') === 0) { var c = (s.custom || []).filter(function (x) { return x && x.id === id; })[0]; if (c) { var b = THEMES[c.base] || THEMES.notebook; var o = {}; for (var k in b) o[k] = b[k]; for (k in c) if (c[k] != null && k !== 'c') o[k] = c[k]; o.c = {}; for (k in (b.c || {})) o.c[k] = b.c[k]; for (k in (c.c || {})) if (c.c[k]) o.c[k] = c.c[k]; return o; } id = 'notebook'; }
+    s = s || state(); var id = resolveId(idOf(s));
+    if (id.indexOf('c-') === 0) { var c = (s.custom || []).filter(function (x) { return x && x.id === id; })[0]; if (c) { var b = THEMES[resolveId(c.base)] || THEMES.notebook; if (!b.c) b = THEMES.notebook; var o = {}; for (var k in b) o[k] = b[k]; for (k in c) if (c[k] != null && k !== 'c') o[k] = c[k]; o.c = {}; for (k in (b.c || {})) o.c[k] = b.c[k]; for (k in (c.c || {})) if (c.c[k]) o.c[k] = c.c[k]; return o; } id = 'notebook'; }
     return THEMES[id] || THEMES.notebook;
   }
   var SET = [];
@@ -73,7 +82,7 @@
     } else {
       var c = th.c, dark = th.mode === 'dark';
       de.dataset.theme = dark ? (c.bg === '#000000' ? 'amoled' : 'dark') : 'light'; de.dataset.ltMode = dark ? 'dark' : 'light';
-      de.dataset.lt = String(s.theme || 'notebook').indexOf('c-') === 0 ? 'custom' : (s.theme || 'notebook'); de.dataset.ltDeco = th.deco || 'none';
+      var tid = idOf(s); de.dataset.lt = tid.indexOf('c-') === 0 ? 'custom' : resolveId(tid); de.dataset.ltAuto = tid === 'auto' ? '1' : ''; de.dataset.ltDeco = th.deco || 'none';
       setVar('--bg', c.bg); setVar('--bg2', c.bg2 || c.bg); setVar('--card', c.card); setVar('--card2', c.card2 || mix(c.card, c.tx, 94));
       setVar('--tx', c.tx); setVar('--mut', c.mut); setVar('--mut2', mix(c.mut, c.bg, 60));
       setVar('--line', c.line); setVar('--line2', mix(c.line, c.tx, 75)); setVar('--fill', mix(c.tx, 'transparent', 7)); setVar('--fill2', mix(c.tx, 'transparent', 12));
@@ -99,9 +108,14 @@
     if (s.accent && !th.c && hex(s.accent)) { setVar('--acc', s.accent); setVar('--acc-tx', s.accent); }
     de.classList.toggle('lt-compact', s.density === 'compact');
     de.classList.add('lt-themed');
+    try { document.dispatchEvent(new CustomEvent('lt:applied', { detail: { mode: de.dataset.ltMode } })); } catch (e) {}
   }
-  window.LT = { THEMES: THEMES, ORDER: ORDER, TOKENS: TOKENS, FONTS: FONTS, KEY: KEY, state: state, apply: apply, reapply: reapply, themeOf: themeOf, hex: hex, lum: lum };
+  window.LT = { idOf: idOf, resolveId: resolveId, isDark: isDark, THEMES: THEMES, ORDER: ORDER, TOKENS: TOKENS, FONTS: FONTS, KEY: KEY, state: state, apply: apply, reapply: reapply, themeOf: themeOf, hex: hex, lum: lum };
   try { apply(); } catch (e) {}
+  // v118: phone switches light/dark while the app is open -> repaint live when the theme follows the phone
+  function onScheme() { try { var st = last || state(); var id = idOf(st); if (id === 'auto' || id === 'classic') apply(st); } catch (e) {} }
+  if (mqDark) { if (mqDark.addEventListener) mqDark.addEventListener('change', onScheme); else if (mqDark.addListener) mqDark.addListener(onScheme); }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) onScheme(); });
   // Settings (prefs.js) writes its own colors when it starts; the saved layout theme goes back on top once every script has run
   document.addEventListener('DOMContentLoaded', function () { try { apply(); } catch (e) {} });
 })();

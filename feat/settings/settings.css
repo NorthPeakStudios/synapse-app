@@ -32,7 +32,7 @@ body:has(#v-prefs:not([hidden]) .st) main{padding-top:0}
 .st-row .prow-l small{font-size:13px;line-height:1.3}
 .st-nav,.st-sel,.st-tile{gap:12px}
 .st-ic{flex:none;width:30px;height:30px;border-radius:8px;background:var(--fill2);color:var(--tx);display:flex;align-items:center;justify-content:center}
-.st-nav .st-nl{flex:1;min-width:0;font-size:17px;text-align:left}
+.st-nav .st-nl{flex:1 0 auto;min-width:0;font-size:17px;text-align:left}
 .st-nav>svg:last-child,.st-sel>svg,.st-hit>svg{color:var(--mut2);flex:none}
 .st-g .prow+.prow::before{left:16px}
 .st-g .st-nav+.st-nav::before,.st-g .st-tile+.st-tile::before{left:58px}

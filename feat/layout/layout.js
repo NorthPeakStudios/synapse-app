@@ -167,7 +167,7 @@
     return true;
   }
   /* ---------- state ---------- */
-  const DEF = () => ({ v: 1, at: 0, nav: '03a', tabs: null, blocks: [{ id: 'hero', size: 'w' }, { id: 'daily', size: 's' }, { id: 'doc', size: 's' }], theme: 'notebook', accent: '', text: '', corners: '', density: 'comfy', groups: null, custom: [], labTools: ['ecg', 'labs', 'receptor', 'sim'], hidden: {} });
+  const DEF = () => ({ v: 1, at: 0, nav: '03a', tabs: null, blocks: [{ id: 'hero', size: 'w' }, { id: 'daily', size: 's' }, { id: 'doc', size: 's' }], theme: 'auto', m118: 1, accent: '', text: '', corners: '', density: 'comfy', groups: null, custom: [], labTools: ['ecg', 'labs', 'receptor', 'sim'], hidden: {} });
   function clean(s) {
     const d = DEF(); s = s && typeof s === 'object' ? s : {};
     const o = Object.assign(d, s);
@@ -175,6 +175,8 @@
     o.blocks = (Array.isArray(o.blocks) ? o.blocks : d.blocks).filter(b => b && BLOCKS[b.id]).map(b => ({ id: b.id, size: b.size === 's' ? 's' : 'w', opt: b.opt || undefined }));
     if (o.tabs && (!Array.isArray(o.tabs) || !o.tabs.length)) o.tabs = null; if (o.tabs) o.tabs = o.tabs.filter(k => TG[k]).slice(0, 6);
     if (!Array.isArray(o.custom)) o.custom = []; o.custom = o.custom.filter(c => c && /^c-/.test(c.id)).slice(0, 30);
+    // v118: before v118 'notebook' was just the default, so it becomes 'auto' (Match phone) once; a pick made after this is kept
+    if (!s.m118) { if (!s.theme || s.theme === 'notebook') o.theme = 'auto'; o.m118 = 1; }
     if (o.theme && o.theme.indexOf('c-') === 0 && !o.custom.some(c => c.id === o.theme)) o.theme = 'notebook';
     if (o.theme && o.theme.indexOf('c-') !== 0 && !LT.THEMES[o.theme]) o.theme = 'notebook';
     if (!Array.isArray(o.labTools)) o.labTools = d.labTools;
@@ -382,7 +384,8 @@
     return `<div class="lt-sch lt-sch-${tb || 'none'}${n.rail ? ' r' : ''}" aria-hidden="true"><i class="s-hd">${tr === 'left' ? '<i class="s-mb"></i>' : ''}${tr === 'right' ? '<i class="s-mb s-r"></i>' : ''}${tb === 'head' ? '<i class="s-hi"></i>' : ''}</i>${tb === 'top' || tb === 'seg' ? '<i class="s-strip"></i>' : ''}${n.crumbs ? '<i class="s-crumb"></i>' : ''}${n.rail ? `<i class="s-rail${n.rail === 'labels' ? ' w' : ''}"></i>` : ''}${tb === 'edge' ? '<i class="s-edge"></i>' : ''}<i class="s-body"><i></i><i></i><i class="h"></i></i>${['tabs', 'text', 'fab', 'dock', 'pill', 'handle'].includes(tb) ? `<i class="s-bar s-${tb}">${tb === 'fab' ? '<i class="s-c"></i>' : ''}</i>` : ''}${/^fab/.test(tr) ? `<i class="s-fab s-${tr}"></i>` : ''}<i class="s-m s-m-${m}"></i></div>`;
   }
   function themeCard(id, th, cur) {
-    const c = th.c || { bg: 'var(--bg)', card: 'var(--card)', acc: 'var(--acc)', tx: 'var(--tx)', line: 'var(--line)' }, F = LT.FONTS;
+    let c = th.c || { bg: 'var(--bg)', card: 'var(--card)', acc: 'var(--acc)', tx: 'var(--tx)', line: 'var(--line)' }, F = LT.FONTS;
+    if (th.auto) { const L = LT.THEMES[th.auto[0]], D = LT.THEMES[th.auto[1]]; c = { bg: `linear-gradient(135deg,${L.c.bg} 0 50%,${D.c.bg} 50% 100%)`, card: LT.isDark() ? D.c.card : L.c.card, acc: L.c.acc, tx: LT.isDark() ? D.c.tx : L.c.tx, line: LT.isDark() ? D.c.line : L.c.line }; th = Object.assign({}, th, { head: L.head, r: L.r }); }
     return `<button type="button" class="lt-thc${cur ? ' on' : ''}" data-cz-theme="${esc(id)}" aria-pressed="${cur}" style="--a:${c.bg};--b:${c.card};--c:${c.acc};--d:${c.tx};--e:${c.line};--f:${F[th.head] || F.sans};--r2:${Math.min(14, th.r == null ? 10 : th.r)}px"><span class="lt-thp"><span class="lt-thk"><b>Aa</b><i></i><i class="s"></i></span><span class="lt-thb"></span></span><span class="lt-thn">${esc(th.name)}</span>${th.desc ? `<small>${esc(th.desc)}</small>` : ''}</button>`;
   }
   function toHex(v) { if (LT.hex(v)) return v.length === 4 ? '#' + v.slice(1).replace(/./g, '$&$&') : v; const m = /rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/.exec(v || ''); return m ? '#' + [m[1], m[2], m[3]].map(x => (+x).toString(16).padStart(2, '0')).join('') : '#888888'; }
@@ -406,8 +409,8 @@
       + (canTabs && n.bar !== 'handle' ? `<h4>${n.rail ? 'Rail buttons' : 'Tabs'} for this layout</h4><p class="lt-mut">Tap to add or remove, up to ${n.bar === 'top' ? 7 : 5}. The menu always stays reachable.</p><div class="lt-chipsel">${TAB_CHOICES.map(k => `<button type="button" class="lt-cs2${keys.includes(k) ? ' on' : ''}" data-cz-tab="${k}">${keys.includes(k) ? (keys.indexOf(k) + 1) + '. ' : ''}${esc(label(k, n))}</button>`).join('')}</div>${S.tabs ? '<button type="button" class="lt-btn2" data-cz-tabsreset>Use this layout’s tabs</button>' : ''}` : '');
   }
   function secTheme() {
-    const cur = S.theme || 'notebook';
-    return `<div class="lt-thg">${LT.ORDER.map(id => themeCard(id, LT.THEMES[id], cur === id)).join('')}</div>`
+    const cur = S.theme || 'auto';
+    return `<p class="lt-mut">Match phone (auto) uses the cream Notebook when your phone is in light mode and Notebook Night when it is in dark mode. Pick any other theme to keep it all the time.</p><div class="lt-thg">${LT.ORDER.map(id => themeCard(id, LT.THEMES[id], cur === id)).join('')}</div>`
       + (S.custom.length ? `<h4>My themes</h4><div class="lt-thg">${S.custom.map(c => themeCard(c.id, LT.themeOf(Object.assign({}, S, { theme: c.id })), cur === c.id)).join('')}</div>` : '')
       + `<button type="button" class="lt-btn2" data-cz-new>Make my own theme</button>`;
   }
@@ -424,7 +427,7 @@
     const font = (k, v) => `<select data-cz-ef="${k}">${[['sans', 'System'], ['serif', 'Serif'], ['rounded', 'Rounded'], ['mono', 'Monospace']].map(([a, b]) => `<option value="${a}"${v === a ? ' selected' : ''}>${b}</option>`).join('')}</select>`;
     return `<div class="lt-edh"><button type="button" class="lt-btn3" data-cz-done>Done</button><span class="lt-mut">Changes show live and save as you go</span></div>
       <label class="lt-fl"><span>Name</span><input data-cz-ename value="${esc(c.name || '')}" maxlength="40" placeholder="My theme"></label>
-      <label class="lt-fl"><span>Start from</span><select data-cz-ebase>${LT.ORDER.filter(x => x !== 'classic').map(id => `<option value="${id}"${c.base === id ? ' selected' : ''}>${esc(LT.THEMES[id].name)}</option>`).join('')}</select></label>
+      <label class="lt-fl"><span>Start from</span><select data-cz-ebase>${LT.ORDER.filter(x => x !== 'classic' && x !== 'auto').map(id => `<option value="${id}"${c.base === id ? ' selected' : ''}>${esc(LT.THEMES[id].name)}</option>`).join('')}</select></label>
       <div class="lt-fl"><span>Mode</span>${seg('emode', [['light', 'Light'], ['dark', 'Dark']], th.mode)}</div>
       <h4>Colors</h4><div class="lt-toks">${LT.TOKENS.map(([k, lab]) => `<label class="lt-tok"><input type="color" value="${toHex(cc[k] || '#888888')}" data-cz-tok="${k}" aria-label="${esc(lab)}"><span>${esc(lab)}</span><input class="lt-hex" value="${esc(toHex(cc[k] || ''))}" data-cz-hex="${k}" maxlength="7" aria-label="${esc(lab)} hex" autocapitalize="off" spellcheck="false"></label>`).join('')}</div>
       <h4>Type and shape</h4>
@@ -469,7 +472,7 @@
     return { id: 'c-' + Date.now().toString(36), name: String(o.n || 'Shared theme').replace(/[<>]/g, '').slice(0, 40), base: LT.THEMES[o.b] && o.b !== 'classic' ? o.b : 'notebook', mode: pick(o.m, ['light', 'dark'], undefined), c, font: pick(o.f, ['sans', 'serif', 'rounded', 'mono'], undefined), head: pick(o.h, ['sans', 'serif', 'rounded', 'mono'], undefined), r: Number.isFinite(+o.r) ? Math.max(0, Math.min(28, +o.r)) : undefined, shadow: pick(o.s, ['none', 'soft', 'hard', 'brutal', 'glow'], undefined), deco: pick(o.d, ['none', 'notebook', 'glass', 'brutal', 'chart', 'neon', 'gradient', 'terminal', 'contrast'], undefined) };
   }
   function newCustom() {
-    const th = LT.themeOf(S), baseId = S.theme && S.theme.indexOf('c-') === 0 ? ((S.custom.find(c => c.id === S.theme) || {}).base || 'notebook') : (S.theme === 'classic' ? 'notebook' : S.theme || 'notebook');
+    const th = LT.themeOf(S), baseId = LT.resolveId(S.theme && S.theme.indexOf('c-') === 0 ? ((S.custom.find(c => c.id === S.theme) || {}).base || 'notebook') : (S.theme === 'classic' ? 'notebook' : S.theme || 'auto'));
     const src = th.c ? th : LT.THEMES[baseId];
     const c = { id: 'c-' + Date.now().toString(36), name: 'My theme ' + (S.custom.length + 1), base: baseId, mode: src.mode, c: Object.assign({}, src.c), font: src.font, head: src.head, r: src.r, shadow: src.shadow, deco: src.deco };
     set({ custom: S.custom.concat([c]), theme: c.id }); CZ.edit = c.id; CZ.sec = 'colors'; rerender();
