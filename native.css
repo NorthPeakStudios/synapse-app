@@ -8,5 +8,3 @@ input,textarea,select{font-size:max(16px,1em)!important}
 [data-pinch],[data-pinch] canvas{touch-action:none}
 button,a,[role=button],.tile,label{touch-action:manipulation}
 img{-webkit-user-drag:none}
-/* v116: black safe-area strip under the iOS status bar on every screen (tint over black = black) */
-html::before{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);background:#000;z-index:2147483647;pointer-events:none}

@@ -64,9 +64,7 @@
     const rm = v.reduceMotion === 'auto' ? !!(mqMotion && mqMotion.matches) : !!v.reduceMotion;
     de.classList.toggle('reduce-motion', rm);
     const mc = document.querySelector('meta[name=theme-color]');
-    // v115: no status-bar-style write here (always "black-translucent", set in index.html); a Customize layout theme owns theme-color, so only classic writes it
-    var ltOwns = false; try { ltOwns = !!(window.LT && LT.themeOf && LT.themeOf().c); } catch (e) {}
-    if (mc && !location.pathname.startsWith('/chess')) mc.content = '#000000'; // v116: black top bar on every theme
+    if (mc && !location.pathname.startsWith('/chess')) mc.content = tv && /^#/.test(tv[0]) ? tv[0] : t === 'light' ? '#f2f2f7' : t === 'amoled' ? '#000000' : '#0c0c0e';
     // a layout theme (Customize) owns the colors and the top bar color: put it back on top
     if (window.LT && LT.reapply) try { LT.reapply(); } catch (e) {}
   }
