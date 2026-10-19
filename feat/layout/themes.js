@@ -53,10 +53,8 @@
     if (id.indexOf('c-') === 0) { var c = (s.custom || []).filter(function (x) { return x && x.id === id; })[0]; if (c) { var b = THEMES[c.base] || THEMES.notebook; var o = {}; for (var k in b) o[k] = b[k]; for (k in c) if (c[k] != null && k !== 'c') o[k] = c[k]; o.c = {}; for (k in (b.c || {})) o.c[k] = b.c[k]; for (k in (c.c || {})) if (c.c[k]) o.c[k] = c.c[k]; return o; } id = 'notebook'; }
     return THEMES[id] || THEMES.notebook;
   }
-  // iOS home-screen status bar: light themes get "default" (bar painted in the page color, dark clock/battery);
-  // dark themes get "black-translucent" (white clock/battery). iOS reads this when the app launches, so a theme
-  // change shows up in the status bar on the next launch. Runs in <head> before first paint.
-  function sbStyle(dark) { try { var m = document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]'); var v = dark ? 'black-translucent' : 'default'; if (m && m.content !== v) m.content = v; } catch (e) {} }
+  // iOS home-screen status bar: ALWAYS "default" (bar in the theme-color / page color, dark clock). Never black-translucent.
+  function sbStyle() { try { var m = document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]'); if (m && m.content !== 'default') m.content = 'default'; } catch (e) {} } // v114: always "default" for every theme (black-translucent = white clock + dark scrim on iOS)
   var SET = [];
   function setVar(k, v) { de.style.setProperty(k, v); if (SET.indexOf(k) < 0) SET.push(k); }
   function clearVars() { SET.forEach(function (k) { de.style.removeProperty(k); }); SET = []; }
@@ -96,7 +94,7 @@
       var r = th.r == null ? 14 : +th.r;
       setVar('--r', r + 'px'); setVar('--r-sm', Math.max(0, Math.round(r * .75)) + 'px'); setVar('--lt-r', r + 'px');
       var mc = document.querySelector('meta[name=theme-color]'), top = /^#/.test(c.top || '') ? c.top : /^#/.test(c.bar || '') ? c.bar : c.bg; if (mc && /^#/.test(top || '')) mc.content = top;
-      sbStyle(dark);
+      sbStyle();
     }
     // shape + size choices apply to every theme, classic included
     if (s.corners && RAD[s.corners] != null) { var rr = RAD[s.corners]; setVar('--r', rr + 'px'); setVar('--r-sm', Math.round(rr * .75) + 'px'); setVar('--lt-r', rr + 'px'); }
