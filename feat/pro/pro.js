@@ -409,8 +409,8 @@
   }
   function removePw() {
     var w = document.querySelector('.pw:not(.ac-sheet)'); if (!w) return;
-    if (!document.querySelector('.ac-sheet')) document.documentElement.classList.remove('pw-open');
-    w.classList.remove('in'); w.classList.add('pw-out'); setTimeout(function () { w.remove(); }, 180);
+    if (!document.querySelector('.ac-sheet:not(.pw-out)')) document.documentElement.classList.remove('pw-open');
+    w.classList.remove('in'); w.classList.add('pw-out'); setTimeout(function () { w.remove(); if (!document.querySelector('.pw')) document.documentElement.classList.remove('pw-open'); }, 180);
   }
   function closePaywall() { if (gated()) { paywall(''); return; } gateOn = false; removePw(); }
 

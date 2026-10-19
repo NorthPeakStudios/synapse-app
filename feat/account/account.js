@@ -119,7 +119,7 @@
       + '<div class="ac-list"><button type="button" data-ac-go="password">Change password</button><button type="button" data-ac-act="logout">Log out</button><button type="button" class="ac-del" data-ac-go="delete">Delete account</button></div>';
   }
   function open(v) {
-    var w = document.querySelector('.ac-sheet');
+    var w = document.querySelector('.ac-sheet:not(.pw-out)');
     if (!w) {
       w = document.createElement('div'); w.className = 'pw ac-sheet'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-labelledby', 'acT');
       w.innerHTML = '<div class="pw-in"></div>'; document.body.appendChild(w);
@@ -131,9 +131,9 @@
     var first = inn.querySelector('input'); if (first && cur !== 'account') try { first.focus({ preventScroll: true }); } catch (e) {}
   }
   function close() {
-    var w = document.querySelector('.ac-sheet'); if (!w) return;
-    if (!document.querySelector('.pw:not(.ac-sheet)')) document.documentElement.classList.remove('pw-open');
-    w.classList.remove('in'); setTimeout(function () { w.remove(); }, 180);
+    var w = document.querySelector('.ac-sheet:not(.pw-out)'); if (!w) return;
+    if (!document.querySelector('.pw:not(.ac-sheet):not(.pw-out)')) document.documentElement.classList.remove('pw-open');
+    w.classList.remove('in'); w.classList.add('pw-out'); setTimeout(function () { w.remove(); if (!document.querySelector('.pw')) document.documentElement.classList.remove('pw-open'); }, 180);
   }
   function err(f, m) { var e = f.querySelector('[data-ac-err]'); if (e) { e.textContent = m; e.hidden = !m; } }
   function busy(f, on, txt) { var b = f.querySelector('button[type=submit]'); if (b) { if (!b.dataset.t) b.dataset.t = b.textContent; b.disabled = on; b.textContent = on ? (txt || 'One moment\u2026') : b.dataset.t; } }
