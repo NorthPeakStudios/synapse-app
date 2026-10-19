@@ -86,6 +86,7 @@
   }
   function render() {
     const el = $('#v-home'); if (!el) return;
+    if (window.Layout && Layout.home && Layout.home(el)) return; // v111: the block-built home (feat/layout)
     const style = Prefs.v.home.style;
     let extra = '';
     try { if (window.HomeExtras) extra = HomeExtras.map(f => { try { return f() || ''; } catch (e) { return ''; } }).join(''); } catch (e) {}

@@ -39,7 +39,7 @@
     make: ['add', 'ocr', 'occl', 'pbook', 'anki'],
     review: ['daily', 'hands', 'mnemo', 'vn', 'fc', 'plan', 'badges'],
     focus: ['focus', 'amb'],
-    you: ['me', 'themes', 'share', 'prefs', 'sync', 'help', 'about', 'work']
+    you: ['me', 'customize', 'themes', 'share', 'prefs', 'sync', 'help', 'about', 'work']
   };
   const EXTRA = {
     doc: { title: 'Doctordle', sub: "Guess the diagnosis: today's case + 6-clue rounds", icn: 'steth', open: () => go('doc'), keys: 'diagnosis guess case daily wordle dle clues' },
@@ -47,6 +47,7 @@
     rx: { title: 'Interactions game', sub: 'Spot the drug interaction, beat your 60s best', icn: 'pill', open: () => XView.open('rx'), keys: 'drug interaction rx game pharmacology' },
     add: { title: 'Add a card', sub: 'Type a new flashcard', icn: 'plus', open: () => go('add'), keys: 'new card create flashcard' },
     me: { title: 'Me', sub: 'Your profile', icn: 'person', href: 'https://odin-cards.sites.tab.bot/me/', keys: 'profile account me', when: () => !window.ODIN_STORE },
+    customize: { title: 'Customize', sub: 'Home blocks, layout, theme and colors', icn: 'gear', open: () => { if (window.Layout) Layout.customize('home'); }, keys: 'customize layout look theme themes colors colours home blocks drawer menu tabs navigation appearance style', when: () => !!window.Layout },
     help: { title: 'Help & feedback', sub: 'Questions, send a bug or idea, replay the intro', icn: 'help', open: () => { if (window.SettingsUI) SettingsUI.open('help'); }, keys: 'help faq feedback bug idea support question tour intro' },
     about: { title: 'About', sub: 'Version, credits & licenses, privacy', icn: 'info', open: () => { if (window.SettingsUI) SettingsUI.open('about'); }, keys: 'about version credits licenses license privacy made by' },
     prefs: { title: 'Settings', sub: 'Appearance, study, voices, notifications', icn: 'gear', open: () => { if (window.SettingsUI && SettingsUI.open) SettingsUI.open(); else go('prefs'); }, keys: 'settings preferences options config dark mode text size' },
@@ -248,6 +249,8 @@
   }
   function icon(id, s) { if (id && id.startsWith('nav:')) { const k = id.slice(4); return svg({ home: 'home', decks: 'study', weak: 'target', browse: 'list', stats: 'stats', learn: 'learn', library: 'books', lab: 'lab', more: 'more' }[k] || 'bolt', s); } return iconOf(feat(id), s); }
 
+  // open the Lab or More hub on one group (the side menu's group rows)
+  function openHub(hub, g) { const st = hubState[hub]; if (st) { st.g = g || 'all'; st.q = ''; } switchTab(hub === 'lab' ? 'lab' : 'more'); }
   const boot = () => {
     wrap(); buildChrome();
     stack = [now()]; tab = rootTabOf(stack[0]) || 'home';
@@ -255,5 +258,5 @@
     new MutationObserver(paintSoon).observe(document.getElementById('main') || document.body, { childList: true, subtree: true });
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-  window.Shell = { back, canBack, backLabel, open, openDoc, switchTab, feat, list, recent, remember, icon, iconOf, searchDocs, paint, svg, get tab() { return tab; }, get stack() { return stack.slice(); }, get mod() { return curMod; } };
+  window.Shell = { back, canBack, backLabel, open, openDoc, openHub, switchTab, feat, list, recent, remember, icon, iconOf, searchDocs, paint, svg, get tab() { return tab; }, get stack() { return stack.slice(); }, get mod() { return curMod; } };
 })();

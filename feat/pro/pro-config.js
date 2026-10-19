@@ -43,12 +43,12 @@ window.SYNAPSE_PRO = {
       { id: 'web_lifetime', label: 'Lifetime', price: '$35', per: 'once', note: 'Pay once, yours forever', best: true }
     ],
     copy: {
-      why: 'Why Apple Cash? Synapse is built by an independent student developer. Paying through Apple Cash means your money goes straight to the person who made the app — no middleman, no store cut. It\u2019s not instant: after you send the form, you\u2019ll get an Apple Cash request for $35 on the phone number you entered (usually within a few hours, always within 24h). Pay it, and your unlock code arrives right after.',
+      why: 'Why Apple Cash? Synapse is built by an independent student developer. Paying through Apple Cash means your money goes straight to the person who made the app — no middleman, no store cut. It\u2019s not instant: after you send the form, you\u2019ll get an Apple Cash request for your plan ($35 or $100) on the phone number you entered (usually within a few hours, always within 24h). Pay it, and it unlocks on your account email right after, plus an unlock code.',
       cta: 'Pay with Apple Cash',
       formTitle: 'Request an Apple Cash payment',
-      formNote: 'We only use your number to send the Apple Cash request and your unlock code.',
-      sent: 'We\u2019ll text an Apple Cash request for $35 to your phone within 24h. After you pay, you\u2019ll get an unlock code.',
-      fine: '$35 once, no subscription. Apple Cash works in the US on iPhone. Questions: northpeak.support@gmail.com',
+      formNote: 'We only use your number to send the Apple Cash request and your unlock code, and your email to attach the purchase to your account.',
+      sent: 'We\u2019ll text an Apple Cash request for {price} to your phone within 24h. After you pay, it unlocks on your account email, and you also get an unlock code.',
+      fine: '$35 (Synapse) or $100 (all Northpeak apps) once, no subscription. Apple Cash works in the US on iPhone. Questions: northpeak.support@gmail.com',
       codeTitle: 'Have an unlock code?',
       codeNote: 'Enter the code you got after paying. It unlocks Synapse Pro on this device, and on your account if you\u2019re signed in.'
     },

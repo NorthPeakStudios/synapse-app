@@ -309,7 +309,7 @@
       if (t.closest('[data-pw-signin]')) { if (window.Account) Account.open(); return; }
     });
     w.addEventListener('input', function (e) { var t = e.target; if (t.name === 'contact' && /\D/.test(t.value)) { t.value = t.value.replace(/\D/g, '').slice(0, 14); } var f = t.form; if (f) err(f, ''); });
-    w.addEventListener('change', function (e) { var t = e.target; if (t.name === 'cc') { var c = CC[+t.value] || CC[0], s = t.parentNode.querySelector('.pw-cc'); if (s) s.textContent = flag(c[0]) + ' +' + c[1]; } });
+    w.addEventListener('change', function (e) { var t = e.target; if (t.name === 'plan') { buyPlan = t.value; w.querySelectorAll('.pw-bplan').forEach(function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); }); } if (t.name === 'cc') { var c = CC[+t.value] || CC[0], s = t.parentNode.querySelector('.pw-cc'); if (s) s.textContent = flag(c[0]) + ' +' + c[1]; } });
     w.addEventListener('submit', function (e) {
       e.preventDefault();
       var f = e.target; if (f.matches('[data-pw-form]')) sendRequest(f); else if (f.matches('[data-pw-codeform]')) sendCode(f);
@@ -317,6 +317,8 @@
     loadPrices();
   }
 
+  var BUY_PLANS = [{ id: 'synapse_lifetime', name: 'Synapse Lifetime', price: '$35', sub: 'Synapse, unlocked for good' }, { id: 'all_access', name: 'Northpeak All-Access', price: '$100', sub: 'Synapse and every Northpeak Studios app, now and later' }];
+  var buyPlan = 'synapse_lifetime';
   var CC = [['US', '1', 'United States'], ['CA', '1', 'Canada'], ['MX', '52', 'Mexico'], ['CU', '53', 'Cuba'], ['GB', '44', 'United Kingdom'], ['IE', '353', 'Ireland'], ['FR', '33', 'France'], ['DE', '49', 'Germany'],
     ['ES', '34', 'Spain'], ['IT', '39', 'Italy'], ['PT', '351', 'Portugal'], ['NL', '31', 'Netherlands'], ['BE', '32', 'Belgium'], ['CH', '41', 'Switzerland'], ['AT', '43', 'Austria'], ['SE', '46', 'Sweden'],
     ['NO', '47', 'Norway'], ['DK', '45', 'Denmark'], ['FI', '358', 'Finland'], ['PL', '48', 'Poland'], ['GR', '30', 'Greece'], ['TR', '90', 'Turkey'], ['IL', '972', 'Israel'], ['AE', '971', 'United Arab Emirates'],
@@ -340,9 +342,11 @@
     if (v === 'form') {
       h = head(WC.formTitle || 'Request an Apple Cash payment')
         + '<form class="pw-form" data-pw-form novalidate>'
-        + (PRODUCTS.length === 1 ? '<input type="hidden" name="product" value="' + esc(PRODUCTS[0].id) + '"><p class="pw-what"><b>' + esc(C.name || 'Synapse Pro') + '</b> \u00b7 ' + esc(PRODUCTS[0].price) + ' one time</p>'
-          : '<label>Pass<select name="product">' + PRODUCTS.map(function (p) { return '<option value="' + esc(p.id) + '"' + (p.id === sel ? ' selected' : '') + '>' + esc(p.label + ' \u2014 ' + p.price) + '</option>'; }).join('') + '</select></label>')
+        + '<div class="pw-plans pw-bplans" role="radiogroup" aria-label="Choose a plan">' + BUY_PLANS.map(function (p, i) { var on = p.id === buyPlan;
+            return '<label class="pw-plan pw-bplan' + (on ? ' on' : '') + '"><input type="radio" name="plan" value="' + esc(p.id) + '"' + (on ? ' checked' : '') + '><span class="pw-radio" aria-hidden="true"></span><span class="pw-pl"><b>' + esc(p.name) + '</b><small>' + esc(p.sub) + '</small></span><span class="pw-pp"><b>' + esc(p.price) + '</b><small>one time</small></span></label>'; }).join('') + '</div>'
+        + '<p class="pw-fine">Both are one-time payments after the 3-day free trial. No subscription.</p>'
         + '<label>Name or nickname<input name="name" maxlength="60" autocomplete="nickname" required></label>'
+        + '<label>Account email<input name="email" type="email" maxlength="254" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" value="' + esc(acct() && acct().email || '') + '" required><small class="pw-hint">Your purchase is attached to this email. Sign in with it on any device to unlock.</small></label>'
         + '<label for="pwTel">Your phone number (for the Apple Cash request)</label><div class="pw-tel"><select name="cc" aria-label="Country code" autocomplete="tel-country-code">' + ccOptions() + '</select><span class="pw-cc" aria-hidden="true">' + flag('US') + ' +1</span>'
         + '<input id="pwTel" name="contact" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="14" autocomplete="tel-national" placeholder="5305551234" required></div>'
         + '<input class="pw-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">'
@@ -352,7 +356,7 @@
         + '<p class="pw-fine">' + esc(WC.formNote || '') + '</p></form>';
     } else if (v === 'sent') {
       h = head('Request sent')
-        + '<div class="pw-sent"><span class="pw-ok">' + svg('check', 30, 2.4) + '</span><p><b>' + esc(WC.sent || '') + '</b></p>'
+        + '<div class="pw-sent"><span class="pw-ok">' + svg('check', 30, 2.4) + '</span><p><b>' + esc((WC.sent || '').replace('{price}', (BUY_PLANS.filter(function (p) { return p.id === buyPlan; })[0] || BUY_PLANS[0]).price)) + '</b></p>'
         + (WC.why ? '<p class="pw-why">' + esc(WC.why) + '</p>' : '') + '</div>'
         + '<button type="button" class="pw-cta" data-pw-code>' + esc(WC.codeTitle || 'Have an unlock code?') + '</button>'
         + '<div class="pw-links"><button type="button" data-pw-done>Close</button></div>';
@@ -371,16 +375,18 @@
   function err(f, m) { var e = f.querySelector('[data-pw-err]'); if (e) { e.textContent = m; e.hidden = !m; } }
   function lock(f, on, txt) { var b = f.querySelector('button[type=submit]'); if (b) { b.disabled = on; if (txt) b.textContent = txt; } }
   function sendRequest(f) {
-    var name = f.elements['name'].value.trim(), contact = f.elements['contact'].value.trim(), product = f.elements['product'].value;
+    var pe = f.querySelector('input[name=plan]:checked'), plan = pe ? pe.value : '', name = f.elements['name'].value.trim(), contact = f.elements['contact'].value.trim(), email = f.elements['email'].value.trim().toLowerCase();
+    if (!plan) return err(f, 'Choose a plan.');
     if (name.length < 1) return err(f, 'Add a name or nickname.');
+    if (!/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/.test(email)) return err(f, 'Enter the email for your account.');
     var digits = contact.replace(/\D/g, ''), cc = CC[+f.elements['cc'].value] || CC[0];
     if (cc[1] === '1' ? digits.length !== 10 : (digits.length < 6 || digits.length > 14)) return err(f, cc[1] === '1' ? 'Enter your 10-digit phone number (area code first).' : 'Enter your phone number (6 to 14 digits).');
     contact = '+' + cc[1] + ' ' + digits;
     err(f, ''); lock(f, true, 'Sending\u2026');
-    api('/api/pro/request', { name: name, contact: contact, product: product, website: f.elements['website'].value }).then(function (j) {
+    api('/api/pro/request', { name: name, contact: contact, plan: plan, email: email, website: f.elements['website'].value }).then(function (j) {
       if (j.ok) { view('sent'); return; }
       lock(f, false, 'Send request');
-      err(f, j.status === 429 ? 'Too many requests from here. Try again in an hour.' : j.error === 'closed' ? 'Web purchases aren\u2019t open right now.' : 'That didn\u2019t send. Check the details and try again.');
+      err(f, j.status === 429 ? 'Too many requests from here. Try again in an hour.' : j.error === 'closed' ? 'Web purchases aren\u2019t open right now.' : j.error === 'bad_email' ? 'Enter the email for your account.' : 'That didn\u2019t send. Check the details and try again.');
     }).catch(function () { lock(f, false, 'Send request'); err(f, 'You look offline. Try again when you\u2019re connected.'); });
   }
   function sendCode(f) {
