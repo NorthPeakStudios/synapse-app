@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f17">
+<meta name="robots" content="noindex">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://odin-cards.sites.tab.bot; connect-src 'self' https://odin-cards.sites.tab.bot; media-src 'self' data: blob:; font-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Synapse">
+<title>Synapse</title>
+<meta property="og:title" content="Synapse">
+<meta property="og:description" content="Spaced-repetition flashcards that sync between your devices.">
+<meta property="og:image" content="og.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="native.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="library.css">
+<link rel="stylesheet" href="resources.css">
+<link rel="stylesheet" href="learn.css">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="feat/stats/stats.css">
+<link rel="stylesheet" href="feat/focus/focus.css">
+<link rel="stylesheet" href="feat/interact/interact.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="feat/search/search.css">
+<link rel="stylesheet" href="feat/makecards/makecards.css">
+<link rel="stylesheet" href="feat/exam/exam.css">
+<link rel="stylesheet" href="anat/anatomy.css">
+<link rel="stylesheet" href="feat/push/push.css">
+<link rel="stylesheet" href="feat/mastery/know.css">
+<link rel="stylesheet" href="feat/settings/settings.css">
+<link rel="stylesheet" href="feat/imgcards/imgcards.css">
+<link rel="stylesheet" href="feat/lab/lab.css">
+<link rel="stylesheet" href="feat/polish/polish.css">
+<link rel="stylesheet" href="feat/shell/shell.css">
+<link rel="stylesheet" href="feat/about/about.css">
+<link rel="stylesheet" href="feat/pro/pro.css">
+<link rel="stylesheet" href="feat/account/account.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><button id="homeBtn" class="homebtn" type="button" data-go="home" aria-label="Back to home"><span aria-hidden="true">‹</span><span>Home</span></button><span class="logo" aria-hidden="true"></span><span id="title">Home</span></div>
+  <div class="topr"><span class="hub-badge" data-hub-streak title="Streak"><b>0</b></span><button id="syncPill" class="pill" type="button" aria-live="polite"><span class="dot"></span><span class="txt">Local</span></button></div>
+</header>
+<main id="main">
+  <section id="v-home" class="view"></section>
+  <section id="v-decks" class="view" hidden></section>
+  <section id="v-doc" class="view" hidden></section>
+  <section id="v-weak" class="view" hidden></section>
+  <section id="v-anat" class="view" hidden></section>
+  <section id="v-learn" class="view" hidden></section>
+  <section id="v-library" class="view" hidden></section>
+  <section id="v-study" class="view" hidden></section>
+  <section id="v-add" class="view" hidden></section>
+  <section id="v-browse" class="view" hidden></section>
+  <section id="v-stats" class="view" hidden></section>
+  <section id="v-settings" class="view" hidden></section>
+  <section id="v-prefs" class="view" hidden></section>
+  <section id="v-x" class="view" hidden></section>
+</main>
+<nav class="tabs" id="tabs">
+  <button data-go="decks" class="on"><span class="ic">▤</span><span>Decks</span></button>
+  <button data-go="learn"><span class="ic">✦</span><span>Learn</span></button>
+  <button data-go="library"><span class="ic">📚</span><span>Library</span></button>
+  <button data-go="weak"><span class="ic">🎯</span><span>Weak</span></button>
+  <button data-go="add"><span class="ic">＋</span><span>Add</span></button>
+  <button data-go="browse"><span class="ic">⌕</span><span>Browse</span></button>
+  <button data-go="stats"><span class="ic">▥</span><span>Stats</span></button>
+  <button data-go="settings"><span class="ic">⚙</span><span>Settings</span></button>
+</nav>
+<div id="sheetWrap" class="sheet-wrap" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div id="toast" class="toast" hidden></div>
+<script src="host.js"></script>
+<script src="native.js"></script>
+<script src="prefs.js"></script>
+<script src="feat/settings/settings.js"></script>
+<script src="hub.js"></script>
+<script src="feat/mastery/mastery.js"></script>
+<script src="seed.js"></script>
+<script src="learn.js"></script>
+<script src="library.js"></script>
+<script src="resources.js"></script>
+<script src="weak.js"></script>
+<script src="doctordle.js"></script>
+<script src="anat/anatomy.js"></script>
+<script src="feat/stats/stats.js"></script>
+<script src="feat/focus/focus.js"></script>
+<script src="xview.js"></script>
+<script src="feat/mastery/know.js"></script>
+<script src="feat/interact/pairs.js"></script>
+<script src="feat/interact/interact.js"></script>
+<script src="home.js"></script>
+<script src="app.js"></script>
+<script src="prefs-ui.js"></script>
+<script src="feat/search/search.js"></script>
+<script src="feat/makecards/makecards.js"></script>
+<script src="feat/exam/exam.js"></script>
+<script src="feat/settings/settings-ui.js"></script>
+<script src="feat/push/push.js"></script>
+<script src="feat/imgcards/imgcards.js"></script>
+<script src="feat/lab/lab.js"></script>
+<script src="feat/shell/shell.js"></script>
+<script src="feat/about/about.js"></script>
+<script src="feat/pro/pro-config.js"></script>
+<script src="feat/pro/pro.js"></script>
+<script src="feat/account/account.js"></script>
+</body>
+</html>
