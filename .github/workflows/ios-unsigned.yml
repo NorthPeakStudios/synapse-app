@@ -1,0 +1,102 @@
+name: iOS unsigned IPA (sideload)
+
+# Builds Synapse.ipa (unsigned) for installing on your own iPhone with a free Apple ID through
+# SideStore, Sideloadly, ESign or Feather (see SIDELOAD-PHONE.md). No Apple Developer account needed.
+# Run it on the ios-build branch: Actions -> this workflow -> Run workflow -> Branch: ios-build.
+# The web app inside comes from the GitHub Pages site (the main branch), so it matches what's live.
+on:
+  workflow_dispatch:
+    inputs:
+      store:
+        description: "Store build (hides the personal sections). Leave off for your own phone."
+        type: boolean
+        default: false
+      release_tag:
+        description: "Publish the .ipa on this GitHub Release (blank = only keep it as a run artifact)"
+        type: string
+        default: "ios-v1"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the live web app (GitHub Pages branch)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: pages
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Use the newest Xcode on the runner
+        run: |
+          X=$(ls -d /Applications/Xcode*.app | grep -v -i beta | sort -V | tail -1)
+          sudo xcode-select -s "$X"
+          xcodebuild -version
+
+      - name: Install
+        run: npm ci
+
+      - name: Bundle the web app (checksummed)
+        run: |
+          node scripts/fetch-web.mjs --from pages --gen ${{ inputs.store && '--store' || '' }}
+          rm -rf pages
+
+      - name: Copy it into the iOS project
+        run: npx cap sync ios
+
+      - name: Apply Synapse's native settings (name, id, icons, splash, permissions)
+        run: node scripts/apply-native.mjs
+
+      - name: Build (unsigned)
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            build > xcode.log 2>&1 || {
+              grep -E "error:|BUILD FAILED|fatal" xcode.log | sort -u | head -20 | while IFS= read -r l; do echo "::error::$l"; done
+              tail -n 80 xcode.log; exit 1; }
+          tail -n 5 xcode.log
+
+      - name: Package .ipa
+        run: |
+          rm -rf Payload && mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/Synapse.app
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' Payload/Synapse.app/Info.plist
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' Payload/Synapse.app/Info.plist)" = "com.northpeakstudios.synapse"
+          test -f Payload/Synapse.app/public/index.html
+          test -f Payload/Synapse.app/public/native/resign.js || [ "${{ inputs.store }}" = "true" ]
+          rm -f Synapse.ipa && zip -qry -X Synapse.ipa Payload
+          ls -lh Synapse.ipa
+          shasum -a 256 Synapse.ipa | tee Synapse.ipa.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Synapse-ipa
+          path: Synapse.ipa
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish on the GitHub Release
+        if: ${{ inputs.release_tag != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          NOTES="Synapse for iPhone, unsigned. Install from your phone: SideStore, ESign or Feather can import it straight from this link. Free Apple ID signing lasts 7 days; the app reminds you and opens SideStore to refresh. Northpeak Studios."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" Synapse.ipa Synapse.ipa.sha256 --clobber
+          else
+            gh release create "$TAG" Synapse.ipa Synapse.ipa.sha256 --target "$GITHUB_SHA" --title "Synapse for iPhone ($TAG)" --notes "$NOTES"
+          fi
+          gh release view "$TAG" --json assets --jq '.assets[] | .name + "  " + .url'
