@@ -53,8 +53,8 @@
     if (id.indexOf('c-') === 0) { var c = (s.custom || []).filter(function (x) { return x && x.id === id; })[0]; if (c) { var b = THEMES[c.base] || THEMES.notebook; var o = {}; for (var k in b) o[k] = b[k]; for (k in c) if (c[k] != null && k !== 'c') o[k] = c[k]; o.c = {}; for (k in (b.c || {})) o.c[k] = b.c[k]; for (k in (c.c || {})) if (c.c[k]) o.c[k] = c.c[k]; return o; } id = 'notebook'; }
     return THEMES[id] || THEMES.notebook;
   }
-  // iOS home-screen status bar: ALWAYS "default" (bar in the theme-color / page color, dark clock). Never black-translucent.
-  function sbStyle() { try { var m = document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]'); if (m && m.content !== 'default') m.content = 'default'; } catch (e) {} } // v114: always "default" for every theme (black-translucent = white clock + dark scrim on iOS)
+  // iOS home-screen status bar: ALWAYS "black-translucent" (iOS draws no bar or overlay; the page bg shows behind the clock). Same for every theme/appearance.
+  function sbStyle() { try { var m = document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]'); if (m && m.content !== 'black-translucent') m.content = 'black-translucent'; } catch (e) {} } // v115
   var SET = [];
   function setVar(k, v) { de.style.setProperty(k, v); if (SET.indexOf(k) < 0) SET.push(k); }
   function clearVars() { SET.forEach(function (k) { de.style.removeProperty(k); }); SET = []; }
