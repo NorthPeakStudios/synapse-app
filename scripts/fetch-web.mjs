@@ -17,7 +17,7 @@ const CFG = JSON.parse(readFileSync(join(ROOT, 'native', 'build.json'), 'utf8'))
 const WWW = join(ROOT, 'www');
 const sha = b => createHash('sha256').update(b).digest('hex');
 async function get(p) {
-  if (FROM) return readFileSync(join(FROM, p));
+  if (FROM && existsSync(join(FROM, p))) return readFileSync(join(FROM, p));
   for (let i = 0; i < 4; i++) {
     try { const r = await fetch(SITE + '/' + p.split('/').map(encodeURIComponent).join('/'), { cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); return Buffer.from(await r.arrayBuffer()); }
     catch (e) { if (i === 3) throw new Error(p + ': ' + e.message); await new Promise(r => setTimeout(r, 1500 * (i + 1))); }
@@ -44,6 +44,12 @@ function manifestFromDir(dir) {
 }
 const man = FROM && (args.includes('--gen') || !existsSync(join(FROM, 'app-update.json'))) ? manifestFromDir(FROM)
   : JSON.parse((FROM ? readFileSync(join(FROM, 'app-update.json')) : await get('app-update.json')).toString('utf8'));
+// the app-only glue (native/app.js, native/native.css) lives on the live site, not in the Pages copy
+if (FROM) for (const p of ['native/app.js', 'native/native.css']) {
+  if (man.files.some(f => f[0] === p)) continue;
+  const b = await get(p); man.files.push([p, sha(b), b.length]); console.log('from the live site: ' + p);
+}
+
 rmSync(WWW, { recursive: true, force: true }); mkdirSync(WWW, { recursive: true });
 let i = 0, bytes = 0; const q = man.files.slice(), pages = {};
 async function worker() {
@@ -58,6 +64,7 @@ async function worker() {
 await Promise.all(Array.from({ length: 8 }, worker));
 // the page shells load through native/boot.js (applies downloaded updates, then writes the real page)
 const files = Object.fromEntries(man.files.map(f => [f[0], f[1]]));
+mkdirSync(join(WWW, 'native'), { recursive: true });
 writeFileSync(join(WWW, 'native', 'bundle.json'), JSON.stringify({ v: man.v, files }));
 const RESIGN = !STORE && !args.includes('--no-resign'); // re-sign reminder: sideload builds only
 writeFileSync(join(WWW, 'native', 'config.js'), 'window.__ODIN_CFG=' + JSON.stringify({ site: SITE, store: STORE, build: CFG.build, v: man.v, resign: RESIGN }) + ';\n');
