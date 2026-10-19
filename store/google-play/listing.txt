@@ -1,0 +1,54 @@
+SYNAPSE - GOOGLE PLAY STORE LISTING (copy and paste into Play Console -> Grow -> Store presence -> Main store listing)
+
+App name (max 30, this is 26):
+Synapse: Med & Study Cards
+
+Short description (max 80, this is 80):
+Flashcards, 200 med courses and a hands-on medical lab. Study anywhere, offline.
+
+Full description (max 4000, this is 2165):
+Synapse is a study app for curious students who want to really learn medicine and the science behind it, not just cram it.
+
+SPACED-REPETITION FLASHCARDS
+Make your own decks and Synapse schedules every review for the moment you are about to forget it. Weak Spots collects the cards you keep missing, Stats shows your progress, and a daily goal keeps your streak going.
+
+200 GUIDED COURSES
+Four subject areas: medicine, pharmacology, medicinal chemistry and neurology. Every lesson is written at five levels, from "explain it like I'm 5" up to doctor level, and ends with a short test. Missed questions turn into flashcards with one tap.
+
+A HANDS-ON LAB
+Learn by doing with interactive tools: a patient simulator, an ECG rhythm trainer, a CT and MRI slice reader, heart and lung sounds, a lesion locator, lab panel and vitals interpreters, a 3D anatomy viewer, a drug class matcher, an interactions game and more.
+
+DOCTORDLE
+A new diagnosis puzzle every day. Read the clues, guess the condition in six tries, then learn how it works.
+
+MADE FOR STUDYING ANYWHERE
+- Works offline. Courses, decks and tools are built into the app.
+- Optional sync with a private code, so your cards and progress follow you to your other devices. No account, no email, no tracking, no ads.
+- Study reminders at the time you choose.
+- Export or delete all of your data from Settings at any time.
+
+SYNAPSE PRO
+Synapse is free to download and use: your own flashcards, studying, stats, the daily challenge, the daily Doctordle, the first level of every course and a selection of Lab tools. Synapse Pro unlocks every course level and test, the full Lab, .apkg deck import, image occlusion, unlimited Doctordle, themes and app icons.
+- Synapse Pro is $35, one time. Yours forever: no subscription, nothing renews.
+- Payment is charged to your Google Play account.
+
+FOR LEARNING ONLY
+Synapse is an educational tool. It is not medical advice and must not be used to diagnose or treat anyone. Always ask a qualified professional about health questions.
+
+Made by Northpeak Studios. Questions or ideas: northpeak.support@gmail.com
+Privacy policy: https://northpeakstudios.github.io/synapse/privacy/
+
+Category: Education
+Tags (pick up to 5 in Play Console): Education, Flashcards, Medicine, Science, Health
+Contact email: northpeak.support@gmail.com
+Website: https://northpeakstudios.github.io/
+Privacy policy URL: https://northpeakstudios.github.io/synapse/privacy/
+Developer name: Northpeak Studios
+
+Graphics in this folder:
+- App icon 512 x 512: icon-512.png
+- Feature graphic 1024 x 500: feature-graphic-1024x500.png
+- Phone screenshots 1080 x 2400 (upload in this order): screenshots/phone-1-home ... phone-6-doctordle
+
+Release notes for the first version (max 500):
+First release of Synapse: spaced-repetition flashcards, 200 medicine and science courses at five levels, a hands-on medical and science Lab, daily Doctordle, offline studying, optional sync with a private code, and study reminders.

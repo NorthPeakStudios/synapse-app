@@ -1,0 +1,40 @@
+name: Make upload key (run once)
+
+# Creates the Google Play upload key. Run it ONCE, download the artifact, save the
+# files somewhere safe (not in the repo), then add the two repository secrets
+# listed in KEY-README.txt. The artifact deletes itself after 1 day.
+# Keep this repository PRIVATE: anyone who can read it can download artifacts.
+on:
+  workflow_dispatch:
+
+jobs:
+  key:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Generate
+        run: |
+          mkdir out
+          PASS=$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)
+          keytool -genkeypair -v -keystore out/upload.jks -storetype JKS -alias upload \
+            -keyalg RSA -keysize 4096 -validity 10000 \
+            -storepass "$PASS" -keypass "$PASS" \
+            -dname "CN=Northpeak Studios, O=Northpeak Studios, C=US"
+          base64 -w0 out/upload.jks > out/ODIN_KEYSTORE_BASE64.txt
+          printf '%s' "$PASS" > out/ODIN_KEYSTORE_PASSWORD.txt
+          cat > out/KEY-README.txt <<'EOF'
+          Synapse upload key. Keep upload.jks and the password somewhere safe (a password manager or a USB stick).
+          In GitHub: Settings > Secrets and variables > Actions > New repository secret, add:
+            ODIN_KEYSTORE_BASE64   = the whole text of ODIN_KEYSTORE_BASE64.txt
+            ODIN_KEYSTORE_PASSWORD = the text of ODIN_KEYSTORE_PASSWORD.txt
+          Then delete these files from your Downloads folder.
+          If the key is ever lost, Google Play can reset the upload key (Play Console > Test and release > App integrity).
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synapse-upload-key
+          path: out/
+          retention-days: 1

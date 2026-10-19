@@ -1,0 +1,31 @@
+{
+  "name": "synapse-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Synapse native shell (Android + iOS) for the Synapse web app at odin-cards.sites.tab.bot",
+  "scripts": {
+    "web": "node scripts/fetch-web.mjs",
+    "web:store": "node scripts/fetch-web.mjs --store",
+    "sync": "cap sync && node scripts/apply-native.mjs",
+    "android:sync": "cap sync android",
+    "ios:sync": "cap sync ios",
+    "native": "node scripts/apply-native.mjs",
+    "native:check": "node scripts/apply-native.mjs --check"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.3",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
+    "@capgo/native-purchases": "^8.9.6"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3"
+  }
+}

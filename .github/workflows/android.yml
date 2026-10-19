@@ -1,0 +1,80 @@
+name: Android (Google Play)
+
+# Builds the Google Play bundle (.aab) and an installable .apk.
+# Run it from the Actions tab: "Android (Google Play)" → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: "Version name shown in Google Play (e.g. 1.0.0)"
+        default: "1.0.0"
+        required: true
+      store:
+        description: "Store build (hides the personal Me and Tab's Work sections)"
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install
+        run: npm ci
+
+      - name: Download the web app from the live site (checksummed)
+        run: node scripts/fetch-web.mjs ${{ inputs.store && '--store' || '' }}
+
+      - name: Copy it into the Android project
+        run: npx cap sync android
+
+      - name: Apply Synapse's native settings (name, id, icons, splash, permissions)
+        run: node scripts/apply-native.mjs
+
+      - name: Upload key (from repository secrets)
+        env:
+          KEYSTORE_B64: ${{ secrets.ODIN_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "ODIN_KEYSTORE_FILE=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+            echo "Signing with the upload key."
+          else
+            echo "::warning::No upload key secret yet. Building a debug APK only. Run the 'Make upload key' workflow first (see BUILD.md)."
+          fi
+
+      - name: Build
+        working-directory: android
+        env:
+          ODIN_KEYSTORE_PASSWORD: ${{ secrets.ODIN_KEYSTORE_PASSWORD }}
+          ODIN_KEY_ALIAS: upload
+          ODIN_VERSION_CODE: ${{ github.run_number }}
+          ODIN_VERSION_NAME: ${{ inputs.version_name }}
+        run: |
+          chmod +x gradlew
+          if [ -n "$ODIN_KEYSTORE_FILE" ]; then
+            ./gradlew --no-daemon bundleRelease assembleRelease
+          else
+            ./gradlew --no-daemon assembleDebug
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Synapse-android-${{ inputs.version_name }}-build${{ github.run_number }}
+          path: |
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 30
