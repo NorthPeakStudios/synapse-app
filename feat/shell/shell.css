@@ -117,3 +117,8 @@ html.s-contrast .sh-list,html.s-contrast .h-mini,html.s-contrast .h-hero.done,ht
 .srch-field,.sh-find{border:0!important;border-radius:10px!important;background:var(--fill)!important;box-shadow:none!important;outline:none!important;transition:background-color .15s}
 .srch-field:focus-within,.sh-find:focus-within{background:var(--fill2)!important;box-shadow:none!important}
 .srch-field input,.sh-find input{-webkit-appearance:none!important;appearance:none!important;border:0!important;border-radius:0!important;outline:none!important;box-shadow:none!important;background:transparent!important}
+
+/* v119: seamless top. the header is the page colour, no hairline, no blur/tint band; nothing scrolls visibly under the status bar */
+header.top,body.sh-scrolled header.top,body.sh-segon header.top{background:var(--bg)!important;background-image:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-bottom:0!important;box-shadow:none!important}
+.st-nb{background:var(--bg)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-bottom:0!important;box-shadow:none!important}
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--top,env(safe-area-inset-top,0px));background:var(--bg);z-index:2147483600;pointer-events:none}
