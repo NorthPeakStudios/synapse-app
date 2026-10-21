@@ -440,7 +440,7 @@ document.addEventListener('click', e => {
 /* ---------- public ---------- */
 function homeHTML() {
   const st = streak(), r = recent(3);
-  return `<h3>Recently completed</h3><div class="panel lhome"><div class="row" style="justify-content:space-between;align-items:center"><span><b>${st}</b> day learning streak</span><button class="btn small" data-lgolearn>Open Learn ›</button></div>${r.length ? recentList(3) : '<p class="muted small">Finish a lesson test in Learn and it shows up here.</p>'}</div>`;
+  return `<h3>Recently completed</h3><div class="panel lhome"><div class="row" style="justify-content:space-between;align-items:center"><span><b>${st}</b>-day learning streak</span><button class="btn small" data-lgolearn>Open Learn ›</button></div>${r.length ? recentList(3) : '<p class="muted small">Finish a lesson test in Learn and it shows up here.</p>'}</div>`;
 }
 function onChange() { if (view !== 'learn') return; const p = S.route.page; if (p === 'home' || p === 'topic' || p === 'course') render(); }
 window.Learn = { shuffleChoices, getManifest, getCourse, speak, sayTerms, hasVoice, pickVoice, VX, VOICE_LANG, render, homeHTML, onChange, LEVELS, isRight, norm, md, _S: S };
