@@ -59,10 +59,17 @@
     if (meta.codeOld) { await setMeta('code', meta.codeOld); await setMeta('codeOld', null); }
     try { setPill(); } catch (e) {}
   }
+  /* np-email-change v1: the account's email changed (here or on another device). The account and its sync space are the same,
+     so this device just relabels its cached copy; it doesn't start a fresh sync. */
+  async function emailChanged(j) {
+    var was = (st() || {}).email || '';
+    save(j.user); notify();
+    try { if (was && was !== j.user.email && (await whenReady()) && meta.acct === was) await setMeta('acct', j.user.email); } catch (e) {}
+  }
   function refresh() {
     if (!st()) return Promise.resolve(null);
     return call('me').then(async function (j) {
-      if (j.ok && j.user) { save(j.user); notify(); return j.user; }
+      if (j.ok && j.user) { if (j.user.email !== (st() || {}).email) await emailChanged(j); else save(j.user); notify(); return j.user; }
       if (j.ok && j.user === null) { clear(); await stopSync(); notify(); toast('You were signed out. Sign in again to keep syncing.'); }
       return null;
     }).catch(function () { return st(); });
@@ -104,6 +111,10 @@
       + '<form class="pw-form" data-ac-form="password" novalidate>' + field('old', 'Current password', 'password', 'current-password', 'maxlength="200"') + field('password', 'New password (8 or more characters)', 'password', 'new-password', 'minlength="8" maxlength="200"') + ERR
       + '<button type="submit" class="pw-cta">Change password</button></form>'
       + '<div class="pw-links ac-links"><button type="button" data-ac-go="account">Back</button></div>';
+    if (v === 'email') return head('Change email', 'Your account, Pro, owner status and synced progress move to the new email. The old email stops working for sign-in, here and in Axon and Liminal.')
+      + '<form class="pw-form" data-ac-form="email" novalidate>' + field('email', 'New email', 'email', 'username', 'inputmode="email" autocapitalize="off" spellcheck="false" maxlength="254"') + field('password', 'Password', 'password', 'current-password', 'maxlength="200"') + ERR
+      + '<button type="submit" class="pw-cta">Change email</button></form>'
+      + '<div class="pw-links ac-links"><button type="button" data-ac-go="account">Back</button></div>';
     if (v === 'delete') return head('Delete account')
       + '<div class="ac-box ac-warn"><p>This deletes your account, its synced progress and its share links from our server right away. It can\u2019t be undone. Cards on this device stay here.</p></div>'
       + '<form class="pw-form" data-ac-form="delete" novalidate>' + field('password', 'Password', 'password', 'current-password', 'maxlength="200"') + ERR
@@ -116,7 +127,7 @@
       + '<div class="ac-row"><span>Sync</span><b class="ac-sync" data-ac-last>' + esc(lastSync()) + '</b></div></div>'
       + '<button type="button" class="pw-cta" data-ac-act="sync">Sync now</button>'
       + '<p class="pw-fine">Your decks, reviews, stats, streak, course progress and settings sync to every device you sign in on.' + (u.pro ? '' : ' Unlock Synapse Pro while signed in and it follows your account.') + '</p>'
-      + '<div class="ac-list"><button type="button" data-ac-go="password">Change password</button><button type="button" data-ac-act="logout">Log out</button><button type="button" class="ac-del" data-ac-go="delete">Delete account</button></div>';
+      + '<div class="ac-list"><button type="button" data-ac-go="email">Change email</button><button type="button" data-ac-go="password">Change password</button><button type="button" data-ac-act="logout">Log out</button><button type="button" class="ac-del" data-ac-go="delete">Delete account</button></div>';
   }
   function open(v) {
     var w = document.querySelector('.ac-sheet:not(.pw-out)');
@@ -145,7 +156,9 @@
   function submit(f) {
     var kind = f.dataset.acForm, v = function (n) { return f.elements[n] ? f.elements[n].value : ''; };
     var email = v('email').trim(), pw = v('password');
-    if ((kind === 'login' || kind === 'signup' || kind === 'reset') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err(f, 'Enter your email address.');
+    if ((kind === 'login' || kind === 'signup' || kind === 'reset' || kind === 'email') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err(f, 'Enter your email address.');
+    if (kind === 'email' && !pw) return err(f, 'Enter your password.');
+    if (kind === 'email' && st() && email.toLowerCase() === String(st().email || '').toLowerCase()) return err(f, 'That\u2019s already your email.');
     if (kind === 'login' && !pw) return err(f, 'Enter your password.');
     if ((kind === 'signup' || kind === 'reset' || kind === 'password') && pw.length < 8) return err(f, 'Use at least 8 characters for the password.');
     if (kind === 'reset' && v('code').replace(/[^0-9a-z]/gi, '').length !== 8) return err(f, 'Enter the 8-character reset code.');
@@ -155,6 +168,7 @@
       : kind === 'signup' ? call('signup', { email: email, password: pw, device: device() })
       : kind === 'reset' ? call('reset', { email: email, code: v('code'), password: pw, device: device() })
       : kind === 'password' ? call('password', { old: v('old'), password: pw })
+      : kind === 'email' ? call('email', { email: email, password: pw })
       : call('delete', { password: pw });
     p.then(async function (j) {
       if (j.ok) {
@@ -162,6 +176,12 @@
         if (kind === 'signup') return signedIn(j, 'Account created. Your progress now syncs.');
         if (kind === 'reset') return signedIn(j, 'Password changed. You\u2019re signed in.');
         if (kind === 'password') { toast('Password changed. Other devices were signed out.'); open('account'); return; }
+        if (kind === 'email') {
+          await emailChanged(j);
+          var mv = {}; try { if (window.NPEmail && j.moves) { busy(f, true, 'Updating Axon and Liminal\u2026'); mv = await window.NPEmail.apply(j.moves, pw); } } catch (e) {}
+          var also = mv.axon && mv.liminal ? ' Axon and Liminal changed too.' : mv.axon ? ' Axon changed too.' : mv.liminal ? ' Liminal changed too.' : '';
+          toast('Email changed to ' + j.user.email + '.' + also + ' Sign in with it from now on.'); open('account'); return;
+        }
         if (kind === 'delete') { clear(); await stopSync(); notify(); close(); toast('Your account was deleted.'); return; }
       }
       busy(f, false);
@@ -170,6 +190,7 @@
       err(f, kind === 'login' ? 'Wrong email or password.'
         : kind === 'signup' ? (j.error === 'exists' ? 'That email can\u2019t be used for a new account. If it\u2019s yours, sign in instead.' : j.error === 'bad_email' ? 'Enter a valid email address.' : 'Couldn\u2019t create the account. Try again.')
         : kind === 'reset' ? 'That reset code didn\u2019t work. Check the email and code, or ask for a new code.'
+        : kind === 'email' ? (j.error === 'exists' ? 'That email already has a Northpeak account.' : j.error === 'email_locked' ? 'This account\u2019s email is locked (owner and bot accounts keep theirs).' : j.error === 'bad_email' ? 'Enter a valid email address.' : j.status === 401 ? 'Wrong password.' : 'That didn\u2019t work. Try again.')
         : j.error === 'bad_password_new' ? 'Use at least 8 characters for the new password.' : j.status === 401 ? 'Wrong password.' : 'That didn\u2019t work. Try again.');
     }).catch(function () { busy(f, false); err(f, OFF); });
   }
