@@ -185,6 +185,7 @@
   }
   function homeHTML() {
     const libDecks = [...M.decks.values()].filter(d => d.lib && !d.del).length;
+    if (window.Resources && Resources.web) return `<div class="lib-home"><button class="btn grow" data-go="library">📚 Library · free textbooks &amp; videos</button></div>`;
     return `<div class="lib-home"><button class="btn grow" data-go="library">📚 Deck Library${libDecks ? ` · ${libDecks} added` : ' · free Anki decks'}</button></div>`;
   }
   document.addEventListener('click', e => {

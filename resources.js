@@ -3,13 +3,15 @@
    into the app except that list. Videos with embedding allowed play in-app via youtube-nocookie. */
 'use strict';
 (function () {
-  const SEGS = [['decks', 'Decks'], ['textbook', 'Textbooks'], ['video', 'Videos'], ['pdf', 'PDFs'], ['game', 'Games'], ['site', 'Courses & tools']];
+  /* the shared Anki decks are licence-filtered on the web, so that section was always empty there: hidden on the web (Odin, Oct 21 2026), kept in the store apps */
+  const WEB = !(window.Capacitor || window.ODIN_STORE);
+  const SEGS = [['decks', 'Decks'], ['textbook', 'Textbooks'], ['video', 'Videos'], ['pdf', 'PDFs'], ['game', 'Games'], ['site', 'Courses & tools']].filter(s => !(WEB && s[0] === 'decks'));
   const TYPE_LABEL = { textbook: 'Textbook', video: 'Videos', pdf: 'PDF', game: 'Game', site: 'Course / tool' };
   const TYPE_IC = { textbook: '📖', video: '▶️', pdf: '📄', game: '🎮', site: '🧭' };
   const LS = k => { try { return localStorage.getItem('res.' + k) || ''; } catch { return ''; } };
   const LSset = (k, v) => { try { localStorage.setItem('res.' + k, v); } catch {} };
-  const S = { mode: LS('mode') || 'decks', topic: LS('topic'), q: '', data: null, err: null, loading: null, open: {} };
-  if (!SEGS.some(s => s[0] === S.mode)) S.mode = 'decks';
+  const S = { mode: LS('mode') || SEGS[0][0], topic: LS('topic'), q: '', data: null, err: null, loading: null, open: {} };
+  if (!SEGS.some(s => s[0] === S.mode)) S.mode = SEGS[0][0];
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   function load() {
     if (S.data || S.loading) return S.loading;
@@ -133,5 +135,5 @@
     if (t.dataset.rsretry != null) { S.err = null; rerender(); }
   });
   document.addEventListener('change', e => { if (e.target && e.target.id === 'rsGdeck') { G.deck = e.target.value; LSset('gdeck', G.deck); rerender(); } });
-  window.Resources = { mode: () => S.mode, render, decorate, load, _S: S, _G: G };
+  window.Resources = { web: WEB, mode: () => S.mode, render, decorate, load, _S: S, _G: G };
 })();
