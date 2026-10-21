@@ -32,7 +32,13 @@
     return picked.map(x => {
       const same = all.filter(y => y.deck === x.deck && y.a !== x.a), other = all.filter(y => y.a !== x.a);
       const src = same.length >= 3 ? same : other; const opts = new Set([x.a]); let guard = 0;
-      while (opts.size < 4 && guard++ < 60) opts.add(src[Math.floor(r() * src.length)].a);
+      // v131: distractors that look like the answer (numbers with numbers, short with short) instead of any random card's answer
+      const shape = s => ({ num: /^[\s\d.,%<>≈~×x\-–]+\s*[a-zA-Zµ%°/]{0,6}\s*$/.test(s), len: s.length, words: s.trim().split(/\s+/).length });
+      const sx = shape(x.a);
+      const score = y => { const sy = shape(y.a); let d = sx.num !== sy.num ? 10 : 0; d += Math.abs(Math.log((sy.len + 4) / (sx.len + 4))) * 4; d += Math.abs(Math.log((sy.words + 1) / (sx.words + 1))) * 2; return d + r() * 0.6; };
+      const ranked = src.map(y => [score(y), y]).sort((a, b) => a[0] - b[0]).map(v => v[1]).slice(0, 8);
+      while (opts.size < 4 && guard++ < 40) opts.add(ranked[Math.floor(r() * ranked.length)].a);
+      while (opts.size < 4 && guard++ < 80) opts.add(src[Math.floor(r() * src.length)].a);
       const o = [...opts].map(v => [r(), v]).sort((a, b) => a[0] - b[0]).map(v => v[1]);
       return { q: x.q, a: x.a, o, deck: (M.decks.get(x.deck) || {}).name || '' };
     });

@@ -120,7 +120,7 @@
 .mn-body .xp-a{margin-bottom:8px;font-weight:600}
 
 .di-play{display:flex;gap:10px;align-items:center;justify-content:center;margin:6px 0 14px}
-.di-big{width:76px;height:76px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:30px;box-shadow:var(--shadow)}
+.di-big{width:76px;height:76px;border-radius:50%;border:0;background:var(--acc);color:var(--on-acc);font-size:30px;box-shadow:var(--shadow)}
 .di-keys{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .di-keys button{min-width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--tx);font:600 16px/1 inherit}
 .di-res{font-size:18px;line-height:1.6;font-weight:600}

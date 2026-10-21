@@ -51,7 +51,7 @@
   var TRIAL = WEB ? (+W.trialDays || 0) * 864e5 : 0, GATE = WEB && TRIAL > 0;
   function acct() { try { var a = JSON.parse(localStorage.getItem('acct.v1')); return a && a.email && Date.now() - (a.checked || 0) < WEB_GRACE ? a : null; } catch (e) { return null; } }
   function owner() { try { if (localStorage.getItem('pro.owner') === '1') return true; } catch (e) {} var a = acct(); return !!(a && a.owner); }
-  function trialStart() { var a = acct(); if (a && a.trial) return a.trial; var t = 0; try { t = +localStorage.getItem('pro.trial') || 0; } catch (e) {} return t; }
+  function trialStart() { var a = acct(); return a && a.trial ? a.trial : 0; } // account-only trial (Oct 20): signed out = no trial
   function trialLeft() { var s = trialStart(); return s ? s + TRIAL - Date.now() : null; }
   function trialOn() { var l = trialLeft(); return TRIAL > 0 && l != null && l > 0; }
   function paid() {
@@ -267,19 +267,19 @@
     var pro = WEB ? (owner() || paid()) : has(), s = st(), cur = PRODUCTS.filter(function (p) { return p.id === s.id; })[0];
     var a = acct(), started = !!trialStart(), signedOut = !a && !!window.Account && Account.on;
     var w = document.createElement('div'); w.className = 'pw' + (g ? ' pw-gate' : ''); if (g) w.dataset.gate = '1'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-labelledby', 'pwT');
-    var hero = g ? (started ? ['Your free trial has ended', 'Get ' + (C.name || 'Synapse Pro') + ' to keep using Synapse. ' + priceLine() + ' once, yours forever.'] : ['Try Synapse free for ' + (W.trialDays || 3) + ' days', 'Everything in Synapse, free for ' + (W.trialDays || 3) + ' days. After that, ' + (C.name || 'Synapse Pro') + ' is ' + priceLine() + ' once, yours forever.'])
+    var hero = g ? (signedOut && !started ? ['Make an account to start your ' + (W.trialDays || 3) + '\u2011day free trial', 'Everything in Synapse, free for ' + (W.trialDays || 3) + ' days once you have an account. After that, ' + (C.name || 'Synapse Pro') + ' is ' + priceLine() + ' once, yours forever.'] : started ? ['Your free trial has ended', 'Get ' + (C.name || 'Synapse Pro') + ' to keep using Synapse. ' + priceLine() + ' once, yours forever.'] : ['Try Synapse free for ' + (W.trialDays || 3) + ' days', 'Everything in Synapse, free for ' + (W.trialDays || 3) + ' days. After that, ' + (C.name || 'Synapse Pro') + ' is ' + priceLine() + ' once, yours forever.'])
       : [C.name || 'Synapse Pro', pro ? 'You have ' + C.name + '. Everything is unlocked.' : GATE && trialOn() ? trialText() + '. ' + priceLine() + ' once to keep everything.' : (C.tagline ? C.tagline.replace((C.name || 'Synapse Pro') + ' \u2014 ', '') : 'Unlock every course, tool and deck.')];
     w.innerHTML = '<div class="pw-in">'
       + (g ? '' : '<button type="button" class="pw-x" data-pw-x aria-label="Close">' + svg('x', 20, 2.2) + '</button>')
       + '<div class="pw-hero' + (g ? ' pw-hero-gate' : '') + '"><img class="pw-logo" src="' + esc(logo()) + '" alt=""><h2 id="pwT">' + esc(hero[0]) + '</h2>'
       + '<p>' + esc(hero[1]) + '</p></div>'
       + (g && !started ? (signedOut
-          ? '<button type="button" class="pw-cta" data-pw-signup>Create account &amp; start free trial</button><button type="button" class="pw-cta pw-cta2" data-pw-signin>Sign in</button><div class="pw-links"><button type="button" data-pw-trial>Start the trial without an account</button></div>'
-          : '<button type="button" class="pw-cta" data-pw-trial>Start free trial</button>') + '<h3 class="pw-or">Or buy it now</h3>' : '')
+          ? '<button type="button" class="pw-cta" data-pw-signup>Make an account</button><button type="button" class="pw-cta pw-cta2" data-pw-signin>I already have one \u2014 sign in</button>'
+          : '<button type="button" class="pw-cta" data-pw-signin>Account</button>') + '<h3 class="pw-or">Or buy it now</h3>' : '')
       + (!pro && from ? '<div class="pw-from">' + svg('lock', 15, 2) + '<span>' + esc(from) + ' ' + (/s$/.test(from) && !/^The /.test(from) ? 'are' : 'is') + ' part of ' + esc(C.name) + '</span></div>' : '')
       + '<ul class="pw-ben">' + (C.benefits || []).map(function (b) { return '<li><span class="pw-bi">' + svg(b[0], 19) + '</span><span class="pw-bt"><b>' + esc(b[1]) + '</b><small>' + esc(b[2]) + '</small></span></li>'; }).join('') + '</ul>'
       + (pro
-        ? (WEB ? '<p class="pw-fine">' + esc(webStatus()) + '</p>' : (cur && cur.type === 'subs' ? '<a class="pw-cta" href="' + esc(LINKS.manage) + '" target="_blank" rel="noopener">Manage subscription</a>' : '') + '<p class="pw-fine">Thanks for supporting Synapse.</p>')
+        ? (WEB ? '<p class="pw-fine">' + esc(webStatus()) + '</p>' + aaHtml() : (cur && cur.type === 'subs' ? '<a class="pw-cta" href="' + esc(LINKS.manage) + '" target="_blank" rel="noopener">Manage subscription</a>' : '') + '<p class="pw-fine">Thanks for supporting Synapse.</p>')
         : '<div class="pw-plans" role="radiogroup" aria-label="Choose a plan">' + plansHTML() + '</div>'
           + (WEB && !CHECKOUT && WC.why ? '<p class="pw-why">' + esc(WC.why) + '</p>' : '')
           + '<button type="button" class="pw-cta" data-pw-buy>' + esc(ctaText()) + '</button>'
@@ -329,6 +329,11 @@
   function ccOptions() { return CC.map(function (c, i) { return '<option value="' + i + '"' + (i === 0 ? ' selected' : '') + '>' + flag(c[0]) + ' +' + c[1] + ' ' + esc(c[2]) + '</option>'; }).join(''); }
   /* ---------- web-sale screens: request form, request sent, unlock code ---------- */
   var lastFrom = '';
+  function aaCode() { var a = acct(), s = st(); return (a && a.aaCode) || (s.active && s.id === 'all_access' && s.code) || ''; }
+  function aaHtml() { // Northpeak All-Access: the same code unlocks Axon (and every future Northpeak app)
+    var c = aaCode(); if (!c) return '';
+    return '<p class="pw-fine" style="margin-top:8px">You have <b>Northpeak All-Access</b>. Your code <b style="user-select:all;-webkit-user-select:all;letter-spacing:.04em">' + esc(c) + '</b> unlocks Axon too: in Axon, open <b>Settings \u203a Get Axon Pro \u203a Have an All-Access code?</b></p>';
+  }
   function webStatus() {
     if (owner()) return acct() && acct().owner ? 'Your account is the owner account. Everything is unlocked.' : 'This device is unlocked as the owner\u2019s copy.';
     if (acct() && acct().pro) return 'Synapse Pro is on your account, on every device you sign in on. Thanks for supporting Synapse.';
@@ -374,6 +379,13 @@
   }
   function err(f, m) { var e = f.querySelector('[data-pw-err]'); if (e) { e.textContent = m; e.hidden = !m; } }
   function lock(f, on, txt) { var b = f.querySelector('button[type=submit]'); if (b) { b.disabled = on; if (txt) b.textContent = txt; } }
+  /* Northpeak All-Access: the backends pass short signed notes through this page (they can't call each other directly) */
+  var NP_PEERS = { synapse: '', axon: 'https://axon-sync.sites.tab.bot' };
+  function npHop(j, n) {
+    n = n || 0; if (!j || !j.relay || n > 3 || !(j.relay.to in NP_PEERS)) return Promise.resolve(j);
+    return fetch(NP_PEERS[j.relay.to] + j.relay.path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ m: j.relay.m, sig: j.relay.sig }) })
+      .then(function (r) { return r.json(); }).then(function (k) { return npHop(k, n + 1); }).catch(function () { return j; });
+  }
   function sendRequest(f) {
     var pe = f.querySelector('input[name=plan]:checked'), plan = pe ? pe.value : '', name = f.elements['name'].value.trim(), contact = f.elements['contact'].value.trim(), email = f.elements['email'].value.trim().toLowerCase();
     if (!plan) return err(f, 'Choose a plan.');
@@ -384,7 +396,7 @@
     contact = '+' + cc[1] + ' ' + digits;
     err(f, ''); lock(f, true, 'Sending\u2026');
     api('/api/pro/request', { name: name, contact: contact, plan: plan, email: email, website: f.elements['website'].value }).then(function (j) {
-      if (j.ok) { view('sent'); return; }
+      if (j.ok) { npHop(j).then(function () {}, function () {}); view('sent'); return; }
       lock(f, false, 'Send request');
       err(f, j.status === 429 ? 'Too many requests from here. Try again in an hour.' : j.error === 'closed' ? 'Web purchases aren\u2019t open right now.' : j.error === 'bad_email' ? 'Enter the email for your account.' : 'That didn\u2019t send. Check the details and try again.');
     }).catch(function () { lock(f, false, 'Send request'); err(f, 'You look offline. Try again when you\u2019re connected.'); });
@@ -425,20 +437,11 @@
   function gated() { return GATE && !has(); }
   function priceLine() { var p = PRODUCTS[0] || {}; return p.price || '$35'; }
   function trialText() { var l = trialLeft() || 0, d = Math.ceil(l / 864e5); return l < 864e5 ? 'Trial: ends today' : 'Trial: ' + d + ' day' + (d === 1 ? '' : 's') + ' left'; }
-  function startTrial() {
-    if (!trialStart()) { try { localStorage.setItem('pro.trial', String(Date.now())); } catch (e) {} }
-    syncTrial(); changed(); toast('Your ' + (W.trialDays || 3) + '-day free trial has started.');
+  function startTrial() { // the trial only exists on an account: signed out, this opens account creation
+    if (!acct()) { if (window.Account) Account.open('signup'); return; }
+    changed();
   }
-  function syncTrial() { // device trial (signed out): the server keeps the earliest start this device reported
-    var t = 0; try { t = +localStorage.getItem('pro.trial') || 0; } catch (e) {}
-    if (!GATE || !t || acct()) return;
-    api('/api/pro/trial', { device: device(), start: t }).then(function (j) {
-      if (!j.ok) return;
-      if (j.start && j.start < t) { try { localStorage.setItem('pro.trial', String(j.start)); } catch (e) {} }
-      if (j.owner) { try { localStorage.setItem('pro.owner', '1'); } catch (e) {} }
-      changed();
-    }).catch(function () {});
-  }
+  function syncTrial() { try { localStorage.removeItem('pro.trial'); } catch (e) {} } // old device-trial clock: no longer used, cleared
   function check() {
     if (!GATE) return;
     var g = gated(); try { if (g) localStorage.setItem('pro.locked', '1'); else localStorage.removeItem('pro.locked'); } catch (e) {}

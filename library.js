@@ -152,7 +152,7 @@
       el.innerHTML = `<div class="lib-head"><p class="muted">Free shared Anki decks for your topics, ready to add.</p></div><div class="empty">${S.err ? 'The library could not be loaded. ' + esc(S.err) : 'Loading the library…'}</div>`;
       getIndex().then(render, e => { S.err = e.message; render(); }); return;
     }
-    if (!idx.length) { el.innerHTML = '<div class="lib-head"><p class="muted">Ready-made decks you can add with one tap.</p></div><div class="empty">New decks are on the way. Until then, the Learn courses and your own decks have you covered.</div>'; return; }
+    if (!idx.length) { el.innerHTML = '<div class="lib-head"><p class="muted">Ready-made decks you can add with one tap.</p></div><div class="empty">New decks are on the way. Until then, the free textbooks, videos and courses in the tabs above, the Learn courses and your own decks have you covered.<div style="margin-top:14px"><button type="button" class="btn" data-rsmode="textbook">Browse free textbooks</button></div></div>'; return; }
     const q = S.q.trim().toLowerCase();
     const list = idx.filter(m => (!S.topic || m.topic === S.topic) && (!q || (m.name + ' ' + m.topic + ' ' + (m.desc || '') + ' ' + ((m.source || {}).title || '')).toLowerCase().includes(q)));
     const byTopic = {}; for (const m of list) (byTopic[m.topic] = byTopic[m.topic] || []).push(m);

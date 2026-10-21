@@ -119,6 +119,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--acc)}
 .chip{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--mut);margin-left:6px}
 .tagbox{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px 12px}
 .tagbox summary{cursor:pointer;padding:10px 0;font-weight:600;color:var(--mut);min-height:44px;display:flex;align-items:center}
+.tagbox summary::-webkit-details-marker{display:none}.tagbox summary::after{content:"▸";margin-left:auto;color:var(--mut);font-size:14px;transition:transform .15s}.tagbox[open] summary::after{transform:rotate(90deg)}
 #tagtree{max-height:50vh;overflow:auto;padding-bottom:8px}
 .tagrow{display:flex;align-items:center;gap:2px}
 .tog{width:36px;height:40px;background:none;border:0;color:var(--mut);flex:none;display:inline-flex;align-items:center;justify-content:center}
@@ -126,3 +127,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--acc)}
 .tagbtn.on{background:var(--bg2);color:var(--acc)}
 select{-webkit-appearance:none;appearance:none;background-color:var(--bg2);color:var(--tx);padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238d99b0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 select option{background:var(--bg2);color:var(--tx)}
+
+/* v138: study bar counts say what they are */
+.counts.labeled{gap:3px;align-items:baseline}
+.counts.labeled small{font-size:11px;font-weight:500;color:var(--mut);margin-right:8px}
+.counts.labeled small:last-child{margin-right:0}
+
+h1,h2,h3{text-wrap:balance}
+
+/* v159: link from a card back to the Axon note it was made from */
+#face .srcnote{display:block;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin-top:14px;padding-top:10px;border-top:1px dashed rgba(127,127,127,.35);font-size:14px;color:var(--accent,#6aa9ff);text-decoration:none;text-align:center}

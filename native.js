@@ -1,5 +1,5 @@
 /* native app feel: no pinch / double-tap zoom anywhere except elements marked data-pinch (the 3D anatomy canvas),
-   no rubber-band, no long-press callouts on chrome. Shared by / and /chess/. */
+   no rubber-band, no long-press callouts on chrome. */
 (function () {
   'use strict';
   if (window.__nativeFeel) return; window.__nativeFeel = 1;

@@ -34,7 +34,7 @@ window.SYNAPSE_PRO = {
   /* ---------- web-sale mode (the website selling Pro itself) ---------- */
   web: {
     enabled: true,             // THE switch. false = the website is fully unlocked (Odin's own copy too). true = website sells Pro.
-    trialDays: 3,              // web: no free tier. New people get a 3-day free trial of everything (tied to their account when signed in),
+    trialDays: 3,              // web: no free tier. New people get a 3-day free trial of everything once they make an account (no account = no trial),
                                // then the whole app locks behind the paywall until they buy, redeem a code, or sign in to a paid account.
     method: 'applecash',       // 'applecash' = buyer sends a request, you send an Apple Cash request, then an unlock code
                                // 'checkout'  = hosted checkout from a merchant-of-record (needs an adult seller account; see SELL-ONLINE.md)
@@ -69,7 +69,7 @@ window.SYNAPSE_PRO = {
     }
   },
   benefits: [
-    ['learn', 'All 200 courses at every level', 'High school to doctor level, with every test'],
+    ['learn', 'All 400 courses at every level', 'High school to doctor level, with every test'],
     ['lab', 'The full Lab', 'Patient sims, ECG, CT and MRI, Anatomy 3D'],
     ['books', 'Deck import and image occlusion', 'Bring in .apkg decks, turn diagrams into cards'],
     ['steth', 'Unlimited Doctordle', 'New cases anytime, not just the daily one'],

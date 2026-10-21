@@ -1,5 +1,5 @@
 /* Prefs: one settings store for the whole app (theme, accent, text size, motion, haptics, home layout, per-app options).
-   localStorage 'prefs.v1' (same origin, so /chess/ reads it too); the Cards app syncs it through D1 as progress record id 'prefs'. */
+   localStorage 'prefs.v1'; the Cards app syncs it through D1 as progress record id 'prefs'. */
 (function () {
   'use strict';
   if (window.Prefs) return;
@@ -12,7 +12,6 @@
     cards: { newPerDay: 20, font: 'system' },
     learn: { level: 'hs' },
     doc: { hard: false, timed: false },
-    chess: { board: 'green', light: '', dark: '', pieces: 'cburnett' },
     at: 0
   };
   const clone = o => JSON.parse(JSON.stringify(o));
@@ -23,7 +22,7 @@
   function fixTiles() { const o = v.home.order.filter(k => TILE_IDS.includes(k)); TILE_IDS.forEach(k => { if (!o.includes(k)) o.push(k); }); v.home.order = o; v.home.hidden = v.home.hidden.filter(k => TILE_IDS.includes(k)); }
   fixTiles();
   const subs = [];
-  function save(remote) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} apply(); syncChess(); subs.forEach(f => { try { f(remote); } catch (e) {} }); }
+  function save(remote) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} apply(); subs.forEach(f => { try { f(remote); } catch (e) {} }); }
   function set(path, val) {
     const ks = path.split('.'); let o = v; for (let i = 0; i < ks.length - 1; i++) o = o[ks[i]];
     o[ks[ks.length - 1]] = val; v.at = Date.now(); save(false);
@@ -64,23 +63,12 @@
     const rm = v.reduceMotion === 'auto' ? !!(mqMotion && mqMotion.matches) : !!v.reduceMotion;
     de.classList.toggle('reduce-motion', rm);
     const mc = document.querySelector('meta[name=theme-color]');
-    if (mc && !location.pathname.startsWith('/chess')) mc.content = tv && /^#/.test(tv[0]) ? tv[0] : t === 'light' ? '#f2f2f7' : t === 'amoled' ? '#000000' : '#0c0c0e';
+    if (mc) mc.content = tv && /^#/.test(tv[0]) ? tv[0] : t === 'light' ? '#f2f2f7' : t === 'amoled' ? '#000000' : '#0c0c0e';
     // a layout theme (Customize) owns the colors and the top bar color: put it back on top
     if (window.LT && LT.reapply) try { LT.reapply(); } catch (e) {}
   }
-  if (mqDark && mqDark.addEventListener) mqDark.addEventListener('change', () => { if (v.theme === 'auto') { apply(); syncChess(); } });
-  // chess (Openings Lab) keeps its own settings; mirror the shared ones into it so it follows the app
-  function syncChess() {
-    try {
-      const S = JSON.parse(localStorage.getItem('ol.settings') || '{}') || {};
-      const t = themeNow();
-      S.theme = t === 'light' ? 'light' : t === 'amoled' ? 'oled' : 'dark';
-      S.accent = v.accent; S.board = v.chess.board || 'green'; S.boardLight = v.chess.light || ''; S.boardDark = v.chess.dark || ''; S.pieces = v.chess.pieces || 'cburnett';
-      S.haptics = !!v.haptics; S.reduceMotion = de.classList.contains('reduce-motion');
-      localStorage.setItem('ol.settings', JSON.stringify(S));
-    } catch (e) {}
-  }
-  apply(); syncChess();
+  if (mqDark && mqDark.addEventListener) mqDark.addEventListener('change', () => { if (v.theme === 'auto') apply(); });
+  apply();
 
   /* ---------- haptics + sounds ---------- */
   let hapEl = null;
@@ -107,7 +95,6 @@
   /* ---------- icons (line icons, 24px grid) ---------- */
   const P = {
     cards: '<rect x="3.5" y="6" width="13" height="15" rx="2.5"/><path d="M7.5 3h10A2.5 2.5 0 0 1 20 5.5V17"/>',
-    chess: '<path d="M8 21h8M7 18h10l-1-4H8l-1 4z"/><path d="M9 14c0-2 1-3 1-5-1.5-.4-2.5-1.5-2.5-3 0-1.8 1.9-3 4.5-3 3.2 0 5 2.2 5 5.5 0 2.2-.7 3.9-1 5.5"/><circle cx="11" cy="6" r=".6" fill="currentColor"/>',
     doc: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/><path d="M5 3h2M13 3h2"/>',
     anat: '<circle cx="12" cy="4.5" r="2"/><path d="M12 7.5v7M8 21l2-6.5h4L16 21M5.5 10.5 12 8.5l6.5 2"/>',
     me: '<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>',

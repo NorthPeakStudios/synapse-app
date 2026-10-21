@@ -1,16 +1,11 @@
 {
- "id": "/synapse-app/",
+ "id": "/",
  "name": "Synapse",
  "short_name": "Synapse",
  "description": "Synapse: flashcards, courses, Doctordle and anatomy for curious students.",
- "start_url": "./",
- "scope": "./",
+ "start_url": "/",
+ "scope": "/",
  "display": "standalone",
- "display_override": [
-  "standalone",
-  "fullscreen",
-  "minimal-ui"
- ],
  "orientation": "portrait",
  "background_color": "#f6f0e1",
  "theme_color": "#f6f0e1",

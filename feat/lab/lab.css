@@ -39,7 +39,7 @@
 .sim-steps{display:flex;gap:4px;margin:2px 0 12px;overflow-x:auto;scrollbar-width:none}
 .sim-steps::-webkit-scrollbar{display:none}
 .sim-st{flex:1 1 0;min-width:0;border:0;border-radius:99px;background:var(--fill);color:var(--mut);font:600 12px/1 inherit;padding:8px 2px;white-space:nowrap}
-.sim-st.on{background:var(--acc);color:#fff}
+.sim-st.on{background:var(--acc);color:var(--on-acc)}
 .sim-st.done{color:var(--tx)}
 .sim-st:disabled{opacity:.55}
 .sim-pt{border-left:4px solid var(--acc)}
@@ -58,7 +58,7 @@
 .sim-o:disabled{opacity:1}
 .sim-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 .chip-t{border:1.5px solid var(--line);background:var(--card);color:var(--tx);border-radius:99px;padding:9px 13px;font:500 14.5px inherit;min-height:40px}
-.chip-t.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chip-t.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
 .sim-notes{background:var(--fill);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:14px}
 .sim-notes summary{font-weight:600;cursor:pointer}
 .sim-notes ul{margin:8px 0 0;padding-left:18px;line-height:1.45}

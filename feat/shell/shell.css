@@ -21,7 +21,7 @@ body.sh-sub .sh-back + .logo + #title,body.sh-sub header.top #title{max-width:60
 .sh-seg{grid-column:1/-1;padding:4px 6px 6px}
 .sh-seg[hidden]{display:none}
 .sh-segc{display:flex;background:var(--fill);border-radius:10px;padding:2px;gap:2px}
-.sh-segc button{flex:1;min-height:32px;border:0;border-radius:8px;background:none;color:var(--tx);font-size:13.5px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 6px}
+.sh-segc button{flex:1;min-height:36px;border:0;border-radius:8px;background:none;color:var(--tx);font-size:13.5px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 6px}
 .sh-segc button.on{background:rgba(255,255,255,.2);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 html[data-theme=light] .sh-segc button.on{background:#fff}
 .sh-cnt{font-style:normal;font-size:11px;font-weight:700;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--again);color:#fff;display:inline-flex;align-items:center;justify-content:center}
@@ -53,7 +53,7 @@ body:not(.sh-hide-tabs) .toast{bottom:calc(var(--sh-tabh) + 16px + var(--bot))!i
 .sh-find input::-webkit-search-cancel-button,.sh-find input::-webkit-search-decoration{-webkit-appearance:none;display:none}
 .sh-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--sh-gut)) 4px;padding:2px var(--sh-gut) 6px;scroll-padding:0 var(--sh-gut)}
 .sh-chips::-webkit-scrollbar{display:none}
-.sh-chip{flex:none;min-height:34px;padding:0 14px;border-radius:17px;border:0;background:var(--fill);color:var(--tx);font-size:14px;font-weight:500;white-space:nowrap}
+.sh-chip{flex:none;min-height:38px;padding:0 14px;border-radius:19px;border:0;background:var(--fill);color:var(--tx);font-size:14px;font-weight:500;white-space:nowrap}
 .sh-chip.on{background:var(--tx);color:var(--bg)}
 .sh-grp[hidden]{display:none}
 .sh-gh{display:flex;align-items:baseline;justify-content:space-between;margin:20px 6px 7px!important;font-size:13px!important;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
@@ -121,4 +121,15 @@ html.s-contrast .sh-list,html.s-contrast .h-mini,html.s-contrast .h-hero.done,ht
 /* v119: seamless top. the header is the page colour, no hairline, no blur/tint band; nothing scrolls visibly under the status bar */
 header.top,body.sh-scrolled header.top,body.sh-segon header.top{background:var(--bg)!important;background-image:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-bottom:0!important;box-shadow:none!important}
 .st-nb{background:var(--bg)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-bottom:0!important;box-shadow:none!important}
-body::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--top,env(safe-area-inset-top,0px));background:var(--bg);z-index:2147483600;pointer-events:none}
+/* v122/v125: the status-bar painter is a REAL fixed element. iOS 26/27 ignores theme-color and the status-bar-style meta and draws a system blur
+   over the top of an installed app (a dark material in dark mode = the gray band over the cream page); WebKit colors the status bar from a
+   position:fixed element that is >=6px tall, >=80% wide and within 4px of the top. v125: it sits BEHIND everything (z-index:-1) so sheets,
+   modals, toasts and scrolled content are never covered by it; every screen already starts below the safe-area inset (header padding / home padding). */
+.sbar{position:fixed;left:0;right:0;top:0;width:100%;height:var(--top,env(safe-area-inset-top,0px));background:var(--bg);z-index:-1;pointer-events:none}
+html.is-standalone .sbar{height:max(6px,var(--top,env(safe-area-inset-top,0px)))}
+html.is-standalone body{background:transparent} /* the html element already paints var(--bg) on the canvas; a transparent body lets the strip behind it show in the status-bar area */
+
+/* v137: lab tool score/count sits on the title line as a small pill instead of floating alone above it */
+#v-x .lb-top:has(+ .lb-title):has(.lb-tr:not(:empty)){min-height:0;height:0;position:relative}
+#v-x .lb-top:has(+ .lb-title) .lb-tr:not(:empty){position:absolute;right:0;top:4px;background:var(--fill);border-radius:999px;padding:3px 10px;font-size:13px;line-height:18px;max-width:45%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#v-x .lb-top:has(.lb-tr:not(:empty)) + .lb-title{padding-right:84px}

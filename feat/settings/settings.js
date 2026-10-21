@@ -1,7 +1,7 @@
 /* Settings API (feat/settings/settings.js) — one store for every option in the app.
    window.Settings = { get(key), set(key, value), on(key | 'prefix.*' | '*', fn) -> off(), all(), reset(), DEF, apply(),
                        anat(), nav(), weakDays(), orderCards(list, kind), matchTyped(given, accepted, strict) }
-   Keys that already exist in Prefs (theme, accent, text, home.*, cards.*, learn.level, doc.*, chess.board ...) read and write
+   Keys that already exist in Prefs (theme, accent, text, home.*, cards.*, learn.level, doc.* ...) read and write
    through Prefs, so old code keeps working. Everything else lives in localStorage 'settings.v2' and syncs through D1 as
    progress record id 'settings2' (t:'prefs2'), newest 'at' wins. Load right after prefs.js; app.js globals are used lazily. */
 (function () {
@@ -24,7 +24,6 @@
     'cards.flip': 'flip', 'cards.swipe': true,
     'learn.testLen': 0, 'learn.explain': 'always', 'learn.slow': false,
     'doc.clueOrder': 'classic',
-    'chess.coords': 'inside', 'chess.sound': true, 'chess.anim': 'normal', 'chess.depth': 18, 'chess.evalBar': true, 'chess.lastMove': true, 'chess.dests': true,
     'anat.sex': 'm', 'anat.layers': ['skin'], 'anat.labelSize': 'm', 'anat.quality': 'high', 'anat.shadows': true, 'anat.autoRotate': false,
     'anat.sensitivity': 1, 'anat.isolate': 'ghost', 'anat.labels': true,
     'lib.mode': 'decks', 'lib.sort': 'popular', 'res.openIn': 'app',
@@ -105,17 +104,6 @@
     lastCls.forEach(c => de.classList.remove(c)); vc.forEach(c => de.classList.add(c)); lastCls = vc;
     const sn = SENS[g('nav.swipeSens')] || SENS.medium; de.style.setProperty('--swipe-edge', sn[0] + 'px');
     de.style.setProperty('--anat-label-scale', { s: .85, m: 1, l: 1.2, xl: 1.4 }[g('anat.labelSize')] || 1);
-    syncChess();
-  }
-  // Openings Lab (/chess/) keeps its own settings; mirror ours in (Prefs mirrors theme/board/pieces)
-  function syncChess() {
-    try {
-      const C = JSON.parse(localStorage.getItem('ol.settings') || '{}') || {};
-      C.coords = get('chess.coords'); C.sound = !!get('chess.sound'); C.anim = get('chess.anim'); C.engDepth = +get('chess.depth');
-      C.evalBar = !!get('chess.evalBar'); C.lastMove = !!get('chess.lastMove'); C.dests = !!get('chess.dests');
-      C.largeText = ['l', 'xl'].includes(prefGetSafe('text')); C.highContrast = !!get('ui.contrast');
-      localStorage.setItem('ol.settings', JSON.stringify(C));
-    } catch (e) {}
   }
   function prefGetSafe(k) { try { return prefGet(k); } catch (e) { return null; } }
   apply();
@@ -150,7 +138,9 @@
     if (mode === 'exact') return accepted.includes(given);
     if (accepted.includes(given)) return true;
     if (mode === 'lenient') return accepted.some(a => { const x = strip(a), y = strip(given); return x === y || lev(x, y) <= Math.max(1, Math.floor(x.length / 6)); });
-    return accepted.some(a => strip(a) === strip(given) || (a.length >= 8 && lev(a, given) <= 1));
+    const soft = s => strip(s).replace(/^(the|a|an) /, '').replace(/[-\u2010-\u2014\s]+/g, '');
+    const plural = (x, y) => x === y || x + 's' === y || y + 's' === x || x + 'es' === y || y + 'es' === x;
+    return accepted.some(a => strip(a) === strip(given) || plural(soft(a), soft(given)) || (a.length >= 8 && lev(a, given) <= 1));
   }
 
   /* ---------- behaviours that need no hooks in other files ---------- */

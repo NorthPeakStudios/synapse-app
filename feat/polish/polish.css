@@ -36,5 +36,5 @@ html.s-tile-s #v-home .btiles.as-grid .btile{grid-column:span 2;flex-direction:c
 html.s-tile-s #v-home .btiles.as-grid .btile:last-child:nth-child(3n+1){grid-column:1/-1;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;min-height:72px}
 html.s-tile-s #v-home .btiles.as-grid .btile:last-child:nth-child(3n+2),html.s-tile-s #v-home .btiles.as-grid .btile:nth-last-child(2):nth-child(3n+1){grid-column:span 3}
 html.s-tile-l #v-home .btiles.as-grid .btile:last-child:nth-child(odd){grid-column:auto}
-.doc-cbtns .chip.on{background:var(--acc)!important;color:#fff!important}
+.doc-cbtns .chip.on{background:var(--acc)!important;color:var(--on-acc)!important}
 .doc-cbtns .chip.on small{color:rgba(255,255,255,.8)!important}

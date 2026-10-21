@@ -15,7 +15,7 @@
   if (!ON) { window.Account = { on: false, user: function () { return null; }, open: function () {}, refresh: function () { return Promise.resolve(null); }, homeBtn: function () { return ''; }, label: function () { return ''; } }; return; }
 
   function st() { try { var s = JSON.parse(localStorage.getItem(KEY)); return s && s.email ? s : null; } catch (e) { return null; } }
-  function save(u) { try { localStorage.setItem(KEY, JSON.stringify({ email: u.email, pro: !!u.pro, owner: !!u.owner, since: u.since || 0, trial: u.trial || 0, checked: Date.now() })); } catch (e) {} }
+  function save(u) { try { localStorage.setItem(KEY, JSON.stringify({ email: u.email, pro: !!u.pro, owner: !!u.owner, since: u.since || 0, trial: u.trial || 0, aaCode: u.aaCode || null, checked: Date.now() })); } catch (e) {} }
   function clear() { try { localStorage.removeItem(KEY); localStorage.removeItem('acct.tok'); } catch (e) {} }
   function user() { return st(); }
   function device() {
@@ -84,11 +84,11 @@
   function body(v) {
     var u = st();
     if (v === 'account' && !u) v = 'signin';
-    if (v === 'signin') return head('Sign in to sync', 'Keep your decks, progress and Synapse Pro on every device. Optional: the app works fully without an account.')
+    if (v === 'signin') return head('Sign in to sync', 'Keep your decks, progress and Synapse Pro on every device.' + (window.Pro && Pro.web ? ' Your 3-day free trial lives on your account.' : ' Optional: the app works fully without an account.'))
       + '<form class="pw-form" data-ac-form="login" novalidate>' + field('email', 'Email', 'email', 'username', 'inputmode="email" autocapitalize="off" spellcheck="false" maxlength="254"') + field('password', 'Password', 'password', 'current-password', 'maxlength="200"') + ERR
       + '<button type="submit" class="pw-cta">Sign in</button></form>'
       + '<div class="pw-links ac-links"><button type="button" data-ac-go="signup">Create an account</button><button type="button" data-ac-go="forgot">Forgot password?</button></div>';
-    if (v === 'signup') return head('Create an account', 'Sync your decks, stats, streak and course progress, and keep Synapse Pro on every device you sign in on.')
+    if (v === 'signup') return head('Create an account', (window.Pro && Pro.web ? 'Your 3-day free trial starts when you make your account. ' : '') + 'Sync your decks, stats, streak and course progress, and keep Synapse Pro on every device you sign in on.')
       + '<form class="pw-form" data-ac-form="signup" novalidate>' + field('email', 'Email', 'email', 'username', 'inputmode="email" autocapitalize="off" spellcheck="false" maxlength="254"') + field('password', 'Password (8 or more characters)', 'password', 'new-password', 'minlength="8" maxlength="200"') + ERR
       + '<button type="submit" class="pw-cta">Create account</button>' + PRIV + '</form>'
       + '<div class="pw-links ac-links"><button type="button" data-ac-go="signin">I have an account</button></div>';

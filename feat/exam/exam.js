@@ -65,7 +65,7 @@
     await Promise.all(jobs.map(async ([key, cm, lids]) => {
       try {
         const c = await getCourse(cm.id);
-        c.lessons.forEach((l, li) => { if (lids && !lids.has(l.id)) return; testFor(l, cfg.lvl).forEach(q => { if (q && q.q && (q.type === 'mc' ? Array.isArray(q.choices) && q.choices[q.answer] != null : q.answer != null)) per[key].pool.push({ ...q, topic: key, cid: cm.id, lid: l.id, li, lt: l.title, ct: c.title }); }); });
+        c.lessons.forEach((l, li) => { if (lids && !lids.has(l.id)) return; testFor(l, cfg.lvl).forEach(q => { if (q && q.q && (q.type === 'mc' ? Array.isArray(q.choices) && q.choices[q.answer] != null : q.answer != null)) { const qq = { ...q, topic: key, cid: cm.id, lid: l.id, li, lt: l.title, ct: c.title }; per[key].pool.push(window.Learn && Learn.shuffleChoices ? Learn.shuffleChoices(qq) : qq); } }); });
       } catch (e) { fails.push(cm.id); }
       S.busy = { done: ++done, total: jobs.length }; paint();
     }));

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f6f0e1">
 <meta name="robots" content="noindex">
 <meta name="format-detection" content="telephone=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://odin-cards.sites.tab.bot; connect-src 'self' https://odin-cards.sites.tab.bot; media-src 'self' data: blob:; font-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://odin-cards.sites.tab.bot; connect-src 'self' https://odin-cards.sites.tab.bot https://axon-sync.sites.tab.bot; media-src 'self' data: blob:; font-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -46,6 +46,7 @@
 <script src="feat/layout/themes.js"></script>
 </head>
 <body>
+<div id="sbar" class="sbar" aria-hidden="true"></div>
 <header class="top">
   <div class="brand"><button id="homeBtn" class="homebtn" type="button" data-go="home" aria-label="Back to home"><span aria-hidden="true">‹</span><span>Home</span></button><span class="logo" aria-hidden="true"></span><span id="title">Home</span></div>
   <div class="topr"><span class="hub-badge" data-hub-streak title="Streak"><b>0</b></span><button id="syncPill" class="pill" type="button" aria-live="polite"><span class="dot"></span><span class="txt">Local</span></button></div>

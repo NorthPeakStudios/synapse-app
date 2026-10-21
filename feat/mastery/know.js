@@ -43,9 +43,8 @@
     if (!partsCache) Mastery.anatParts().then(p => { partsCache = p; if (root && root.isConnected) paint(); });
   }
   function paint() {
-    const Ms = window.Mastery, sm = Ms.summary(), C = Ms.cfg(), all = Ms.topics(), ch = null;
+    const Ms = window.Mastery, sm = Ms.summary(), C = Ms.cfg(), all = Ms.topics();
     const subj = all.filter(x => Ms.TOPIC[x.k] && x.k !== 'cards' && x.n).sort((a, b) => b.n - a.n);
-    if (ch) subj.push({ k: 'chess', name: 'Chess', n: ch.n || 0, pct: Math.max(0, Math.min(100, Math.round((ch.r - 400) / 20))), level: ch.r + ' rating', trend: ch.hist && ch.hist.length > 1 ? (ch.hist[ch.hist.length - 1][1] - ch.hist[Math.max(0, ch.hist.length - 8)][1]) / 100 : 0 });
     const sys = all.filter(x => x.k.startsWith('anat.sys.')).sort((a, b) => b.n - a.n || b.pct - a.pct);
     const docs = all.filter(x => x.k.startsWith('doc.') && x.n).sort((a, b) => b.n - a.n);
     const regs = all.filter(x => x.k.startsWith('anat.reg.') && x.n).sort((a, b) => b.n - a.n);

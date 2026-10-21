@@ -23,7 +23,7 @@
   /* ---------- topics ---------- */
   const TOPIC = {
     german: ['German', 'lang'], french: ['French', 'lang'], spanish: ['Spanish', 'lang'], medicine: ['Medicine', 'sci'], neurology: ['Neurology', 'sci'],
-    pharmacology: ['Pharmacology', 'sci'], medchem: ['Med Chem', 'sci'], chess: ['Chess', 'chess'], cards: ['Other cards', 'cards'], doctordle: ['Doctordle', 'doc']
+    pharmacology: ['Pharmacology', 'sci'], medchem: ['Med Chem', 'sci'], cards: ['Other cards', 'cards'], doctordle: ['Doctordle', 'doc']
   };
   const SYS = { skeletal: 'Skeletal', muscular: 'Muscular', nervous: 'Nervous', cardiovascular: 'Heart & vessels', respiratory: 'Respiratory', digestive: 'Digestive', urinary: 'Urinary', endocrine: 'Endocrine', lymphatic: 'Lymphatic', skin: 'Skin' };
   const REG = { head: 'Head & neck', brain: 'Brain', skull: 'Skull', spine: 'Spine', thorax: 'Chest', abdomen: 'Abdomen', pelvis: 'Pelvis', 'arm-l': 'Left arm', 'arm-r': 'Right arm', 'hand-l': 'Left hand', 'hand-r': 'Right hand', 'leg-l': 'Left leg', 'leg-r': 'Right leg', 'foot-l': 'Left foot', 'foot-r': 'Right foot', body: 'Whole body' };
@@ -398,8 +398,6 @@
   let partsP = null;
   function anatParts() { return partsP || (partsP = fetch('anat/v2/parts.json').then(r => r.ok ? r.json() : null).then(d => { const out = []; if (d && d.parts) for (const id in d.parts) { const p = d.parts[id]; out.push({ id, n: p[0], sys: Array.isArray(p) ? p[1] : p.sys, tags: Array.isArray(p) ? p[2] : p.tags }); } return out; }).catch(() => { partsP = null; return []; })); }
 
-  /* ---------- chess (reads the puzzle rating the chess app keeps) ---------- */
-  function chess() { try { const o = JSON.parse(localStorage.getItem('chess.sync.v1') || 'null'); if (o && o.rating && o.rating.r) return { r: Math.round(o.rating.r), rd: o.rating.rd, hist: o.hist || [], n: o.n || 0 }; } catch (e) {} return null; }
 
   // 0 (beginner) … 1 (expert) for a set of topic tags: modules use it to make distractors closer (same drug class, neighbouring parts)
   function level(tags) { if (!cfg().on) return 0.4; const ev = tags.reduce((a, k) => a + (S.T[k] ? S.T[k][1] : 0), 0); return r3(clamp((abilityFor(tags) * (ev / (ev + 8)) + 0.8) / 3.2, 0, 1)); }
@@ -487,7 +485,7 @@
   window.Mastery = {
     record, recordMany, predict, pick, order, suggestLevel, courseTopic, learnTest, learnResult, nudgeHTML, docPick, docResult,
     anatQuiz, anatAnswer, anatView, anatParts, anatTags, weakOrder, weakAnswer, cardAnswer, newFactor, deckTopic,
-    topics, topicPct, summary, fading, recent, growth, chess, cfg, setCfg, tname, level, hash, LEVELS, SYS, REG, TOPIC,
+    topics, topicPct, summary, fading, recent, growth, cfg, setCfg, tname, level, hash, LEVELS, SYS, REG, TOPIC,
     on: f => { subs.add(f); return () => subs.delete(f); }, flush, pull, push, _S: () => S, _reset: () => { S = blank(); flush(); emit(); }
   };
 })();

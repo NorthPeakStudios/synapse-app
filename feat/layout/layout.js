@@ -28,6 +28,7 @@
     home: ['Today', 'home', () => Shell.switchTab('home')],
     study: ['Study', 'study', () => Shell.switchTab('study')],
     learn: ['Learn', 'learn', () => Shell.switchTab('learn')],
+    course: ['Course', 'learn', () => { const l = lastLesson(); Shell.switchTab('learn'); if (l && window.Learn && Learn._S) { const li = Math.max(0, parseInt(String(l.lid).split('-l').pop(), 10) - 1); Learn._S.route = { page: 'lesson', cid: l.cid, lvl: l.lvl, li }; Learn.render(); window.scrollTo(0, 0); } }], // switchTab resets Learn's route to home, so set the lesson after it
     lab: ['Lab', 'lab', () => Shell.switchTab('lab')],
     more: ['More', 'more', () => Shell.switchTab('more')],
     library: ['Library', 'books', () => Shell.openDoc('nav:library')],
@@ -108,7 +109,7 @@
   const todayH = () => { try { return Hub.today(); } catch (e) { return { xp: 0, goal: 50, pct: 0 }; } };
   const levelH = () => { try { return Hub.level(); } catch (e) { return { level: 1, pct: 0, into: 0, need: 100 }; } };
   const lastDeck = () => { try { const id = localStorage.getItem('lt.lastDeck'); const d = id && M.decks.get(id); return d && !d.del ? d : null; } catch (e) { return null; } };
-  const lastLesson = () => { try { let b = null; for (const r of M.progress.values()) if (r && !r.del && r.ctitle && r.lid && (!b || (r.at || 0) > (b.at || 0))) b = r; return b; } catch (e) { return null; } };
+  const lastLesson = () => { try { let b = null; for (const r of M.progress.values()) if (r && !r.del && r.ctitle && r.lid && (!b || Math.max(r.at || 0, r.read || 0) > Math.max(b.at || 0, b.read || 0))) b = r; return b; } catch (e) { return null; } }; // v129: a read-but-untested lesson counts too
   const dateLine = () => new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
   const cardBtn = (act, inner, cls) => `<button type="button" class="lt-bk ${cls || ''}" data-lt-act="${act}">${inner}</button>`;
   const BLOCKS = {
@@ -125,7 +126,7 @@
     weak: { name: 'Weak cards', desc: 'Cards you keep missing', render: () => cardBtn('weak', `<span class="lt-k">Weak cards</span><b class="lt-big1">${weakN()}</b><small>to fix</small>`) },
     decks: { name: 'Deck list', desc: 'Your decks with due counts', render: () => { let ds = []; try { ds = decks().slice(0, 6); } catch (e) {}
       return `<div class="lt-panelb"><div class="lt-bh"><span class="lt-k">Decks</span><button type="button" class="lt-lnk" data-lt-act="decks">All</button></div>${ds.length ? ds.map(d => { let c = { n: 0, l: 0, r: 0 }; try { c = deckCounts(d.id); } catch (e) {} return `<button type="button" class="lt-li" data-lt-deck="${esc(d.id)}"><span>${esc(d.name)}</span><span class="lt-cnt"><i class="n">${c.n}</i><i class="l">${c.l}</i><i class="r">${c.r}</i></span></button>`; }).join('') : `<button type="button" class="lt-li" data-lt-act="library"><span>Get a deck from the library</span><span>${ic('chev', 15, 2.2)}</span></button>`}</div>`; } },
-    course: { name: 'Course', desc: 'Continue your last course', render: () => { const l = lastLesson(); return cardBtn('learn', `<span class="lt-k">Course</span><b class="lt-t2">${esc(l ? l.ctitle : 'Medical courses')}</b><small>${esc(l ? 'Last: ' + l.title : 'Lessons with quizzes')}</small>`); } },
+    course: { name: 'Course', desc: 'Continue your last course', render: () => { const l = lastLesson(); return cardBtn(l ? 'course' : 'learn', `<span class="lt-k">${l ? 'Continue' : 'Course'}</span><b class="lt-t2">${esc(l ? l.title : 'Medical courses')}</b><small>${esc(l ? l.ctitle : 'Lessons with quizzes')}</small>`); } },
     heatmap: { name: 'Activity', desc: 'Last 15 weeks of study', render: () => { let days = {}; try { days = Hub._S().days || {}; } catch (e) {}
       const goal = todayH().goal || 50, W = 15, cells = []; const now = Date.now(), dk = t => { try { return Hub.dayKey(t); } catch (e) { return ''; } };
       for (let i = W * 7 - 1; i >= 0; i--) { const x = (days[dk(now - i * 864e5)] || {}).xp || 0; const lv = x <= 0 ? 0 : x < goal * .34 ? 1 : x < goal * .67 ? 2 : x < goal ? 3 : 4; cells.push(`<i class="h${lv}"></i>`); }
@@ -136,7 +137,7 @@
     search: { name: 'Search box', desc: 'Find any deck, card, course or tool', render: () => `<button type="button" class="lt-searchb" data-search-open>${ic('search', 18, 2.2)}<span>Search decks, cards, courses, tools</span></button>` },
     recent: { name: 'Jump back in', desc: 'Places you opened lately', render: () => { const r = (Shell.recent() || []).slice(0, 4).map(id => Shell.feat(id)).filter(Boolean);
       return `<div class="lt-panelb"><div class="lt-bh"><span class="lt-k">Jump back in</span></div>${r.length ? r.map(f => `<button type="button" class="lt-li" data-lt-tool="${esc(f.id)}"><span class="lt-lii">${Shell.iconOf(f, 18)}</span><span>${esc(f.title)}</span>${ic('chev', 15, 2.2)}</button>`).join('') : '<p class="lt-mut lt-pad">Tools you open show up here.</p>'}</div>`; } },
-    tiles: { name: 'Six tiles', desc: 'Big tiles for the main places', render: () => `<div class="lt-six">${[['decks', 'Study', 'study', dueN() + ' due'], ['learn', 'Learn', 'learn', 'Courses'], ['lab', 'Lab', 'lab', 'Tools'], ['doc', 'Doctordle', 'steth', 'Daily case'], ['library', 'Library', 'books', 'Decks'], ['stats', 'Progress', 'stats', streakN() + '-day streak']].map(([a, t, i, s], k) => `<button type="button" class="lt-six-b" data-lt-act="${a}" style="--c:var(--lt-g${k % 5 + 1})"><span>${ic(i, 26)}</span><b>${t}</b><small>${esc(s)}</small></button>`).join('')}</div>` },
+    tiles: { name: 'Six tiles', desc: 'Big tiles for the main places', render: () => `<div class="lt-six">${[['decks', 'Study', 'study', dueN() + ' due'], (lastLesson() ? ['course', 'Learn', 'learn', lastLesson().title] : ['learn', 'Learn', 'learn', 'Courses']), ['lab', 'Lab', 'lab', 'Tools'], (S.blocks || []).some(b => b.id === 'doc') ? ['weak', 'Weak cards', 'target', weakN() + ' to fix'] : ['doc', 'Doctordle', 'steth', 'Daily case'], ['library', 'Library', 'books', 'Decks'], ['stats', 'Progress', 'stats', streakN() + '-day streak']].map(([a, t, i, s], k) => `<button type="button" class="lt-six-b" data-lt-act="${a}" style="--c:var(--lt-g${k % 5 + 1})"><span>${ic(i, 26)}</span><b>${t}</b><small>${esc(s)}</small></button>`).join('')}</div>` },
     checklist: { name: 'Today checklist', desc: 'Today’s steps, in order', render: () => { const n = dueN(), w = weakN(); let dc = false; try { dc = !!(Lab.bestOf && Lab.result) && false; } catch (e) {} const docOpen = num(() => window.Doctordle && Doctordle.badge());
       const steps = [['review', 'Review due cards', n ? n + ' due' : 'Done', !n], ['weak', 'Fix weak cards', w ? w + ' left' : 'Done', !w], ['daily', 'Daily Challenge', '90 seconds', dc], ['doc', 'Doctordle', docOpen ? 'Today’s case' : 'Done', !docOpen], ['learn', 'One lesson', 'Courses', false]];
       return `<div class="lt-panelb"><div class="lt-bh"><span class="lt-k">Today</span><span class="lt-mut">${steps.filter(s => s[3]).length} of ${steps.length} done</span></div>${steps.map(([a, t, s, d], i) => `<button type="button" class="lt-step${d ? ' done' : ''}" data-lt-act="${a}"><span class="lt-sn">${d ? ic('check', 15, 2.6) : i + 1}</span><span class="lt-st"><b>${t}</b><small>${esc(s)}</small></span>${ic('chev', 15, 2.2)}</button>`).join('')}</div>`; } },
@@ -167,7 +168,7 @@
     return true;
   }
   /* ---------- state ---------- */
-  const DEF = () => ({ v: 1, at: 0, nav: '03a', tabs: null, blocks: [{ id: 'hero', size: 'w' }, { id: 'daily', size: 's' }, { id: 'doc', size: 's' }], theme: 'auto', m118: 1, accent: '', text: '', corners: '', density: 'comfy', groups: null, custom: [], labTools: ['ecg', 'labs', 'receptor', 'sim'], hidden: {} });
+  const DEF = () => ({ v: 1, at: 0, nav: '03a', tabs: null, blocks: [{ id: 'hero', size: 'w' }, { id: 'daily', size: 's' }, { id: 'doc', size: 's' }, { id: 'tiles', size: 'w' }], theme: 'auto', m118: 1, m120: 1, accent: '', text: '', corners: '', density: 'comfy', groups: null, custom: [], labTools: ['ecg', 'labs', 'receptor', 'sim'], hidden: {} });
   function clean(s) {
     const d = DEF(); s = s && typeof s === 'object' ? s : {};
     const o = Object.assign(d, s);
@@ -177,6 +178,8 @@
     if (!Array.isArray(o.custom)) o.custom = []; o.custom = o.custom.filter(c => c && /^c-/.test(c.id)).slice(0, 30);
     // v118: before v118 'notebook' was just the default, so it becomes 'auto' (Match phone) once; a pick made after this is kept
     if (!s.m118) { if (!s.theme || s.theme === 'notebook') o.theme = 'auto'; o.m118 = 1; }
+    // v120: a home nobody customized gets the six big tiles (Study, Learn, Lab, Weak, Library, Progress) under the hero, so the main places are one tap away without opening the menu
+    if (!s.m120) { const ids = o.blocks.map(b => b.id).join(','); if (ids === 'hero,daily,doc' || ids === 'hero') o.blocks.push({ id: 'tiles', size: 'w' }); o.m120 = 1; }
     if (o.theme && o.theme.indexOf('c-') === 0 && !o.custom.some(c => c.id === o.theme)) o.theme = 'notebook';
     if (o.theme && o.theme.indexOf('c-') !== 0 && !LT.THEMES[o.theme]) o.theme = 'notebook';
     if (!Array.isArray(o.labTools)) o.labTools = d.labTools;
@@ -483,7 +486,8 @@
   function act(a) {
     closeMenu(true);
     const map = { review: startReview, decks: () => Shell.openDoc('nav:decks'), weak: () => Shell.openDoc('nav:weak'), stats: () => Shell.openDoc('nav:stats'), daily: () => Shell.open('daily'), doc: () => go('doc'), learn: () => Shell.openDoc('nav:learn'), library: () => Shell.openDoc('nav:library'), lab: () => Shell.switchTab('lab'), customize: () => customize('home'),
-      continue: () => { const d = lastDeck(); if (!d) return Shell.openDoc('nav:decks'); try { studyDeck = d.id; undoStack = []; } catch (e) {} go('study'); } };
+      continue: () => { const d = lastDeck(); if (!d) return Shell.openDoc('nav:decks'); try { studyDeck = d.id; undoStack = []; } catch (e) {} go('study'); },
+      course: () => { const l = lastLesson(); Shell.openDoc('nav:learn'); if (l && window.Learn && Learn._S) { const li = Math.max(0, parseInt(String(l.lid).split('-l').pop(), 10) - 1); Learn._S.route = { page: 'lesson', cid: l.cid, lvl: l.lvl, li }; Learn.render(); window.scrollTo(0, 0); } } }; // v132: the Learn tile / Course block open the last lesson itself
     (map[a] || (() => {}))();
   }
   document.addEventListener('click', e => {

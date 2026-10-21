@@ -101,7 +101,7 @@
     m.docSharp = D.docs.some(o => o.best && o.best <= 2) ? 1 : 0;
     m.docDaily = D.docdays.filter(o => o.win).length;
     m.wsCleared = D.ws.filter(o => o.done).length;
-    m.anat = kinds.anat || 0; m.chess = kinds.chess || 0; m.lib = kinds.lib || 0;
+    m.anat = kinds.anat || 0; m.lib = kinds.lib || 0;
     // weekend: Sat + following Sun both active
     m.weekend = 0; for (const k in D.days) { if (keyDate(k).getDay() === 6 && isActive(D.days[k]) && isActive(D.days[addDays(k, 1)])) { m.weekend = 1; break; } }
     return m;
@@ -242,9 +242,9 @@
     svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
     el.addEventListener('click', e => { if (!svg.contains(e.target) && sel.getAttribute('visibility') === 'visible') { sel.setAttribute('visibility', 'hidden'); svg.querySelectorAll('.s2-bar.on').forEach(b => b.classList.remove('on')); cap.innerHTML = def; } });
   }
-  const KL1 = { lesson: 'lesson', test: 'test', doc: 'solve', weak: 'weak spot', anat: 'anatomy', chess: 'chess' };
-  const KL = { review: 'reviews', again: 'missed', lesson: 'lessons', test: 'tests', doc: 'solves', docfail: 'doctordle tries', weak: 'weak spots', anat: 'anatomy', chess: 'chess', lib: 'library', photo: 'photos' };
-  function describe(d) { const c = d.c || {}, parts = []; const rv = (c.review || 0) + (c.again || 0); if (rv) parts.push(rv + ' card' + (rv === 1 ? '' : 's')); for (const k of ['lesson', 'test', 'doc', 'weak', 'anat', 'chess']) if (c[k]) parts.push(c[k] + ' ' + (c[k] === 1 ? KL1[k] : KL[k])); return parts.length ? `<br><span>${parts.slice(0, 4).join(' · ')}</span>` : ''; }
+  const KL1 = { lesson: 'lesson', test: 'test', doc: 'solve', weak: 'weak spot', anat: 'anatomy' };
+  const KL = { review: 'reviews', again: 'missed', lesson: 'lessons', test: 'tests', doc: 'solves', docfail: 'doctordle tries', weak: 'weak spots', anat: 'anatomy', lib: 'library', photo: 'photos' };
+  function describe(d) { const c = d.c || {}, parts = []; const rv = (c.review || 0) + (c.again || 0); if (rv) parts.push(rv + ' card' + (rv === 1 ? '' : 's')); for (const k of ['lesson', 'test', 'doc', 'weak', 'anat']) if (c[k]) parts.push(c[k] + ' ' + (c[k] === 1 ? KL1[k] : KL[k])); return parts.length ? `<br><span>${parts.slice(0, 4).join(' · ')}</span>` : ''; }
 
   // GitHub-style heatmap: weeks × 7 (Mon top). Level by share of the daily goal.
   function heatmap(days, goal, weeks) {

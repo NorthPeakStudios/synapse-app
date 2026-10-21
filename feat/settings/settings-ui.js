@@ -37,8 +37,6 @@
   const group = (title, rows, foot) => `${title ? `<h3 class="st-gh">${E(title)}</h3>` : ''}<div class="pgroup st-g">${rows}</div>${foot ? `<p class="st-gf">${foot}</p>` : ''}`;
 
   const ACC = () => Prefs.ACCENTS;
-  const BOARDS = [['green', 'Green'], ['brown', 'Brown'], ['blue', 'Blue'], ['gray', 'Gray'], ['wood', 'Wood'], ['ice', 'Ice'], ['mint', 'Mint'], ['rose', 'Rose'], ['purple', 'Purple']];
-  const PIECES = ['cburnett', 'merida', 'california', 'cardinal', 'chessnut', 'companion', 'fresca', 'kosal', 'maestro', 'staunty', 'tatiana'];
   const LEVELS = [['kid', "Like I'm 5"], ['hs', 'High school'], ['college', 'College'], ['phd', 'PhD'], ['expert', 'Expert']];
   const SYSTEMS = [['skin', 'Skin & surface'], ['muscular', 'Muscular'], ['skeletal', 'Skeletal'], ['nervous', 'Nervous'], ['cardiovascular', 'Cardiovascular'], ['respiratory', 'Respiratory'], ['digestive', 'Digestive'], ['urinary', 'Urinary'], ['endocrine', 'Endocrine'], ['lymphatic', 'Lymphatic & immune']];
   const LAUNCH = [['home', 'Home'], ['last', 'Last screen used'], ['decks', 'Cards'], ['learn', 'Learn'], ['library', 'Library'], ['weak', 'Weak Spots'], ['doc', 'Doctordle'], ['anat', 'Anatomy'], ['stats', 'Stats']];
@@ -234,7 +232,7 @@
       const loc = j.local ? Object.keys(j.local) : [];
       if (!confirm(`Restore ${list.length} item${list.length === 1 ? '' : 's'}${loc.length ? ' and ' + loc.length + ' saved settings' : ''} from ${f.name}? Newer data on this device is kept.`)) return;
       for (let i = 0; i < list.length; i += 2000) await write(list.slice(i, i + 2000), { keepMod: true });
-      loc.forEach(k => { if (/^(hub|prefs|ol\.|doc|res|lrn|learn|weak|chess|anat|settings)/.test(k)) try { localStorage.setItem(k, j.local[k]); } catch (e) {} });
+      loc.forEach(k => { if (/^(hub|prefs|doc|res|lrn|learn|weak|anat|settings)/.test(k)) try { localStorage.setItem(k, j.local[k]); } catch (e) {} });
       toast('Restored. Reloading…', 1800); setTimeout(() => location.reload(), 1200);
     } catch (e) { toast('Import failed: ' + e.message, 3000); }
   }

@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<style id="np-nozoom">html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}</style>
+<script>(function(){if(window.__npNoZoom)return;window.__npNoZoom=1;var p=function(e){e.preventDefault()},o={passive:false};['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,p,o)});document.addEventListener('dblclick',function(e){var t=e.target;if(!(t&&t.closest&&t.closest('input,textarea,select,[contenteditable]')))e.preventDefault()},o);var b=function(e){var t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)&&parseFloat(getComputedStyle(t).fontSize)<16)t.style.fontSize='16px'};document.addEventListener('touchstart',b,{passive:true,capture:true});document.addEventListener('focusin',b,true)})();</script>
 <meta name="color-scheme" content="light dark">
 <title>Privacy Policy · Synapse</title>
 <meta name="description" content="What Synapse stores, why, and how to delete it.">
@@ -42,7 +44,7 @@ th{font-weight:600}
 <table>
 <tr><th>Feature</th><th>What is stored</th><th>Why</th></tr>
 <tr><td>Account (optional)</td><td>Your email address and your password as a one-way encrypted hash (we never store or see the password itself), when the account was made, whether it has Synapse Pro, and your free-trial start date. While you’re signed in: your decks, review history, stats, streak, XP, course progress and settings. A sign-in cookie keeps you signed in on that device.</td><td>To sign you in, sync your progress to every device you sign in on, keep Synapse Pro on your account, and run the free trial</td></tr>
-<tr><td>Free trial (without an account)</td><td>A random ID for this device and when its trial started</td><td>So the 3-day trial runs once per device</td></tr>
+<tr><td>Device ID</td><td>A random ID for this device</td><td>So unlock codes work on it and the 3-day trial (which needs an account) can’t be restarted with a new account on the same device</td></tr>
 <tr><td>Sync code (off until you turn it on)</td><td>Your cards, review history, progress and settings, filed under a scrambled version of your random sync code</td><td>To keep your devices the same and restore your cards</td></tr>
 <tr><td>Share a deck</td><td>A copy of the deck you chose (cards with dosing numbers are left out), its name, and how many times the link was opened</td><td>So a friend can open your read-only link. Turning the link off stops it working.</td></tr>
 <tr><td>Study reminders (web version)</td><td>Your browser’s push address, time zone, reminder time and streak count</td><td>To send the reminder. The phone apps schedule reminders on the device instead.</td></tr>

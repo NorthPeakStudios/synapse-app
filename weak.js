@@ -74,10 +74,31 @@
     if (o.src === 'card') { const c = M.cards.get(o.cid); if (!c || c.del) return '(card deleted)'; try { return stripHtml(renderCard(c).q).slice(0, 90); } catch (e) { return 'Card'; } }
     return String((o.q && o.q.q) || '').replace(/\*\*/g, '').replace(/_{2,}/g, '___').slice(0, 90);
   }
-  function start(early) {
+  async function fresh(list) { // re-read Learn questions from the live course so fixed keys and options apply
+    if (!window.Learn || !Learn.getCourse) return list;
+    try { await Learn.getManifest(); } catch (e) { return list; }
+    const out = [];
+    for (const o of list) {
+      let r = o;
+      try {
+        const lid = o.lid || ((/^ws:L:(.+):[^:]+$/.exec(o.id || '') || [])[1]);
+        if (o.src === 'learn' && lid && o.q && o.q.q) {
+          const cid = String(lid).replace(/-l\d+$/, ''); const c = await Learn.getCourse(cid); const l = c && (c.lessons || []).find(x => x.id === lid);
+          const all = l ? [...(l.test || []), ...(l.kidTest || []), ...(l.advancedTest || [])] : [];
+          const n = all.find(x => x.q === o.q.q && x.type === o.q.type);
+          if (n) r = Object.assign({}, o, { q: { q: n.q, type: n.type, choices: n.choices, answer: n.answer, accept: n.accept, explain: n.explain } });
+        }
+      } catch (e) {}
+      out.push(r);
+    }
+    return out;
+  }
+  async function start(early) {
     let list = items().filter(o => !o.done && (early ? !isDue(o) : isDue(o))).sort((a, b) => (a.due || 0) - (b.due || 0));
     list = list.filter(o => o.src !== 'card' || (M.cards.get(o.cid) && !M.cards.get(o.cid).del)); if (window.Mastery) list = Mastery.weakOrder(list); list = list.slice(0, 20);
     if (!list.length) return;
+    list = await fresh(list);
+    if (window.Learn && Learn.shuffleChoices) list = list.map(o => (o.q && o.q.type === 'mc') ? Object.assign({}, o, { q: Learn.shuffleChoices(o.q) }) : o);
     S.run = { list, i: 0, ans: null, right: 0 }; render(); window.scrollTo(0, 0);
   }
   function rQuiz() {

@@ -200,7 +200,7 @@ html:not([data-lt-deco=notebook]) .lt-k{color:var(--mut)}
 .lt-six{display:grid;grid-template-columns:1fr 1fr;gap:var(--lt-gap)}
 .lt-six-b{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px 14px;min-height:124px}
 .lt-six-b span{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 15%,transparent);color:var(--c);margin-bottom:auto}
-.lt-six-b b{font:600 17px var(--lt-head)}.lt-six-b small{color:var(--mut);font-size:12.5px}
+.lt-six-b b{font:600 17px var(--lt-head)}.lt-six-b small{color:var(--mut);font-size:12.5px;display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lt-step{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:0;border-top:1px solid var(--line);background:none;color:var(--tx);font:inherit;text-align:left}
 .lt-sn{width:28px;height:28px;flex:none;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--mut)}
 .lt-step.done .lt-sn{background:var(--good);border-color:var(--good);color:#fff}

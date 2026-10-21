@@ -37,17 +37,18 @@
 .lrow{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:60px;color:var(--tx);min-width:0;width:100%}
 .lrow .num{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);font-weight:700;font-size:14px}
 .lrow .tx{display:flex;flex-direction:column;min-width:0;flex:1}.t1{font-weight:600;overflow-wrap:anywhere}.t2{font-size:13px;color:var(--mut)}
-.sc{flex:none;font-size:13px;font-weight:700;border-radius:99px;padding:4px 9px;background:var(--bg2);color:var(--mut)}
+#v-learn .sc,.lsheet .sc,#v-doc .sc{flex:none;font-size:13px;font-weight:700;border-radius:99px;padding:4px 9px;background:var(--bg2);color:var(--mut)}
 .sc.ok{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}.sc.bad{background:color-mix(in srgb,var(--again) 18%,transparent);color:var(--again)}.sc.rd{background:var(--card2);color:var(--acc)}
-.seg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px;margin:10px 0}
-.seg button{background:none;border:0;border-radius:9px;padding:7px 2px;min-height:48px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:1px;font-size:13px}
-.seg button.on{background:var(--card);color:var(--tx);box-shadow:0 0 0 1px var(--line)}
+#v-learn .seg,.lsheet .seg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px;margin:10px 0}
+#v-learn .seg button,.lsheet .seg button{background:none;border:0;border-radius:9px;padding:7px 2px;min-height:48px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:1px;font-size:13px}
+#v-learn .seg button.on,.lsheet .seg button.on{background:var(--card);color:var(--tx);box-shadow:0 0 0 1px var(--line)}
+#v-learn .seg .lvn,.lsheet .seg .lvn{font-size:10.5px;line-height:1.15;white-space:nowrap;letter-spacing:.01em}
 .lvname{font-size:13px;font-weight:700;color:var(--c);text-transform:uppercase;letter-spacing:.06em;margin:6px 0}
 .ltext{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;font-size:17px;line-height:1.6;overflow-wrap:anywhere}
 .ltext p{margin:0 0 12px}.ltext p:last-child{margin-bottom:0}.ltext ul,.kp{margin:6px 0 12px;padding-left:22px}.kp li{margin:5px 0}
 .lex{display:grid;gap:6px}.exr{background:var(--bg2);border-radius:10px;padding:10px 12px}.exr .src{font-weight:600}.exr .tr{color:var(--mut);font-size:15px}
 .rtags{display:flex;flex-wrap:wrap;gap:8px}
-.tprog{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:6px}.tprog .muted{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.tprog{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:6px}.tprog>span:first-child{white-space:nowrap;flex:none}.tprog .muted{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .pbar{height:6px;background:var(--bg2);border-radius:9px;overflow:hidden;margin-bottom:14px}.pbar b{display:block;height:100%;background:var(--acc);transition:width .2s}
 .qcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .qtype{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mut);margin-bottom:6px}
@@ -75,3 +76,6 @@
 .saychip{min-height:44px;min-width:44px;padding:8px 14px;border-radius:22px;border:1px solid var(--line);background:var(--card);color:inherit;font:inherit;font-size:16px;font-weight:600;text-align:left;max-width:100%;overflow-wrap:anywhere;cursor:pointer}
 .saychip:active,.say:active{transform:scale(.96)}
 [data-vlang][hidden]{display:none!important}
+
+/* v135: lesson names in the course sheet are tappable */
+.louts .lout{display:block;width:100%;background:none;border:0;padding:4px 0;color:var(--acc);font:inherit;font-weight:600;text-align:left;min-height:36px}

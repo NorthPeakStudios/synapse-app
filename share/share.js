@@ -25,3 +25,5 @@
     D = j; order = D.cards.map((_, k) => k); document.title = D.name + ' · shared deck'; paint();
   }).catch(() => { app.innerHTML = '<h1>Offline</h1><p class="mut">Connect to the internet to open this deck.</p>'; });
 })();
+// no zoom on iPhone (pinch / double-tap)
+(function(){if(window.__npNoZoom)return;window.__npNoZoom=1;var p=function(e){e.preventDefault()},o={passive:false};['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,p,o)});document.addEventListener('dblclick',function(e){var t=e.target;if(!(t&&t.closest&&t.closest('input,textarea,select,[contenteditable]')))e.preventDefault()},o);var b=function(e){var t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)&&parseFloat(getComputedStyle(t).fontSize)<16)t.style.fontSize='16px'};document.addEventListener('touchstart',b,{passive:true,capture:true});document.addEventListener('focusin',b,true)})();

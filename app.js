@@ -217,6 +217,7 @@ let view = 'decks', studyDeck = null, cur = null, shown = false, shownAt = 0, un
 window.curCard = () => cur;
 const TITLES = { home: 'Home', doc: 'Doctordle', weak: 'Weak Spots', anat: 'Anatomy', library: 'Library', learn: 'Learn', decks: 'Decks', study: 'Study', add: 'Add card', browse: 'Browse', stats: 'Stats', settings: 'Sync & backup', prefs: '', x: '' };
 function go(v, opts = {}) {
+  if (v !== view && !opts.keepSheet) { try { if (!$('#sheetWrap').hidden) closeSheet(); } catch (e) {} } // v120: a sheet never outlives the screen it was opened on
   if (v === 'add' && !opts.keepEdit) editId = null;
   if (v === 'library' && window.Resources && Resources._S) $('#title').dataset.lib = Resources._S.mode;
   view = v; $$('.view').forEach(s => { s.hidden = s.id !== 'v-' + v; });
@@ -270,7 +271,7 @@ function rStudy() {
   const el = $('#v-study'); const now = Date.now();
   const nx = nextCard(studyDeck, now); cur = nx.card || null; shown = false; shownAt = Date.now();
   const tot = scopeCounts(studyDeck, now);
-  const bar = `<div class="studybar"><button class="link" id="backDecks">‹ Decks</button><span class="counts">${cnt(tot.n, 'n')}${cnt(tot.l, 'l')}${cnt(tot.r, 'd')}</span><span class="row" style="gap:0"><button class="link" id="undoBtn" ${undoStack.length ? '' : 'disabled'} title="Undo (Z)">Undo</button>${cur ? '<button class="link" id="editCur" title="Edit (E)">Edit</button>' : ''}</span></div>`;
+  const bar = `<div class="studybar"><button class="link lback" id="backDecks">‹ Decks</button><span class="counts labeled" aria-label="${tot.n} new, ${tot.l} learning, ${tot.r} due">${cnt(tot.n, 'n')}<small>new</small>${cnt(tot.l, 'l')}<small>learning</small>${cnt(tot.r, 'd')}<small>due</small></span><span class="row" style="gap:0"><button class="link" id="undoBtn" ${undoStack.length ? '' : 'disabled'} title="Undo (Z)">Undo</button>${cur ? '<button class="link" id="editCur" title="Edit (E)">Edit</button>' : ''}</span></div>`;
   if (!cur) {
     el.innerHTML = bar + `<div class="done"><div class="big">✓</div><h2>${nx.wait ? 'Done for now' : 'All caught up'}</h2><p class="muted">${nx.wait ? `${tot.l} learning card${tot.l === 1 ? '' : 's'} coming back in ${fmtIvl(nx.wait)}.` : (studyDeck.startsWith('tag:') ? 'Nothing else with this tag is due today.' : 'Nothing else is due in this deck today.')}</p><button class="btn" data-goto="decks" style="margin-top:14px">Back to decks</button></div>`;
     if (nx.wait) { clearTimeout(rStudy.t); rStudy.t = setTimeout(() => { if (view === 'study' && !cur) rStudy(); }, Math.min(nx.wait + 500, 10 * MIN)); }
@@ -281,6 +282,7 @@ function rStudy() {
 }
 function showAnswer() {
   if (!cur || shown) return; shown = true; const f = renderCard(cur); $('#face').innerHTML = f.a;
+  { const sn = M.notes.get(cur.nid), src = sn && sn.src; if (src && src.app === 'axon' && /^https:\/\/northpeakstudios\.github\.io\/axon\/#\/n\/[\w%.-]{1,120}$/.test(String(src.url || ''))) $('#face').insertAdjacentHTML('beforeend', `<a class="srcnote" href="${esc(src.url)}" target="_blank" rel="noopener">📝 Source note in Axon${src.title ? ': ' + esc(String(src.title).slice(0, 80)) : ''}</a>`); } // cards made from an Axon note link back to it
   const now = Date.now(), lbl = ['Again', 'Hard', 'Good', 'Easy'];
   $('#ansbar').innerHTML = `<div class="grades">${[1, 2, 3, 4].map(g => { const n = schedule(cur, g, now); return `<button class="g${g}" data-grade="${g}">${lbl[g - 1]}<small>${fmtIvl(n.due - now)}</small></button>`; }).join('')}</div><div class="kbd"><kbd>1</kbd> Again · <kbd>2</kbd> Hard · <kbd>3</kbd>/<kbd>Space</kbd> Good · <kbd>4</kbd> Easy</div>`;
 }
@@ -308,7 +310,7 @@ function rAdd() {
   const t = draft.type;
   $('#v-add').innerHTML = `<form id="noteForm" autocomplete="off">
     <label class="f" for="nDeck">Deck</label><select id="nDeck">${ds.map(d => `<option value="${esc(d.id)}" ${d.id === deckSel ? 'selected' : ''}>${esc(d.name)}</option>`).join('')}<option value="__new">＋ New deck…</option></select>
-    <label class="f">Type</label><div class="seg" id="nType">${[['basic', 'Basic'], ['reversed', 'Basic + reversed'], ['cloze', 'Cloze']].map(([k, l]) => `<button type="button" data-t="${k}" class="${t === k ? 'on' : ''}">${l}</button>`).join('')}</div>
+    <label class="f">Type</label><div class="seg" id="nType">${[['basic', 'Basic'], ['reversed', 'Both ways'], ['cloze', 'Cloze']].map(([k, l]) => `<button type="button" data-t="${k}" class="${t === k ? 'on' : ''}">${l}</button>`).join('')}</div>
     <label class="f" for="nFront" id="lFront">${t === 'cloze' ? 'Text' : 'Front'}</label><textarea id="nFront" placeholder="${t === 'cloze' ? 'The capital of France is {{c1::Paris}}.' : 'Question'}">${esc(note ? htmlToText(note.front) : '')}</textarea>
     <div class="row" id="clozeRow" ${t === 'cloze' ? '' : 'hidden'}><button type="button" class="btn" id="clozeBtn">[…] Make cloze</button><span class="muted small">Select text, then tap. Use c1, c2… for separate cards.</span></div>
     <label class="f" for="nBack" id="lBack">${t === 'cloze' ? 'Extra (optional)' : 'Back'}</label><textarea id="nBack" placeholder="${t === 'cloze' ? 'Shown with the answer' : 'Answer'}">${esc(note ? htmlToText(note.back) : '')}</textarea>
@@ -432,16 +434,16 @@ function rSettings() {
       <div class="row" style="margin-top:12px"><button class="btn grow" id="showCode">Show sync code</button><button class="btn grow" id="syncNowBtn">Sync now</button></div>
       <div class="row" style="margin-top:10px"><button class="btn danger grow" id="unpair">Stop syncing on this device</button></div>` : `
       ${window.Account && Account.on ? `<p><b>Sign in to sync.</b> <span class="muted small">Optional. Keeps your decks, progress and Synapse Pro on every device.</span></p><button class="btn pri wide" id="acctBtn" style="margin:10px 0 16px">Sign in or create an account</button><p class="muted small"><b>Or use a sync code</b> (no account):</p>` : ''}
-      <p><b>Sync between your phone and computer.</b></p>
-      <p class="muted small">On your first device, create a sync account. You'll get a 12-character code. On your other device, enter that code. Your cards then stay in sync whenever you're online.</p>
-      <button class="btn pri wide" id="createAcct" style="margin-top:12px">Create sync account</button>
+      ${window.Account && Account.on ? '' : '<p><b>Sync between your phone and computer.</b></p>'}
+      <p class="muted small">Tap “Create sync code” on this device and you get a 12-character code. Enter it on your other device and both stay in sync whenever you're online.</p>
+      <button class="btn ${window.Account && Account.on ? '' : 'pri '}wide" id="createAcct" style="margin-top:12px">Create sync code</button>
       <label class="f" for="joinCode">Use a sync code</label>
       <div class="row"><input type="text" id="joinCode" class="grow" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="16" style="flex:1 1 180px;text-transform:uppercase"><button class="btn" id="joinBtn">Connect</button></div>`}
     </div>
     <h3>Import</h3><div class="panel"><p class="muted small">Anki decks (.apkg), CSV or TSV (front, back, tags), or a JSON backup from this app.</p>
       <label class="btn wide" for="impFile" style="margin-top:10px">Choose a file…</label><input type="file" id="impFile" accept=".apkg,.colpkg,.csv,.tsv,.txt,.json,application/zip,text/csv,text/plain,application/json" hidden>
       <p class="muted small" id="impStatus" style="margin-top:10px"></p></div>
-    <h3>Export</h3><div class="panel"><div class="row"><button class="btn grow" id="expCsv">Export CSV</button><button class="btn grow" id="expJson">Full backup (JSON)</button></div></div>
+    <h3>Export</h3><div class="panel"><div class="row" style="align-items:stretch"><button class="btn grow" id="expCsv">Export CSV</button><button class="btn grow" id="expJson">Full backup</button></div><p class="muted small" style="margin:8px 0 0">CSV is your cards only. Full backup saves everything (decks, cards, progress) as one file you can import later.</p></div>
     <h3>About</h3><div class="panel"><p class="muted small">Scheduling uses FSRS, aiming for 90% recall. A study day starts at 4 AM. Everything works offline. Version ${VERSION}.</p></div>`;
   if ($('#acctBtn')) $('#acctBtn').onclick = () => Account.open();
   if (acctU) { $('#syncNowBtn').onclick = () => syncNow(true); }
@@ -743,7 +745,7 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => {
-  if (e.target.closest('input,textarea,select') || e.metaKey || e.ctrlKey || e.altKey) { if (e.key === 'Escape') closeSheet(); return; }
+  if ((e.target && e.target.closest && e.target.closest('input,textarea,select')) || e.metaKey || e.ctrlKey || e.altKey) { if (e.key === 'Escape') closeSheet(); return; }
   if (e.key === 'Escape') { closeSheet(); return; }
   if (view !== 'study' || !$('#sheetWrap').hidden) return;
   if (!shown && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); showAnswer(); return; }
@@ -759,7 +761,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 setInterval(() => { if (document.visibilityState === 'visible') syncNow(); }, 30000);
 
 /* ---------------- hub (shared streak + XP) sync ---------------- */
-// Hub keeps its state in localStorage (so /chess/ and /shot/ share it). Here it is mirrored into D1 as
+// Hub keeps its state in localStorage (so /shot/ shares it). Here it is mirrored into D1 as
 // progress records t:'hx' (one per day), so the streak and XP follow the sync code to every device.
 let hubSeen = 0, hubTimer = 0;
 function hubPull() {
@@ -842,9 +844,16 @@ function swAutoUpdate() {
   const verOf = t => { const m = /CACHE\s*=\s*['"]cards-v(\d+)['"]/.exec(t || ''); return m ? m[1] : ''; };
   fetch('sw.js', { cache: 'no-store' }).then(r => r.text()).then(t => { const v = verOf(t); if (v) { VERSION = v; window.APP_VER = 'v' + v; } }).catch(() => {});
   const inReview = () => view === 'study' && !!cur;
+  const typing = () => { // never reload over something being typed (new card, notes, search, sign-in)
+    const a = document.activeElement;
+    if (a && !a.disabled && !a.readOnly && (a.isContentEditable || a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|hidden)$/i.test(a.type || '')))) return true;
+    return [...document.querySelectorAll('textarea')].some(t => t.offsetParent !== null && t.value && t.value !== t.defaultValue && /\S/.test(t.value));
+  };
+  let pendTyping = false;
   const reload = () => {
     if (reloading) return;
     if (inReview()) { pend = true; return; }
+    if (typing()) { if (!pendTyping) toast('Update ready · it applies next time you open the app', 3200); pend = true; pendTyping = true; return; }
     let last = 0; try { last = +sessionStorage.getItem('swReloadAt') || 0; } catch (e) {}
     if (Date.now() - last < 20e3) return; // loop guard: at most one automatic reload per 20 s
     reloading = true;
@@ -852,7 +861,8 @@ function swAutoUpdate() {
     location.reload();
   };
   sw.addEventListener('controllerchange', () => { if (hadCtl) reload(); else hadCtl = true; }); // first install (no old worker) needs no reload
-  setInterval(() => { if (pend && !inReview()) reload(); }, 1500);
+  setInterval(() => { if (pend && !pendTyping && !inReview()) reload(); }, 1500); // waiting on a review: apply as soon as it ends
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && pend && !inReview() && !typing()) reload(); }); // waiting on typing: apply on the next return
   try {
     if (sessionStorage.getItem('swUpdated') === '1') {
       sessionStorage.removeItem('swUpdated');

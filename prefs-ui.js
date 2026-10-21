@@ -3,8 +3,6 @@
 (function () {
   const I = (n, s) => Prefs.icon(n, s);
   const V = () => Prefs.v;
-  const BOARDS = [['green', '#eeeed2', '#769656'], ['brown', '#f0d9b5', '#b58863'], ['blue', '#dee3e6', '#8ca2ad'], ['gray', '#e0e0e0', '#9e9e9e'], ['wood', '#e8c99b', '#a9743f'], ['ice', '#e4eef8', '#8fb0d0'], ['mint', '#e6f4ea', '#7fb894'], ['rose', '#f6e3e6', '#c48a95'], ['purple', '#ece4f7', '#8c6bbf']];
-  const PIECES = ['cburnett', 'merida', 'california', 'cardinal', 'chessnut', 'companion', 'fantasy', 'maestro', 'staunty', 'shapes', 'pixel'];
   const LEVELS = [['kid', '5'], ['hs', 'HS'], ['college', 'College'], ['phd', 'PhD'], ['expert', 'Dr']];
   const TILE_NAMES = { cards: 'Cards', doc: 'Doctordle', anat: 'Anatomy', me: 'Me', work: 'Files' };
   const TILE_IC = { cards: 'cards', doc: 'doc', anat: 'anat', me: 'me', work: 'folder' };
@@ -20,7 +18,6 @@
     const accents = Prefs.ACCENTS.map(([n, c]) => `<button type="button" class="acc-sw${v.accent.toLowerCase() === c ? ' on' : ''}" style="--c:${c}" data-p-set="accent" data-v="${c}" aria-label="${n}"></button>`).join('')
       + `<label class="acc-sw custom${Prefs.ACCENTS.some(a => a[1] === v.accent.toLowerCase()) ? '' : ' on'}" style="--c:${esc(v.accent)}" aria-label="Custom color"><input type="color" value="${esc(v.accent)}" data-p-color="accent"></label>`;
     const tiles = v.home.order.map(k => `<div class="tile-row" data-tk="${k}"><span class="tile-grip" aria-label="Drag to reorder">${I('grip', 18)}</span><span class="tile-ic">${I(TILE_IC[k] || k, 18)}</span><span class="tile-nm">${TILE_NAMES[k] || k}</span><button type="button" class="tile-eye${v.home.hidden.includes(k) ? ' off' : ''}" data-p-hide="${k}" aria-label="${v.home.hidden.includes(k) ? 'Show' : 'Hide'} ${TILE_NAMES[k] || k}">${I(v.home.hidden.includes(k) ? 'eyeoff' : 'eye', 20)}</button></div>`).join('');
-    const boards = BOARDS.map(([k, a, b]) => `<button type="button" class="board-sw${v.chess.board === k && !v.chess.light ? ' on' : ''}" data-p-board="${k}" aria-label="${k}" style="--a:${a};--b:${b}"></button>`).join('');
     const goal = (window.Hub && Hub.today().goal) || 50;
     const icon = v.icon || 'default';
     el.innerHTML = `<div class="ptitle"><h1>Settings</h1></div>
@@ -56,14 +53,13 @@
   }
   document.addEventListener('click', e => {
     if (typeof view === 'undefined' || view !== 'prefs') return;
-    const t = e.target.closest('[data-p-tog],[data-p-set],[data-p-hide],[data-p-goal],[data-p-step],[data-p-board],[data-p-export],[data-p-reset],[data-p-icon]'); if (!t) return;
+    const t = e.target.closest('[data-p-tog],[data-p-set],[data-p-hide],[data-p-goal],[data-p-step],[data-p-export],[data-p-reset],[data-p-icon]'); if (!t) return;
     const d = t.dataset;
     if (d.pTog) { const ks = d.pTog.split('.'); let o = V(); ks.forEach(k => { o = o[k]; }); Prefs.set(d.pTog, !o); }
     else if (d.pSet) { let val = d.v; if (val === 'true') val = true; else if (val === 'false') val = false; Prefs.set(d.pSet, val); }
     else if (d.pHide) { const h = V().home.hidden.slice(), i = h.indexOf(d.pHide); if (i >= 0) h.splice(i, 1); else h.push(d.pHide); Prefs.set('home.hidden', h); }
     else if (d.pGoal) { Hub.setGoal(+d.pGoal); }
     else if (d.pStep) { Prefs.set('cards.newPerDay', Math.max(0, Math.min(200, V().cards.newPerDay + +d.pStep))); }
-    else if (d.pBoard) { Prefs.set('chess', { ...V().chess, board: d.pBoard, light: '', dark: '' }); }
     else if (d.pIcon) { setIcon(d.pIcon); }
     else if (d.pExport != null) { exportAll(); return; }
     else if (d.pReset != null) { if (confirm('Reset every setting to its default? Your cards and progress stay.')) { Prefs.reset(); toast('Settings reset'); } }
@@ -72,7 +68,7 @@
   document.addEventListener('input', e => {
     const t = e.target; if (!t.dataset || !t.dataset.pColor) return;
     const p = t.dataset.pColor; t.parentElement.style.setProperty('--c', t.value);
-    if (p === 'accent') Prefs.set('accent', t.value); else Prefs.set('chess', { ...V().chess, [p.split('.')[1]]: t.value, board: V().chess.board });
+    if (p === 'accent') Prefs.set('accent', t.value);
   });
   document.addEventListener('change', e => {
     const t = e.target;
@@ -104,7 +100,7 @@
   function exportAll() {
     const dump = { app: 'odin-cards', version: 1, at: new Date().toISOString(), data: {}, local: {} };
     for (const k of Object.keys(M)) { const m = M[k]; if (m && typeof m.values === 'function') dump.data[k] = [...m.values()]; }
-    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(hub|prefs|ol\.|doc|res|lrn|learn|weak|chess|anat|lab|conj|hands|focus|speak|stats2|settings|mastery|ms)/.test(k)) dump.local[k] = localStorage.getItem(k); }
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(hub|prefs|doc|res|lrn|learn|weak|anat|lab|conj|hands|focus|speak|stats2|settings|mastery|ms)/.test(k)) dump.local[k] = localStorage.getItem(k); }
     const blob = new Blob([JSON.stringify(dump)], { type: 'application/json' });
     const name = 'synapse-backup-' + new Date().toISOString().slice(0, 10) + '.json';
     const file = new File([blob], name, { type: 'application/json' });

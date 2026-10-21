@@ -1,12 +1,12 @@
-/* Hub: ONE streak + XP store for the whole app (Cards, Learn, Doctordle, Weak Spots, Anatomy, Chess, Camera, Library).
-   Same-origin localStorage so /chess/ and /shot/ write to it too; the Cards app syncs it through D1
+/* Hub: ONE streak + XP store for the whole app (Cards, Learn, Doctordle, Weak Spots, Anatomy, Camera, Library).
+   Same-origin localStorage so /shot/ writes to it too; the Cards app syncs it through D1
    (progress records t:'hx', one per day, merged by taking the larger count). */
 (function () {
   'use strict';
   if (window.Hub) return;
   const KEY = 'hub.v1';
-  const XP = { focus: 15, speak: 2, rx: 3, exam: 10, review: 2, again: 1, lesson: 10, test: 10, doc: 25, docfail: 5, weak: 3, anat: 2, chess: 5, photo: 5, lib: 2, speak: 3, rx: 2, sim: 15, lesion: 3, ecg: 2, scan: 3, match: 2, conj: 1, hands: 2 };
-  const LABEL = { focus: 'focus blocks', speak: 'speaking', rx: 'interaction game', exam: 'exams', review: 'card reviews', again: 'missed cards', lesson: 'lessons', test: 'tests', doc: 'doctordles', docfail: 'doctordle tries', weak: 'weak spots', anat: 'anatomy', chess: 'chess', photo: 'photos', lib: 'library', speak: 'speaking', rx: 'interactions', sim: 'patient sims', lesion: 'lesion locator', ecg: 'ECG strips', scan: 'scan reading', match: 'drug matching', conj: 'verb drills', hands: 'hands-free review' };
+  const XP = { focus: 15, speak: 2, rx: 3, exam: 10, review: 2, again: 1, lesson: 10, test: 10, doc: 25, docfail: 5, weak: 3, anat: 2, photo: 5, lib: 2, speak: 3, rx: 2, sim: 15, lesion: 3, ecg: 2, scan: 3, match: 2, conj: 1, hands: 2 };
+  const LABEL = { focus: 'focus blocks', speak: 'speaking', rx: 'interaction game', exam: 'exams', review: 'card reviews', again: 'missed cards', lesson: 'lessons', test: 'tests', doc: 'doctordles', docfail: 'doctordle tries', weak: 'weak spots', anat: 'anatomy', photo: 'photos', lib: 'library', speak: 'speaking', rx: 'interactions', sim: 'patient sims', lesion: 'lesion locator', ecg: 'ECG strips', scan: 'scan reading', match: 'drug matching', conj: 'verb drills', hands: 'hands-free review' };
   const pad = n => String(n).padStart(2, '0');
   // a "day" ends at 4 AM, like the flashcard scheduler
   const dayKey = (t = Date.now()) => { const d = new Date(t - 4 * 36e5); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
