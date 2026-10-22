@@ -21,7 +21,7 @@
     const goal = (window.Hub && Hub.today().goal) || 50;
     const icon = v.icon || 'default';
     el.innerHTML = `<div class="ptitle"><h1>Settings</h1></div>
-      ${group('Appearance', block('Theme', seg('theme', v.theme, [['auto', 'Auto'], ['dark', 'Dark'], ['light', 'Light'], ['amoled', 'Black']]))
+      ${group('Appearance', block('Theme', seg('theme', v.theme, [['auto', 'Opposite'], ['dark', 'Dark'], ['light', 'Light'], ['amoled', 'Black']]))
         + block('Accent color', `<div class="acc-row">${accents}</div>`)
         + block('Text size', seg('text', v.text, [['s', 'Small'], ['m', 'Default'], ['l', 'Large'], ['xl', 'Huge']]))
         + block('Reduce motion', seg('reduceMotion', v.reduceMotion, [['auto', 'System'], ['true', 'On'], ['false', 'Off']]))

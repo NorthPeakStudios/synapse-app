@@ -34,7 +34,7 @@
   const de = document.documentElement;
   const mqDark = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
   const mqMotion = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : null;
-  function themeNow() { return v.theme === 'auto' ? (mqDark && !mqDark.matches ? 'light' : 'dark') : v.theme; }
+  function themeNow() { return v.theme === 'auto' ? (mqDark && mqDark.matches ? 'light' : 'dark') : v.theme; } // auto = opposite of the phone (Odin, Oct 21)
   function hex(h) { h = String(h || '').replace('#', ''); if (h.length === 3) h = h.split('').map(x => x + x).join(''); const n = parseInt(h, 16); return isFinite(n) && h.length === 6 ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : [10, 132, 255]; }
   function lum([r, g, b]) { const f = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); }
   const TEXT = { s: .92, m: 1, l: 1.1, xl: 1.22 };

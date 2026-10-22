@@ -413,7 +413,7 @@
   }
   function secTheme() {
     const cur = S.theme || 'auto';
-    return `<p class="lt-mut">Match phone (auto) uses the cream Notebook when your phone is in light mode and Notebook Night when it is in dark mode. Pick any other theme to keep it all the time.</p><div class="lt-thg">${LT.ORDER.map(id => themeCard(id, LT.THEMES[id], cur === id)).join('')}</div>`
+    return `<p class="lt-mut">Opposite of phone (auto) uses Notebook Night when your phone is in light mode and the cream Notebook when it is in dark mode, and flips live. Pick any other theme to keep it all the time.</p><div class="lt-thg">${LT.ORDER.map(id => themeCard(id, LT.THEMES[id], cur === id)).join('')}</div>`
       + (S.custom.length ? `<h4>My themes</h4><div class="lt-thg">${S.custom.map(c => themeCard(c.id, LT.themeOf(Object.assign({}, S, { theme: c.id })), cur === c.id)).join('')}</div>` : '')
       + `<button type="button" class="lt-btn2" data-cz-new>Make my own theme</button>`;
   }
