@@ -30,13 +30,13 @@
   /* ---------- feature registry ---------- */
   const GROUPS = {
     lab: [['diag', 'Diagnose'], ['body', 'Body & imaging'], ['pharm', 'Pharm & science']],
-    more: [['labs', 'Labs ✨'], ['make', 'Make cards'], ['review', 'Review smarter'], ['focus', 'Focus'], ['you', 'You']]
+    more: [['make', 'Make cards'], ['review', 'Review smarter'], ['focus', 'Focus'], ['you', 'You']]
   };
   const PLACE = {
     diag: ['sim', 'doc', 'ddx', 'labs', 'vit', 'soap', 'neuro', 'lesion', 'code', 'ecg', 'heart', 'lung'],
     body: ['anat', 'scan', 'atlas', 'spot', 'speed', 'histo', 'derm', 'surg', 'inst'],
     pharm: ['druglab', 'match', 'receptor', 'rx', 'pk', 'bugs', 'pun', 'words', 'history'],
-    labs: ['hours', 'twins', 'report', 'stems', 'conf', 'autopsy', 'split', 'blurt', 'palace', 'sleep', 'explain'],
+    cmds: ['hours', 'twins', 'report', 'stems', 'conf', 'autopsy', 'split', 'blurt', 'palace', 'sleep', 'explain'], // v178: no Labs section; these open from search (and deck ones from Deck options), never listed in a hub
     make: ['add', 'ocr', 'occl', 'pbook', 'anki'],
     review: ['mix', 'recall', 'body', 'daily', 'hands', 'mnemo', 'vn', 'fc', 'plan', 'badges'],
     focus: ['focus', 'amb'],
@@ -241,6 +241,7 @@
     const docs = [];
     for (const hub of ['lab', 'more']) for (const g of list(hub)) for (const f of g.items) docs.push({ id: f.id, title: f.title, sub: (hub === 'lab' ? 'Lab' : 'More') + ' · ' + g.name, keys: (f.sub || '') + ' ' + (f.keys || '') + ' ' + (SYN[f.id] || '') });
     const NAV = [['nav:home', 'Home', 'Today: due cards, streak, plan', 'today dashboard start'], ['nav:decks', 'Decks', 'Study · your decks', 'cards study review flashcards'], ['nav:weak', 'Weak spots', 'Study · cards and questions you keep missing', 'mistakes missed weak'], ['nav:browse', 'Browse cards', 'Study · find and edit cards', 'edit list all cards'], ['nav:stats', 'Stats', 'Study · XP, streak, retention', 'statistics progress charts history'], ['nav:learn', 'Courses', 'Learn · 350 courses', 'courses lessons learn'], ['nav:library', 'Library', 'Learn · decks, textbooks, videos, PDFs, games', 'deck library resources textbooks videos pdf games'], ['nav:lab', 'Lab', 'Doctor Lab: every tool', 'doctor lab tools'], ['nav:more', 'More', 'Study tools, settings, you', 'tools more']];
+    for (const id of PLACE.cmds) { const f = feat(id); if (f) docs.push({ id, title: f.title, sub: f.sub || 'Tool', keys: 'tool ' + (f.sub || '') + ' ' + (SYN[id] || '') }); } // v178: the old Labs tools, as search commands
     for (const [id, t, s, k] of NAV) docs.push({ id, title: t, sub: s, keys: k });
     return docs;
   }

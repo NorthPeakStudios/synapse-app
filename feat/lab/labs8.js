@@ -1,4 +1,4 @@
-/* Synapse Labs (v175): eight experimental study tools, all in More → Labs.
+/* Synapse study tools (v175; since v178 they open from search, no Labs section): eight study tools.
    stems · conf · autopsy · split · blurt · palace · sleep · explain. Everything runs on this phone from your own cards and
    review history; anything that is a guess (word matching, stems, reading level) says so on screen. */
 (function () {
@@ -33,7 +33,7 @@
   const shortQ = (c, n = 90) => { const t = qa(c).q.replace(/\s+/g, ' '); return t.length > n ? t.slice(0, n - 1) + '…' : t; };
   const recallNow = c => (c.s && c.last) ? retr(Math.max(0, (Date.now() - c.last) / DAY), c.s) : null;
   function mount(el, key, onClick, onInput) { if (el['__l8' + key]) return; el['__l8' + key] = 1; el.addEventListener('click', e => { if (el.__l8cur === key) onClick(e); }); if (onInput) { el.addEventListener('input', e => { if (el.__l8cur === key) onInput(e); }); el.addEventListener('change', e => { if (el.__l8cur === key) onInput(e); }); } }
-  const head = (t, p) => L.top(t, '<span class="l8-tag">Labs</span>', 'tools') + `<p class="muted lb-p">${p}</p>`;
+  const head = (t, p) => L.top(t, '', 'tools') + `<p class="muted lb-p">${p}</p>`;
   const empty = (msg) => `<div class="lb-empty">${msg}</div>`;
 
   /* ---------- 1. Drug stem decoder ---------- */
@@ -165,7 +165,7 @@
     if (lapsesAfterGood >= 2) clues.push(`${lapsesAfterGood} times you got it right and then forgot it next time: the knowing feels solid but doesn't last. A memory hook or picture might help.`);
     if (!rv.length) clues.push('No reviews recorded yet on this phone.');
     if (!clues.length) clues.push('Nothing stands out. It may just need time.');
-    el.innerHTML = `<div class="lb">${L.top('Card autopsy', '<span class="l8-tag">Labs</span>', 'tools')}<button type="button" class="btn lb-wide" data-au="">← Pick another card</button>
+    el.innerHTML = `<div class="lb">${L.top('Card autopsy', '', 'tools')}<button type="button" class="btn lb-wide" data-au="">← Pick another card</button>
       <div class="lb-card l8-q">${esc(x.q).replace(/\n/g, '<br>')}</div><div class="lb-card l8-a">${esc(x.a).replace(/\n/g, '<br>')}</div>
       <div class="l8-stats"><div><b>${rv.length}</b><span>reviews</span></div><div><b>${c.lapses || 0}</b><span>forgot</span></div><div><b>${c.s ? (c.s < 1 ? '<1' : Math.round(c.s)) : '–'}</b><span>stability (days)</span></div><div><b>${r == null ? '–' : pct(r)}</b><span>recall today</span></div></div>
       ${rv.length ? `<div class="lb-card">${timeline(rv)}</div>` : ''}
@@ -249,7 +249,7 @@
   function drawB() {
     const el = blurt.el, R = blurt.run;
     if (!R) { el.innerHTML = `<div class="lb">${head('Blurt sheet', 'Pick a deck, then write everything you remember about it in 3 minutes with no cards in front of you. Synapse checks which cards you covered and which never came up.')}<div class="l8-row">${decksSel('data-bl-deck', '*')}<button type="button" class="btn pri" data-bl="go">Start 3:00</button></div></div>`; return; }
-    el.innerHTML = `<div class="lb">${L.top('Blurt sheet', '<span class="l8-tag">Labs</span>', 'tools')}<div class="l8-timer" data-bl-t>3:00</div><textarea class="l8-ta" data-bl-txt rows="12" placeholder="Everything you know. Messy is fine: keywords, half sentences, lists…"></textarea><button type="button" class="btn pri lb-wide" data-bl="done">I'm done, check it</button></div>`;
+    el.innerHTML = `<div class="lb">${L.top('Blurt sheet', '', 'tools')}<div class="l8-timer" data-bl-t>3:00</div><textarea class="l8-ta" data-bl-txt rows="12" placeholder="Everything you know. Messy is fine: keywords, half sentences, lists…"></textarea><button type="button" class="btn pri lb-wide" data-bl="done">I'm done, check it</button></div>`;
     setTimeout(() => { const t = el.querySelector('[data-bl-txt]'); if (t) t.focus(); }, 50);
   }
 
@@ -357,7 +357,7 @@
         <p class="lb-foot">Jargon spotting is a rule of thumb (medical word parts plus rare words from your own card), so it will miss some and flag a few fine words. Reading level is the Flesch–Kincaid formula; health writing usually aims for grade 8 or lower.</p></div>`; return;
     }
     const c = M.cards.get(explain.id), x = qa(c);
-    el.innerHTML = `<div class="lb">${L.top('Patient explainer', '<span class="l8-tag">Labs</span>', 'tools')}<div class="lb-card l8-q">${esc(x.q).replace(/\n/g, '<br>')}</div><div class="lb-card l8-a">${esc(x.a).replace(/\n/g, '<br>')}</div>
+    el.innerHTML = `<div class="lb">${L.top('Patient explainer', '', 'tools')}<div class="lb-card l8-q">${esc(x.q).replace(/\n/g, '<br>')}</div><div class="lb-card l8-a">${esc(x.a).replace(/\n/g, '<br>')}</div>
       <textarea class="l8-ta" data-ex-txt rows="6" placeholder="Explain it to a patient in everyday words…"></textarea><div data-ex-live></div>
       <div class="lb-btns"><button type="button" class="btn" data-ex="back">Skip</button><button type="button" class="btn pri" data-ex="save">Save</button></div></div>`;
   }

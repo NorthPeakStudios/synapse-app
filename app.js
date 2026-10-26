@@ -251,8 +251,10 @@ function deckSheet(id) {
     <div class="grow"><label class="f" for="drev">Max reviews per day</label><input type="number" id="drev" min="0" max="99999" value="${o.revPerDay}" inputmode="numeric"></div></div>
     <div class="actions"><button type="button" class="btn" data-close>Cancel</button><button class="btn pri" type="submit">Save</button></div>
     ${d && window.ImgCards ? '<div class="actions"><button type="button" class="btn wide" id="deckPics">Add pictures to cards</button></div>' : ''}
+    ${d && window.Lab ? '<div class="actions"><button type="button" class="btn" id="deckReport">Report card</button><button type="button" class="btn" id="deckTwins">Find twin cards</button></div>' : ''}
     ${d ? '<div class="actions"><button type="button" class="btn danger" id="delDeck">Delete deck</button></div>' : ''}</form>`);
   if (d && $('#deckPics')) $('#deckPics').onclick = () => ImgCards.deckPass(d.id);
+  if (d && $('#deckReport')) { $('#deckReport').onclick = () => { closeSheet(); window.__deckTool = d.id; Lab.open('report'); }; $('#deckTwins').onclick = () => { closeSheet(); Lab.open('twins'); }; } // v178: deck tools live here + in search (no Labs section)
   $('#deckForm').onsubmit = async e => {
     e.preventDefault(); const name = $('#dn').value.trim(); if (!name) return;
     const rec = { ...(d || { id: 'd-' + rid() }), name, newPerDay: Math.max(0, +$('#dnew').value || 0), revPerDay: Math.max(0, +$('#drev').value || 0) };

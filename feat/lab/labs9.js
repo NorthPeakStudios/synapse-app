@@ -1,4 +1,4 @@
-/* Synapse Labs (v176): three more tools in More → Labs — hours · twins · report.
+/* Synapse study tools (v176; since v178 they open from search and Deck options): hours · twins · report.
    Built only from your own cards and review history, on this phone. Anything that is a pattern (not a rule) says so on screen. */
 (function () {
   'use strict';
@@ -10,7 +10,7 @@
   const short = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
   const liveCards = f => { const out = []; for (const c of M.cards.values()) { if (c.del) continue; const d = M.decks.get(c.deck); if (!d || d.del) continue; if (f && !f(c)) continue; out.push(c); } return out; };
   const deckName = id => ((M.decks.get(id) || {}).name || 'Deck');
-  const head = (t, p) => L.top(t, '<span class="l8-tag">Labs</span>', 'tools') + `<p class="muted lb-p">${p}</p>`;
+  const head = (t, p) => L.top(t, '', 'tools') + `<p class="muted lb-p">${p}</p>`;
   const empty = msg => `<div class="lb-empty">${msg}</div>`;
   const pct = (a, b) => b ? Math.round(100 * a / b) + '%' : '–';
   function mount(el, key, onClick, onChange) { if (el['__l9' + key]) return; el['__l9' + key] = 1; el.addEventListener('click', e => { if (el.__l9cur === key) onClick(e); }); if (onChange) el.addEventListener('change', e => { if (el.__l9cur === key) onChange(e); }); }
@@ -96,7 +96,7 @@
   } };
   function drawR() {
     const el = report.el, ds = live(M.decks).sort((a, b) => a.name.localeCompare(b.name));
-    let cur = (RP.get({}).deck) || ''; if (cur !== '*' && !M.decks.get(cur)) cur = '*';
+    let cur = window.__deckTool || (RP.get({}).deck) || ''; if (window.__deckTool) { RP.set({ deck: cur }); window.__deckTool = null; } // v178: opened from a deck's options if (cur !== '*' && !M.decks.get(cur)) cur = '*';
     const sel = `<select data-rp-deck><option value="*"${cur === '*' ? ' selected' : ''}>All decks</option>${ds.map(d => `<option value="${esc(d.id)}"${cur === d.id ? ' selected' : ''}>${esc(d.name)}</option>`).join('')}</select>`;
     const cs = liveCards(c => cur === '*' || c.deck === cur), ids = new Set(cs.map(c => c.id)), now = Date.now();
     let h = head('Deck report card', 'One screen that says how a deck is really going: what you know, what keeps slipping, and how much you’ve studied it lately.') + `<div class="l8-row">${sel}</div>`;
@@ -111,7 +111,7 @@
     h += `<div class="l8-stats"><div><b>${grade || '–'}</b><span>grade${grade ? '' : ' (needs 20 reviews)'}</span></div><div><b>${pct(keep, old.length)}</b><span>remembered, 30 days</span></div><div><b>${days}</b><span>days studied, 30</span></div></div>`;
     h += `<div class="mx-h">Cards</div><div class="lb-group"><div class="lb-row"><span class="lb-rt"><span class="t1">${cs.length} cards</span><span class="t2">${lrn} started · ${mat} solid (3+ weeks memory) · ${nw} not seen yet${sus ? ' · ' + sus + ' suspended' : ''}</span>${bar(cs.length ? mat / cs.length : 0, true)}</span></div>
       <div class="lb-row"><span class="lb-rt"><span class="t1">${rv30.length} reviews in 30 days</span><span class="t2">${rv7.length} this week · ${due} due by tomorrow</span></span></div></div>`;
-    if (worst.length) h += `<div class="mx-h">Keeps slipping</div><div class="lb-group">${worst.map(c => `<div class="lb-row"><span class="lb-rt"><span class="t1">${esc(short(qa(c).q, 90))}</span><span class="t2">forgot ${c.lapses}× · ${esc(deckName(c.deck))}</span></span></div>`).join('')}</div><p class="small muted">Tip: Card autopsy and Leech splitter in Labs work on exactly these.</p>`;
+    if (worst.length) h += `<div class="mx-h">Keeps slipping</div><div class="lb-group">${worst.map(c => `<div class="lb-row"><span class="lb-rt"><span class="t1">${esc(short(qa(c).q, 90))}</span><span class="t2">forgot ${c.lapses}× · ${esc(deckName(c.deck))}</span></span></div>`).join('')}</div><p class="small muted">Tip: search for Card autopsy or Leech splitter: they work on exactly these.</p>`;
     const name = cur === '*' ? 'All decks' : deckName(cur);
     const txt = `Synapse report: ${name}\nGrade: ${grade || 'not enough reviews yet'}\nRemembered (30 days): ${pct(keep, old.length)} of ${old.length} reviews\nCards: ${cs.length} (${mat} solid, ${nw} not seen yet)\nStudied ${days} of the last 30 days, ${rv7.length} reviews this week\n` + (worst.length ? 'Keeps slipping:\n' + worst.map(c => '- ' + short(qa(c).q, 80) + ' (forgot ' + c.lapses + 'x)').join('\n') : '');
     h += `<textarea class="l8-ta" data-rp-txt rows="6" readonly aria-label="Report text">${esc(txt)}</textarea><button type="button" class="btn pri lb-wide" data-rp="copy">Copy report</button>`;

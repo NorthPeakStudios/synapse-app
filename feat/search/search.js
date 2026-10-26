@@ -173,7 +173,7 @@
       const lim = S.expanded[g] ? 60 : g === 'cards' || g === 'lessons' || g === 'feat' ? 5 : 4, shown = list.slice(0, lim);
       html += `<div class="srch-h"><span>${name}</span>${list.length > lim ? `<button type="button" class="srch-link" data-srch-more="${g}">Show all ${list.length > 60 ? '60+' : list.length}</button>` : `<span class="srch-n">${list.length}</span>`}</div><div class="srch-grp">`;
       for (const d of shown) { const k = S.items.length; S.items.push(d);
-        html += `<button type="button" class="srch-row" role="option" data-srch-i="${k}" id="srch-o${k}"><span class="srch-ic">${g === 'feat' && window.Shell ? Shell.icon(d.id, 18) : IC(GIC[g], 18)}</span><span class="srch-tx"><span class="srch-t1">${hl(d.title, q)}</span><span class="srch-t2">${esc(d.sub || '')}</span></span>${d.g === 'doc' && !d.solved ? '<span class="srch-tag">Unsolved</span>' : d.g === 'courses' && !d.ready ? '<span class="srch-tag">Soon</span>' : ''}</button>`; }
+        html += `<button type="button" class="srch-row" role="option" data-srch-i="${k}" id="srch-o${k}"><span class="srch-ic">${g === 'feat' && window.Shell ? Shell.icon(d.id, 18) : IC(GIC[g], 18)}</span><span class="srch-tx"><span class="srch-t1">${hl(d.title, q)}</span><span class="srch-t2">${esc(d.sub || '')}</span></span>${d.g === 'feat' && window.Pro && Pro.locked && Pro.locked(d.id) ? '<span class="srch-tag">Pro</span>' : d.g === 'doc' && !d.solved ? '<span class="srch-tag">Unsolved</span>' : d.g === 'courses' && !d.ready ? '<span class="srch-tag">Soon</span>' : ''}</button>`; }
       html += '</div>';
     }
     box.innerHTML = html; mark();
