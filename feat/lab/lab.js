@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   if (window.Lab) return;
-  const VER = '146';
+  const VER = '148';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const IC = {
     steth: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
@@ -68,6 +68,9 @@
     amb: { title: 'Study sounds', sub: 'Rain, brown noise, café… made on your phone', ic: 'ear', hub: 'tools', file: 'amb', ready: true },
     themes: { title: 'Themes', sub: 'Any color, background tints, fonts; save your own', ic: 'book', hub: 'tools', file: 'themes', ready: true },
     share: { title: 'Share a deck', sub: 'Read-only link you can turn off anytime', ic: 'book', hub: 'tools', file: 'share', ready: true },
+    mix: { title: 'Mix-ups', sub: 'Cards you confuse, drilled head to head', ic: 'verb', hub: 'tools', file: 'mix', ready: true },
+    body: { title: 'Body map', sub: 'Every card mapped onto a body', ic: 'steth', hub: 'tools', file: 'body', ready: true },
+    recall: { title: 'Exam-day recall', sub: 'What you would still know on test day', ic: 'clock', hub: 'tools', file: 'recall', ready: true },
     focus: { title: 'Focus timer', sub: 'Pomodoro with cards on the break', ic: 'timer', hub: 'tools', open: () => XView.open('focus'), ready: true }
   };
   const HUBS = { lab: { title: 'Doctor Lab', blurb: 'Practice like a doctor: cases, labs, differentials, neuro localisation, rhythms, scans, drugs and medical words.' }, tools: { title: 'Study tools', blurb: 'Faster ways to make and review cards.' } };
@@ -111,7 +114,7 @@
   function menuFor() {
     if (!curV) return null; const f = F[curV]; const hub = HUBS[curV] ? curV : f && f.hub; if (!hub) return null;
     const items = [[hub === 'lab' ? 'doc' : 'play', HUBS[hub].title, () => XView.open(hub)]];
-    for (const [k, x] of Object.entries(F)) if (x.hub === hub && x.ready) items.push([{ sim: 'doc', lesion: 'brain', ecg: 'play', scan: 'layers', match: 'quiz', ocr: 'add', hands: 'play', conj: 'learn', focus: 'play', labs: 'quiz', ddx: 'doc', words: 'learn', receptor: 'quiz', history: 'layers', druglab: 'quiz', neuro: 'brain', occl: 'add', pbook: 'learn', anki: 'add', bugs: 'quiz', pk: 'play', pun: 'quiz', vit: 'doc', soap: 'learn', spot: 'brain', speed: 'play', gen: 'learn', rp: 'learn', tc: 'learn', share: 'learn', themes: 'learn', amb: 'play', daily: 'quiz', vn: 'play', fc: 'learn', paste: 'add', phr: 'learn', badges: 'play', plan: 'learn', dict: 'play', mnemo: 'learn', dle: 'doc', surg: 'layers', atlas: 'brain', code: 'play', heart: 'play', lung: 'play', inst: 'quiz', derm: 'quiz', histo: 'layers' }[k] || 'play', x.title, () => open(k)]);
+    for (const [k, x] of Object.entries(F)) if (x.hub === hub && x.ready) items.push([{ sim: 'doc', lesion: 'brain', ecg: 'play', scan: 'layers', match: 'quiz', ocr: 'add', hands: 'play', conj: 'learn', focus: 'play', labs: 'quiz', ddx: 'doc', words: 'learn', receptor: 'quiz', history: 'layers', druglab: 'quiz', neuro: 'brain', occl: 'add', pbook: 'learn', anki: 'add', bugs: 'quiz', pk: 'play', pun: 'quiz', vit: 'doc', soap: 'learn', spot: 'brain', speed: 'play', gen: 'learn', rp: 'learn', tc: 'learn', share: 'learn', themes: 'learn', amb: 'play', daily: 'quiz', vn: 'play', fc: 'learn', paste: 'add', phr: 'learn', badges: 'play', plan: 'learn', dict: 'play', mnemo: 'learn', mix: 'quiz', body: 'doc', recall: 'learn', dle: 'doc', surg: 'layers', atlas: 'brain', code: 'play', heart: 'play', lung: 'play', inst: 'quiz', derm: 'quiz', histo: 'layers' }[k] || 'play', x.title, () => open(k)]);
     items.push([hub === 'lab' ? 'play' : 'doc', hub === 'lab' ? 'Study tools' : 'Doctor Lab', () => XView.open(hub === 'lab' ? 'tools' : 'lab')]);
     return { t: HUBS[hub].title, items };
   }
@@ -181,7 +184,7 @@
   function explainBtn() {
     const v = document.getElementById('v-study'); if (!v || v.hidden) return;
     const revealed = v.querySelector('#ansbar [data-grade]'), has = v.querySelector('.lb-xbtn');
-    if (revealed && !has) { const face = v.querySelector('#face'); if (face) face.insertAdjacentHTML('afterend', `<div class="lb-xrow"><button class="lb-xbtn" type="button" data-lab-explain>${ic('book', 16)} Explain this card</button><button class="lb-xbtn" type="button" data-lab-tutor>${ic('steth', 16)} Ask a tutor</button><button class="lb-xbtn" type="button" data-lab-voice>🎙️ Voice note</button>${(() => { try { const c = window.curCard && window.curCard(); return c && (c.lapses || 0) >= 2 ? '<button class="lb-xbtn" type="button" data-lab-mnemo>💡 Memory hook</button>' : ''; } catch (e) { return ''; } })()}</div>`); }
+    if (revealed && !has) { const face = v.querySelector('#face'); if (face) face.insertAdjacentHTML('afterend', `<div class="lb-xrow"><button class="lb-xbtn" type="button" data-lab-explain>${ic('book', 16)} Explain this card</button><button class="lb-xbtn" type="button" data-lab-tutor>${ic('steth', 16)} Ask a tutor</button><button class="lb-xbtn" type="button" data-lab-voice>🎙️ Voice note</button><button class="lb-xbtn" type="button" data-lab-mix>⇄ Mixed it up?</button>${(() => { try { const c = window.curCard && window.curCard(); return c && (c.lapses || 0) >= 2 ? '<button class="lb-xbtn" type="button" data-lab-mnemo>💡 Memory hook</button>' : ''; } catch (e) { return ''; } })()}</div>`); }
     else if (!revealed && has) { const row = has.closest('.lb-xrow'); (row || has).remove(); }
   }
   document.addEventListener('click', e => {
@@ -195,6 +198,11 @@
     const card = typeof window.curCard === 'function' ? window.curCard() : null; if (!card) return;
     if (!window.LabMods.tutor) { const s = document.createElement('script'); s.src = 'feat/lab/tutor.js?v=' + VER; s.onload = () => window.LabMods.tutor.open(card); s.onerror = () => toast('Couldn\'t load. Check your connection.'); document.head.appendChild(s); }
     else window.LabMods.tutor.open(card);
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-lab-mix]')) return;
+    const card = typeof window.curCard === 'function' ? window.curCard() : null; if (!card) return;
+    load('mix').then(() => window.LabMods.mix.pick(card)).catch(() => toast('Couldn\'t load. Check your connection.'));
   });
   document.addEventListener('click', e => {
     if (!e.target.closest('[data-lab-mnemo]')) return;
