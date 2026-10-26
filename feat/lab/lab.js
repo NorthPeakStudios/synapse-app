@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   if (window.Lab) return;
-  const VER = '149';
+  const VER = '176';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const IC = {
     steth: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
@@ -79,7 +79,10 @@
     blurt: { title: 'Blurt sheet', sub: '3 minutes, blank page: what comes out on its own?', ic: 'abc', hub: 'tools', file: 'labs8', ready: true },
     palace: { title: 'Memory palace', sub: 'Park your 10 hardest cards in rooms of your house', ic: 'key', hub: 'tools', file: 'labs8', ready: true },
     sleep: { title: 'Sleep on it', sub: '10 cards before bed, same 10 in the morning', ic: 'timer', hub: 'tools', file: 'labs8', ready: true },
-    explain: { title: 'Patient explainer', sub: 'Explain a card with zero jargon, scored live', ic: 'book', hub: 'tools', file: 'labs8', ready: true }
+    explain: { title: 'Patient explainer', sub: 'Explain a card with zero jargon, scored live', ic: 'book', hub: 'tools', file: 'labs8', ready: true },
+    hours: { title: 'Best time to study', sub: 'When you remember best, from your own reviews', ic: 'timer', hub: 'tools', file: 'labs9', ready: true },
+    twins: { title: 'Card twins', sub: 'Find cards that ask the same thing twice', ic: 'rank', hub: 'tools', file: 'labs9', ready: true },
+    report: { title: 'Deck report card', sub: 'A grade, what slips, and how much you studied', ic: 'book', hub: 'tools', file: 'labs9', ready: true }
   };
   const HUBS = { lab: { title: 'Doctor Lab', blurb: 'Practice like a doctor: cases, labs, differentials, neuro localisation, rhythms, scans, drugs and medical words.' }, tools: { title: 'Study tools', blurb: 'Faster ways to make and review cards.' } };
   window.LabMods = window.LabMods || {};
