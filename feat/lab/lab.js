@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   if (window.Lab) return;
-  const VER = '148';
+  const VER = '149';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const IC = {
     steth: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
@@ -71,7 +71,15 @@
     mix: { title: 'Mix-ups', sub: 'Cards you confuse, drilled head to head', ic: 'verb', hub: 'tools', file: 'mix', ready: true },
     body: { title: 'Body map', sub: 'Every card mapped onto a body', ic: 'steth', hub: 'tools', file: 'body', ready: true },
     recall: { title: 'Exam-day recall', sub: 'What you would still know on test day', ic: 'clock', hub: 'tools', file: 'recall', ready: true },
-    focus: { title: 'Focus timer', sub: 'Pomodoro with cards on the break', ic: 'timer', hub: 'tools', open: () => XView.open('focus'), ready: true }
+    focus: { title: 'Focus timer', sub: 'Pomodoro with cards on the break', ic: 'timer', hub: 'tools', open: () => XView.open('focus'), ready: true },
+    stems: { title: 'Drug stem decoder', sub: 'Type any drug: its ending tells you the class', ic: 'pill', hub: 'tools', file: 'labs8', ready: true },
+    conf: { title: 'Confidence check', sub: 'Does your “sure” really mean sure?', ic: 'rank', hub: 'tools', file: 'labs8', ready: true },
+    autopsy: { title: 'Card autopsy', sub: 'A card’s whole life + why it won’t stick', ic: 'steth', hub: 'tools', file: 'labs8', ready: true },
+    split: { title: 'Leech splitter', sub: 'Break list cards you keep failing into small ones', ic: 'flask', hub: 'tools', file: 'labs8', ready: true },
+    blurt: { title: 'Blurt sheet', sub: '3 minutes, blank page: what comes out on its own?', ic: 'abc', hub: 'tools', file: 'labs8', ready: true },
+    palace: { title: 'Memory palace', sub: 'Park your 10 hardest cards in rooms of your house', ic: 'key', hub: 'tools', file: 'labs8', ready: true },
+    sleep: { title: 'Sleep on it', sub: '10 cards before bed, same 10 in the morning', ic: 'timer', hub: 'tools', file: 'labs8', ready: true },
+    explain: { title: 'Patient explainer', sub: 'Explain a card with zero jargon, scored live', ic: 'book', hub: 'tools', file: 'labs8', ready: true }
   };
   const HUBS = { lab: { title: 'Doctor Lab', blurb: 'Practice like a doctor: cases, labs, differentials, neuro localisation, rhythms, scans, drugs and medical words.' }, tools: { title: 'Study tools', blurb: 'Faster ways to make and review cards.' } };
   window.LabMods = window.LabMods || {};
@@ -114,7 +122,7 @@
   function menuFor() {
     if (!curV) return null; const f = F[curV]; const hub = HUBS[curV] ? curV : f && f.hub; if (!hub) return null;
     const items = [[hub === 'lab' ? 'doc' : 'play', HUBS[hub].title, () => XView.open(hub)]];
-    for (const [k, x] of Object.entries(F)) if (x.hub === hub && x.ready) items.push([{ sim: 'doc', lesion: 'brain', ecg: 'play', scan: 'layers', match: 'quiz', ocr: 'add', hands: 'play', conj: 'learn', focus: 'play', labs: 'quiz', ddx: 'doc', words: 'learn', receptor: 'quiz', history: 'layers', druglab: 'quiz', neuro: 'brain', occl: 'add', pbook: 'learn', anki: 'add', bugs: 'quiz', pk: 'play', pun: 'quiz', vit: 'doc', soap: 'learn', spot: 'brain', speed: 'play', gen: 'learn', rp: 'learn', tc: 'learn', share: 'learn', themes: 'learn', amb: 'play', daily: 'quiz', vn: 'play', fc: 'learn', paste: 'add', phr: 'learn', badges: 'play', plan: 'learn', dict: 'play', mnemo: 'learn', mix: 'quiz', body: 'doc', recall: 'learn', dle: 'doc', surg: 'layers', atlas: 'brain', code: 'play', heart: 'play', lung: 'play', inst: 'quiz', derm: 'quiz', histo: 'layers' }[k] || 'play', x.title, () => open(k)]);
+    for (const [k, x] of Object.entries(F)) if (x.hub === hub && x.ready) items.push([{ sim: 'doc', lesion: 'brain', ecg: 'play', scan: 'layers', match: 'quiz', ocr: 'add', hands: 'play', conj: 'learn', focus: 'play', labs: 'quiz', ddx: 'doc', words: 'learn', receptor: 'quiz', history: 'layers', druglab: 'quiz', neuro: 'brain', occl: 'add', pbook: 'learn', anki: 'add', bugs: 'quiz', pk: 'play', pun: 'quiz', vit: 'doc', soap: 'learn', spot: 'brain', speed: 'play', gen: 'learn', rp: 'learn', tc: 'learn', share: 'learn', themes: 'learn', amb: 'play', daily: 'quiz', vn: 'play', fc: 'learn', paste: 'add', phr: 'learn', badges: 'play', plan: 'learn', dict: 'play', mnemo: 'learn', mix: 'quiz', body: 'doc', recall: 'learn', stems: 'quiz', conf: 'quiz', autopsy: 'doc', split: 'add', blurt: 'learn', palace: 'brain', sleep: 'play', explain: 'learn', dle: 'doc', surg: 'layers', atlas: 'brain', code: 'play', heart: 'play', lung: 'play', inst: 'quiz', derm: 'quiz', histo: 'layers' }[k] || 'play', x.title, () => open(k)]);
     items.push([hub === 'lab' ? 'play' : 'doc', hub === 'lab' ? 'Study tools' : 'Doctor Lab', () => XView.open(hub === 'lab' ? 'tools' : 'lab')]);
     return { t: HUBS[hub].title, items };
   }
