@@ -217,6 +217,7 @@ let view = 'decks', studyDeck = null, cur = null, shown = false, shownAt = 0, un
 window.curCard = () => cur;
 const TITLES = { home: 'Home', doc: 'Doctordle', weak: 'Weak Spots', anat: 'Anatomy', library: 'Library', learn: 'Learn', decks: 'Decks', study: 'Study', add: 'Add card', browse: 'Browse', stats: 'Stats', settings: 'Sync & backup', prefs: '', x: '' };
 function go(v, opts = {}) {
+  if (v === 'study' && !studyDeck) studyDeck = '*'; // v176: a Study link with no deck picked yet (e.g. a cleared photo-book deck) opens All decks instead of throwing
   if (v !== view && !opts.keepSheet) { try { if (!$('#sheetWrap').hidden) closeSheet(); } catch (e) {} } // v120: a sheet never outlives the screen it was opened on
   if (v === 'add' && !opts.keepEdit) editId = null;
   if (v === 'library' && window.Resources && Resources._S) $('#title').dataset.lib = Resources._S.mode;
