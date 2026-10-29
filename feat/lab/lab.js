@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   if (window.Lab) return;
-  const VER = '178';
+  const VER = '181';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const IC = {
     steth: '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
@@ -82,7 +82,25 @@
     explain: { title: 'Patient explainer', sub: 'Explain a card with zero jargon, scored live', ic: 'book', hub: 'tools', file: 'labs8', ready: true },
     hours: { title: 'Best time to study', sub: 'When you remember best, from your own reviews', ic: 'timer', hub: 'tools', file: 'labs9', ready: true },
     twins: { title: 'Card twins', sub: 'Find cards that ask the same thing twice', ic: 'rank', hub: 'tools', file: 'labs9', ready: true },
-    report: { title: 'Deck report card', sub: 'A grade, what slips, and how much you studied', ic: 'book', hub: 'tools', file: 'labs9', ready: true }
+    report: { title: 'Deck report card', sub: 'A grade, what slips, and how much you studied', ic: 'book', hub: 'tools', file: 'labs9', ready: true },
+    // v179 wave 20: case modes (feat/lab/cases20.js) and study tools (feat/lab/tools20.js); their data stays on this phone (l20.*)
+    night: { title: 'Night shift', sub: 'Back-to-back mini cases on a timer, like an ER rush', ic: 'timer', hub: 'lab', file: 'cases20', ready: true },
+    duel: { title: 'Differential duel', sub: 'Two players, one phone, same case: fewest clues wins', ic: 'rank', hub: 'lab', file: 'cases20', ready: true },
+    squad: { title: 'Study squad cases', sub: 'Huddle round one phone, vote on the diagnosis in secret', ic: 'steth', hub: 'lab', file: 'cases20', ready: true },
+    zebra: { title: 'Rare disease of the week', sub: 'One zebra case a week: solve it for its badge', ic: 'bolt', hub: 'lab', file: 'cases20', ready: true },
+    remix: { title: 'Case remix', sub: 'Same patient, one change (age, drug, lab), new answer', ic: 'flask', hub: 'lab', file: 'cases20', ready: true },
+    museum: { title: 'Misdiagnosis museum', sub: 'Famous real-world misses, turned into cases', ic: 'book', hub: 'lab', file: 'cases20', ready: true },
+    sx: { title: 'Symptom-first browse', sub: 'Start from a symptom, branch to every cause', ic: 'steth', hub: 'lab', file: 'cases20', ready: true },
+    wrong: { title: 'Wrong-guess autopsy', sub: 'Which clue should have tipped you off', ic: 'steth', hub: 'lab', file: 'cases20', ready: true },
+    ghost: { title: 'Ghost attending', sub: 'An attending who stops you mid-case: “why?”', ic: 'steth', hub: 'lab', file: 'cases20', ready: true },
+    instinct: { title: 'Lab value instinct', sub: 'A panel flashes for 3 seconds: normal or not?', ic: 'flask', hub: 'lab', file: 'tools20', ready: true },
+    flight: { title: 'Pharmacology flight sim', sub: 'Treat a crashing patient live, watch the vitals react', ic: 'ecg', hub: 'lab', file: 'tools20', ready: true },
+    forg: { title: 'Forgetting forecast', sub: 'Which cards you’ll forget this week, before you do', ic: 'clock', hub: 'tools', file: 'tools20', ready: true },
+    teach: { title: 'Teach-back', sub: 'Explain a card out loud, see which ideas you missed', ic: 'ear', hub: 'tools', file: 'tools20', ready: true },
+    forge: { title: 'Mnemonic forge', sub: 'A weird, memorable sentence for any list card', ic: 'key', hub: 'tools', file: 'tools20', ready: true },
+    ctag: { title: 'Confidence tags', sub: 'Tag how sure you are in review; find overconfident topics', ic: 'rank', hub: 'tools', file: 'tools20', ready: true },
+    neuron: { title: 'Neuron map', sub: 'Your progress drawn as a growing brain', ic: 'brain', hub: 'tools', file: 'tools20', ready: true },
+    cram: { title: 'Exam countdown planner', sub: 'Enter a test date, it rebalances your review load', ic: 'clock', hub: 'tools', file: 'tools20', ready: true }
   };
   const HUBS = { lab: { title: 'Doctor Lab', blurb: 'Practice like a doctor: cases, labs, differentials, neuro localisation, rhythms, scans, drugs and medical words.' }, tools: { title: 'Study tools', blurb: 'Faster ways to make and review cards.' } };
   window.LabMods = window.LabMods || {};

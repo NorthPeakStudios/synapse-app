@@ -1,0 +1,5 @@
+/* Confidence tags in review (v179) */
+.ct-row{display:flex;align-items:center;gap:6px;margin:8px 0 6px;font-size:13px;color:var(--mut)}
+.ct-row span{margin-right:2px}
+.ct-b{flex:1;min-height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--fill);color:var(--tx);font:600 14px/1 inherit;padding:0 6px}
+.ct-b.on{border-color:var(--acc);background:var(--acc-soft,var(--fill));color:var(--acc-tx,var(--acc))}

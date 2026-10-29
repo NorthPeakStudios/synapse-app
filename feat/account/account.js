@@ -111,7 +111,7 @@
       + '<form class="pw-form" data-ac-form="password" novalidate>' + field('old', 'Current password', 'password', 'current-password', 'maxlength="200"') + field('password', 'New password (8 or more characters)', 'password', 'new-password', 'minlength="8" maxlength="200"') + ERR
       + '<button type="submit" class="pw-cta">Change password</button></form>'
       + '<div class="pw-links ac-links"><button type="button" data-ac-go="account">Back</button></div>';
-    if (v === 'email') return head('Change email', 'Your account, Pro, owner status and synced progress move to the new email. The old email stops working for sign-in, here and in Axon and Liminal.')
+    if (v === 'email') return head('Change email', 'Your account, Pro, owner status and synced progress move to the new email. The old email stops working for sign-in, here and in the other Northpeak apps.')
       + '<form class="pw-form" data-ac-form="email" novalidate>' + field('email', 'New email', 'email', 'username', 'inputmode="email" autocapitalize="off" spellcheck="false" maxlength="254"') + field('password', 'Password', 'password', 'current-password', 'maxlength="200"') + ERR
       + '<button type="submit" class="pw-cta">Change email</button></form>'
       + '<div class="pw-links ac-links"><button type="button" data-ac-go="account">Back</button></div>';
@@ -178,8 +178,8 @@
         if (kind === 'password') { toast('Password changed. Other devices were signed out.'); open('account'); return; }
         if (kind === 'email') {
           await emailChanged(j);
-          var mv = {}; try { if (window.NPEmail && j.moves) { busy(f, true, 'Updating Axon and Liminal\u2026'); mv = await window.NPEmail.apply(j.moves, pw); } } catch (e) {}
-          var also = mv.axon && mv.liminal ? ' Axon and Liminal changed too.' : mv.axon ? ' Axon changed too.' : mv.liminal ? ' Liminal changed too.' : '';
+          var mv = {}; try { if (window.NPEmail && j.moves) { busy(f, true, 'Updating your other Northpeak apps\u2026'); mv = await window.NPEmail.apply(j.moves, pw); } } catch (e) {}
+          var NPN = { axon: 'Axon', liminal: 'Liminal', cadence: 'Cadence', mindprint: 'Mindprint', trace: 'Trace' }; var mvn = Object.keys(mv || {}).filter(function (k) { return NPN[k]; }).map(function (k) { return NPN[k]; }); var also = mvn.length ? ' ' + (mvn.length > 1 ? mvn.slice(0, -1).join(', ') + ' and ' + mvn[mvn.length - 1] : mvn[0]) + ' changed too.' : '';
           toast('Email changed to ' + j.user.email + '.' + also + ' Sign in with it from now on.'); open('account'); return;
         }
         if (kind === 'delete') { clear(); await stopSync(); notify(); close(); toast('Your account was deleted.'); return; }
